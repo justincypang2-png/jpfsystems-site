@@ -3,147 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JP Freglien Systems | Precision in Volatility</title>
+    <title>J.P. Freglien Systems Holdings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* The "Quant" Aesthetic: Dark, Minimal, Monospace */
+        /* --- CORE VARIABLES & RESET --- */
         :root {
-            --bg-color: #0a0a0a;
-            --text-color: #e0e0e0;
-            --accent-color: #00ff88; /* Matrix/Terminal Green */
-            --secondary-color: #888;
+            --bg-color: #050505;
+            --card-bg: #111111;
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            --accent: #00ff88; /* Matrix Green */
+            --accent-dim: rgba(0, 255, 136, 0.1);
+            --font-tech: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            margin: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Navigation */
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        /* --- HEADER / NAV --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+        }
+
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 2rem 5%;
+            height: 70px;
         }
 
         .logo {
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+            font-family: var(--font-tech);
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+        
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* --- HERO SECTION (LAUNCH TRACKER) --- */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-tech);
+            font-size: 3.5rem;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
-        .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin-left: 2rem;
-            font-size: 0.9rem;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .nav-links a:hover { opacity: 1; }
-
-        .client-login {
-            border: 1px solid var(--text-color);
-            padding: 8px 16px;
-            border-radius: 4px;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 5%;
-            max-width: 800px;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .slogan {
-            color: var(--accent-color);
-            font-family: 'Courier New', Courier, monospace;
+        .hero-content p {
+            color: var(--text-muted);
             font-size: 1.2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 40px;
         }
 
-        p {
-            font-size: 1.1rem;
-            color: var(--secondary-color);
-            max-width: 600px;
-            margin-bottom: 3rem;
-        }
-
-        .cta-button {
+        .status-box {
+            border: 1px solid var(--accent);
+            background: var(--accent-dim);
+            padding: 20px 40px;
             display: inline-block;
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            padding: 15px 30px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 2px;
-            transition: background 0.3s;
+            margin-bottom: 40px;
         }
 
-        .cta-button:hover { background-color: var(--accent-color); }
+        .countdown {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-        /* Footer */
-        footer {
-            padding: 2rem 5%;
-            border-top: 1px solid #222;
+        .time-unit {
+            text-align: center;
+        }
+
+        .time-unit span {
+            display: block;
+            font-family: var(--font-tech);
+            font-size: 2rem;
+            color: white;
+        }
+
+        .time-unit label {
             font-size: 0.8rem;
-            color: var(--secondary-color);
-            margin-top: auto;
+            color: var(--accent);
+            text-transform: uppercase;
         }
 
-        .legal-block {
-            margin-top: 1rem;
-            font-size: 0.7rem;
-            opacity: 0.5;
+        /* --- VISION SECTION --- */
+        .section-title {
+            font-family: var(--font-tech);
+            font-size: 2rem;
+            margin-bottom: 50px;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border: 1px solid #222;
+            transition: 0.3s;
+        }
+
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        
+        .card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-family: var(--font-tech);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* --- FOUNDER SECTION --- */
+        #founder { background: #0a0a0a; }
+
+        .founder-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        blockquote {
+            font-size: 1.5rem;
+            font-style: italic;
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .signature {
+            margin-top: 20px;
+        }
+        
+        .signature strong { display: block; font-size: 1.1rem; }
+        .signature span { color: var(--text-muted); font-size: 0.9rem; }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-main);
+            font-family: var(--font-tech);
+            font-size: 0.9rem;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+        .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* --- NEWS / UPDATES (INTERACTIVE) --- */
+        .news-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid #222;
+            align-items: center;
+        }
+        
+        .news-item:last-child { border-bottom: none; }
+
+        .news-date {
+            font-family: var(--font-tech);
+            color: var(--accent);
+            font-size: 0.8rem;
+            min-width: 120px;
+        }
+
+        .news-title { font-weight: 600; }
+        .news-tag { 
+            background: #222; 
+            padding: 5px 10px; 
+            font-size: 0.7rem; 
+            border-radius: 4px; 
+            color: #888;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 50px 0;
+            text-align: center;
+            border-top: 1px solid #222;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2rem; }
+            .founder-layout { grid-template-columns: 1fr; }
+            .nav-links { display: none; } /* Simplified for mobile */
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">JP Freglien Systems</div>
-        <div class="nav-links">
-            <a href="mailto:enquiries@jpfsystems.co">Contact</a>
-            <a href="#" class="client-login">Private Client Portal 🔒</a>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">JP FREGLIEN <span>SYSTEMS</span></div>
+                <ul class="nav-links">
+                    <li><a href="#vision">Vision</a></li>
+                    <li><a href="#founder">Founder</a></li>
+                    <li><a href="#updates">Intelligence</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <div class="hero">
-        <div class="slogan">> Precision in Volatility_</div>
-        <h1>Hybrid AI execution systems for complex markets.</h1>
-        <p>
-            JP Freglien Systems develops proprietary algorithmic architecture designed to capture alpha in high-volatility environments. 
-            Leveraging machine learning signals and low-latency infrastructure.
-        </p>
-        <a href="mailto:enquiries@jpfsystems.co" class="cta-button">Request Access</a>
-    </div>
+    <section id="hero">
+        <div class="container hero-content">
+            <h1>JPF MLAT System</h1>
+            <p>Next-Generation Algorithmic Execution Infrastructure</p>
+
+            <div class="status-box">
+                <div style="font-family: var(--font-tech); letter-spacing: 2px; color: var(--accent); margin-bottom: 10px;">
+                    SYSTEM STATUS: PHASE 1
+                </div>
+                <div style="font-size: 0.9rem; color: #fff;">
+                    Out-of-Sample Validation [ACTIVE]
+                </div>
+                
+                <div class="countdown">
+                    <div class="time-unit">
+                        <span id="days">00</span>
+                        <label>Days</label>
+                    </div>
+                    <div class="time-unit">
+                        <span id="hours">00</span>
+                        <label>Hours</label>
+                    </div>
+                    <div class="time-unit">
+                        <span id="minutes">00</span>
+                        <label>Mins</label>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.7rem; color: #666;">Target Deployment: Q4 2026</div>
+            </div>
+
+            <br>
+            <a href="#vision" class="btn">ACCESS ROADMAP</a>
+        </div>
+    </section>
+
+    <section id="vision">
+        <div class="container">
+            <h2 class="section-title">The Architecture of Meritocracy</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <i class="fas fa-microchip"></i>
+                    <h3>Infrastructure First</h3>
+                    <p>We are not a fund; we are a technology laboratory. We build the "pipes" of liquidity before we ever flow capital through them.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Code > Discretion</h3>
+                    <p>We remove human bias. Our "Glass Box" philosophy ensures every trade is the result of rigorous statistical validation.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Hybrid Intelligence</h3>
+                    <p>Merging classical economic theory with linear regression & volatility modeling to decode market intent.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="founder">
+        <div class="container">
+            <div class="founder-layout">
+                <div>
+                    <h2>Founder's Note</h2>
+                    <br>
+                    <blockquote>
+                        "In a world driven by narratives, we trust only the residuals. J.P. Freglien Systems was founded on a simple premise: that alpha is not found by chasing the crowd, but by engineering the tools to see what they miss."
+                    </blockquote>
+                    <div class="signature">
+                        <strong>Justin P.</strong>
+                        <span>Founder & Lead Architect</span>
+                    </div>
+                    <a href="mailto:contact@jpfsystems.co" class="btn">CONTACT THE LAB</a>
+                </div>
+                <div style="background: #111; padding: 40px; border: 1px solid #222; text-align: center;">
+                    <i class="fas fa-fingerprint" style="font-size: 4rem; color: #333; margin-bottom: 20px;"></i>
+                    <p style="color: #666; font-size: 0.9rem;">
+                        IDENTITY VERIFIED<br>
+                        J.P. FREGLIEN SYSTEMS HOLDINGS<br>
+                        EST. 2026
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="updates">
+        <div class="container">
+            <h2 class="section-title">System Updates</h2>
+            <div style="background: var(--card-bg); border: 1px solid #222; padding: 0 30px;">
+                
+                <div class="news-item">
+                    <div class="news-date">FEB 06, 2026</div>
+                    <div style="flex-grow: 1; padding: 0 20px;">
+                        <div class="news-title">Company Incorporation & Structure</div>
+                        <div style="font-size: 0.8rem; color: #666;">Established J.P. Freglien Systems Holdings as primary IP vehicle.</div>
+                    </div>
+                    <span class="news-tag">CORPORATE</span>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-date">JAN 15, 2026</div>
+                    <div style="flex-grow: 1; padding: 0 20px;">
+                        <div class="news-title">Infrastructure Latency Benchmark</div>
+                        <div style="font-size: 0.8rem; color: #666;">Core execution engine achieved < 85ms on testnet environment.</div>
+                    </div>
+                    <span class="news-tag">ENGINEERING</span>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-date">Q4 2026 (TARGET)</div>
+                    <div style="flex-grow: 1; padding: 0 20px;">
+                        <div class="news-title">JPF MLAT Live Deployment</div>
+                        <div style="font-size: 0.8rem; color: #666;">Scheduled capital deployment for Phase 1 strategies.</div>
+                    </div>
+                    <span class="news-tag" style="color: var(--accent); border: 1px solid var(--accent); background: transparent;">UPCOMING</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <footer>
-        <p>&copy; 2026 JP Freglien Systems Ltd.</p>
-        <p>Durham, United Kingdom.</p>
-        
-        <div class="legal-block">
-            <strong>Regulatory Notice:</strong><br>
-            JP Freglien Systems Ltd (Company No. [INSERT NUMBER]) is a software development technology firm. 
-            Our automated trading solutions are available for private licensing only. 
-            We do not offer public investment schemes or financial advice. 
-            Past performance of algorithms is not indicative of future results.
+        <div class="container">
+            <p>&copy; 2026 J.P. Freglien Systems Holdings. All Rights Reserved.</p>
+            <p style="margin-top: 10px; opacity: 0.5;">Durham, United Kingdom | Quantitative Infrastructure</p>
         </div>
     </footer>
 
+    <script>
+        // Set the date we're counting down to (October 1, 2026)
+        var countDownDate = new Date("Oct 1, 2026 00:00:00").getTime();
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            // Time calculations
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+            // Output the result
+            document.getElementById("days").innerHTML = days;
+            document.getElementById("hours").innerHTML = hours;
+            document.getElementById("minutes").innerHTML = minutes;
+
+        }, 1000);
+    </script>
 </body>
 </html>
