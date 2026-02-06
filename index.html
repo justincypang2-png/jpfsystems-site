@@ -3,362 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.P. Freglien Systems Ltd | Official Site</title>
+    <title>J.P. Freglien Systems Ltd | Institutional</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- PRESIDENTIAL THEME --- */
+        /* --- INSTITUTIONAL COLOR PALETTE --- */
         :root {
-            --wh-navy: #002855;   /* The "White House" Blue */
-            --wh-gold: #D4AF37;   /* Subtle Gold Accents */
-            --wh-grey: #f4f4f4;
-            --text-dark: #222222;
-            --font-serif: 'Merriweather', serif;
-            --font-sans: 'Lato', sans-serif;
+            --bank-blue: #003366;    /* Deep J.P. Morgan Style Blue */
+            --bank-gold: #C5A059;    /* Subtle Gold for Borders */
+            --slate: #2C3E50;
+            --off-white: #F8F9FA;
+            --alert-green: #27ae60;
+            
+            --font-heading: 'Merriweather', serif;
+            --font-body: 'Lato', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: white;
-            color: var(--text-dark);
-            font-family: var(--font-sans);
+            background-color: #fff;
+            color: #222;
+            font-family: var(--font-body);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* --- TOP BAR (MARKET STATUS) --- */
-        .top-bar {
-            background: var(--wh-navy);
+        /* --- UTILITIES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+        a { text-decoration: none; transition: 0.3s; }
+        
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            color: var(--bank-blue);
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--bank-gold);
+            margin-top: 10px;
+        }
+
+        /* --- TOP STATUS BAR --- */
+        #top-status {
+            background: var(--bank-blue);
             color: white;
             padding: 8px 0;
             font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 30px; }
+        .status-flex { display: flex; justify-content: space-between; align-items: center; }
+        .live-dot { height: 8px; width: 8px; background-color: var(--alert-green); border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
         
-        .top-flex { display: flex; justify-content: space-between; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* --- HEADER & NAV --- */
         header {
-            border-bottom: 4px solid var(--wh-navy);
-            padding: 25px 0;
             background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .header-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            align-items: center;
-        }
-
-        .logo-box img { 
-            height: 70px; 
-            display: block; 
-        }
-
-        /* Fallback if logo breaks */
-        .logo-text {
-            font-family: var(--font-serif);
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: var(--wh-navy);
-            line-height: 1.1;
-            display: none; /* Hidden if image loads */
-        }
-
-        nav ul {
+        .nav-container {
             display: flex;
-            justify-content: flex-end;
-            gap: 40px;
-            list-style: none;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
         }
 
-        nav a {
-            text-decoration: none;
-            color: var(--text-dark);
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-area img { height: 60px; }
+        .logo-text { 
+            font-family: var(--font-heading); 
+            font-weight: 900; 
+            color: var(--bank-blue); 
+            line-height: 1.1; 
+            font-size: 1.1rem; 
+        }
+
+        .nav-menu { display: flex; gap: 30px; }
+        .nav-menu a {
+            color: var(--slate);
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            padding-bottom: 5px;
+            padding: 10px 0;
             border-bottom: 2px solid transparent;
         }
+        
+        .nav-menu a:hover { color: var(--bank-blue); border-bottom-color: var(--bank-gold); }
 
-        nav a:hover { border-bottom: 2px solid var(--wh-navy); }
-
-        /* --- HERO: THE LAUNCH ROOM --- */
-        #hero {
-            background: #f9f9f9;
-            padding: 80px 0;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-
-        .hero-title {
-            font-family: var(--font-serif);
-            font-size: 3rem;
-            color: var(--wh-navy);
-            margin-bottom: 10px;
-        }
-
-        .hero-sub {
-            font-family: var(--font-serif);
-            font-style: italic;
-            color: #555;
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-        }
-
-        /* COUNTDOWN BOX */
-        .countdown-wrapper {
-            background: white;
-            border: 1px solid #ddd;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            display: inline-block;
-            padding: 30px 60px;
-            border-top: 4px solid var(--wh-gold);
-        }
-
-        .timer-grid {
-            display: flex;
-            gap: 40px;
-            margin-top: 15px;
-        }
-
-        .time-box span {
-            display: block;
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            color: var(--wh-navy);
+        .client-login {
+            border: 1px solid var(--bank-blue);
+            padding: 8px 20px;
+            color: var(--bank-blue);
+            font-size: 0.8rem;
             font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .client-login:hover { background: var(--bank-blue); color: white; }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            background: linear-gradient(rgba(0,51,102,0.05), rgba(0,51,102,0.05)), url('https://www.transparenttextures.com/patterns/cubes.png');
+            padding: 100px 0 60px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
-        .time-box label {
-            font-size: 0.75rem;
+        h1 {
+            font-family: var(--font-heading);
+            color: var(--bank-blue);
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero-lead {
+            font-size: 1.3rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 50px auto;
+            font-family: var(--font-heading);
+            font-style: italic;
+        }
+
+        /* --- THE DASHBOARD (BOXED STOCKS) --- */
+        #dashboard {
+            margin-top: -50px; /* Overlap effect */
+            padding-bottom: 80px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--bank-blue);
+        }
+
+        .dash-box {
+            border: 1px solid #eee;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .dash-title {
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #888;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #888;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        /* --- TRADINGVIEW WIDGETS --- */
-        .market-data-section {
-            background: white;
-            padding: 50px 0;
-        }
+        /* --- SYSTEMS vs CAPITAL (THE SPLIT) --- */
+        #divisions { padding: 100px 0; background: white; }
         
-        .widget-title {
-            font-family: var(--font-serif);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            color: var(--text-dark);
-        }
-
-        /* --- SECTIONS --- */
-        .content-section { padding: 80px 0; }
-        
-        .grid-2 {
+        .split-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
         }
 
-        h2 {
-            font-family: var(--font-serif);
-            color: var(--wh-navy);
+        .corp-card {
+            border-left: 4px solid var(--bank-gold);
+            padding-left: 30px;
+        }
+
+        .corp-card h2 {
+            font-family: var(--font-heading);
             font-size: 2rem;
-            margin-bottom: 20px;
+            color: var(--bank-blue);
+            margin-bottom: 15px;
         }
 
-        p { margin-bottom: 20px; font-size: 1.05rem; color: #444; }
-
-        .btn {
-            background: var(--wh-navy);
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
+        .corp-sub {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: var(--bank-gold);
             font-weight: 700;
-            display: inline-block;
+            margin-bottom: 20px;
+            display: block;
         }
+
+        /* --- LAUNCH TRACKER (INTEGRATED) --- */
+        .launch-bar {
+            background: var(--bank-blue);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .countdown-flex {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 20px;
+        }
+
+        .count-item span { font-size: 2.5rem; font-family: var(--font-heading); font-weight: 700; display: block; }
+        .count-item label { font-size: 0.8rem; opacity: 0.7; text-transform: uppercase; }
 
         /* --- FOOTER --- */
         footer {
-            background: var(--wh-navy);
-            color: white;
+            background: #1a1a1a;
+            color: #888;
             padding: 60px 0;
-            text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        /* Mobile */
-        @media(max-width: 768px) {
-            .header-grid { grid-template-columns: 1fr; text-align: center; }
-            nav ul { justify-content: center; margin-top: 20px; }
-            .timer-grid { gap: 20px; }
-            .grid-2 { grid-template-columns: 1fr; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: white; margin-bottom: 20px; font-family: var(--font-heading); }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a:hover { color: white; }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .nav-menu { display: none; } /* Simplified for mobile */
+            .split-layout { grid-template-columns: 1fr; }
+            .countdown-flex { gap: 20px; }
+            h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <div class="container top-flex">
-            <span>OFFICIAL SITE OF J.P. FREGLIEN SYSTEMS LTD</span>
-            <span><i class="fas fa-lock"></i> SECURE CONNECTION</span>
+    <div id="top-status">
+        <div class="container status-flex">
+            <span><span class="live-dot"></span> SYSTEM STATUS: ONLINE | LATENCY: 82ms</span>
+            <span>LONDON: <span id="clock-ldn">00:00</span> | NEW YORK: <span id="clock-ny">00:00</span></span>
         </div>
     </div>
 
     <header>
-        <div class="container header-grid">
-            <div class="logo-box">
-                <img src="logo.png" alt="JPF Logo" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block';">
-                <div class="logo-text">J.P. FREGLIEN<br>SYSTEMS</div>
+        <div class="container nav-container">
+            <div class="logo-area">
+                <img src="logo.png" alt="JPF Logo" onerror="this.style.display='none'">
+                <div class="logo-text">J.P. FREGLIEN<br>SYSTEMS LTD</div>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#about">The Firm</a></li>
-                    <li><a href="#markets">Markets</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
+            
+            <nav class="nav-menu">
+                <a href="#">Home</a>
+                <a href="#divisions">The Firm</a>
+                <a href="#algo">The Algorithm</a>
+                <a href="#governance">Governance</a>
+                <a href="#careers">Careers</a>
             </nav>
+
+            <a href="#" class="client-login"><i class="fas fa-lock"></i> Client Portal</a>
         </div>
     </header>
 
-    <div class="tradingview-widget-container">
-      <div class="tradingview-widget-container__widget"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-      {
-      "symbols": [
-        { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
-        { "proName": "FOREXCOM:NSXUSD", "title": "US 100" },
-        { "proName": "FX_IDC:EURUSD", "title": "EUR/USD" },
-        { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
-        { "proName": "BITSTAMP:ETHUSD", "title": "Ethereum" }
-      ],
-      "showSymbolLogo": true,
-      "colorTheme": "light",
-      "isTransparent": false,
-      "displayMode": "adaptive",
-      "locale": "en"
-    }
-      </script>
-    </div>
     <section id="hero">
         <div class="container">
-            <h1 class="hero-title">Deployment Status</h1>
-            <p class="hero-sub">J.P. Freglien Systems MLAT Launch: Q4 2026</p>
-            
-            <div class="countdown-wrapper">
-                <div style="font-size: 0.8rem; font-weight: 700; color: var(--wh-navy); letter-spacing: 2px;">T-MINUS DEPLOYMENT</div>
-                <div class="timer-grid">
-                    <div class="time-box"><span id="days">00</span><label>Days</label></div>
-                    <div class="time-box"><span id="hours">00</span><label>Hours</label></div>
-                    <div class="time-box"><span id="minutes">00</span><label>Minutes</label></div>
-                    <div class="time-box"><span id="seconds">00</span><label>Seconds</label></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="market-data-section">
-        <div class="container">
-            <h3 class="widget-title">Global Market Sessions</h3>
-            <div class="tradingview-widget-container">
-              <div class="tradingview-widget-container__widget"></div>
-              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-              {
-              "colorTheme": "light",
-              "dateRange": "12M",
-              "showChart": false,
-              "locale": "en",
-              "largeChartUrl": "",
-              "isTransparent": true,
-              "showSymbolLogo": true,
-              "showFloatingTooltip": false,
-              "width": "100%",
-              "height": "400",
-              "tabs": [
-                {
-                  "title": "Indices",
-                  "symbols": [
-                    { "s": "FOREXCOM:SPXUSD", "d": "S&P 500" },
-                    { "s": "FOREXCOM:NSXUSD", "d": "Nasdaq 100" },
-                    { "s": "FOREXCOM:DJI", "d": "Dow 30" },
-                    { "s": "INDEX:NKY", "d": "Nikkei 225" },
-                    { "s": "INDEX:DEU40", "d": "DAX Index" },
-                    { "s": "FOREXCOM:UKXGBP", "d": "UK 100" }
-                  ]
-                },
-                {
-                  "title": "Forex",
-                  "symbols": [
-                    { "s": "FX:EURUSD", "d": "EUR/USD" },
-                    { "s": "FX:GBPUSD", "d": "GBP/USD" },
-                    { "s": "FX:USDJPY", "d": "USD/JPY" }
-                  ]
-                }
-              ]
-            }
-              </script>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="content-section">
-        <div class="container">
-            <div class="grid-2">
-                <div>
-                    <h2>Infrastructure & Systems</h2>
-                    <p><strong>J.P. Freglien Systems Ltd</strong> serves as the technological backbone of the firm. Focused on high-frequency data ingestion and algorithmic architecture, the Systems division operates independently of market risk.</p>
-                    <p>We are currently stress-testing the <strong>JPF MLAT Engine</strong>, a Python-based execution stack designed to identify and capture statistical anomalies within 85 milliseconds.</p>
-                    <a href="#" class="btn">View Technical Roadmap</a>
-                </div>
-                <div>
-                    <h2>Capital & Research</h2>
-                    <p><strong>JPF Capital</strong> is the proprietary research arm. By utilizing the "Glass Box" infrastructure provided by the Systems division, Capital validates economic theories in live market environments.</p>
-                    <p>The division adheres to strict risk parameters, utilizing linear regression models to determine volatility thresholds and automate capital preservation.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer id="contact">
-        <div class="container">
-            <img src="logo.png" style="height: 50px; opacity: 0.5; margin-bottom: 20px;" onerror="this.style.display='none'">
-            <p>J.P. FREGLIEN SYSTEMS LTD<br>
-            Registered in England & Wales<br>
-            Headquarters: Durham, United Kingdom</p>
-            <br>
-            <p style="opacity: 0.6; font-size: 0.8rem;">
-                DISCLAIMER: This website is for informational purposes only. J.P. Freglien Systems Ltd is a technology holding company and does not offer public investment services.
+            <h1>Architecture of Meritocracy</h1>
+            <p class="hero-lead">"We do not predict the future. We engineer the reaction to it."</p>
+            <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: #888;">
+                Deploying Q4 2026
             </p>
+        </div>
+    </section>
+
+    <section id="dashboard">
+        <div class="container">
+            <div class="dashboard-grid">
+                
+                <div class="dash-box">
+                    <div class="dash-title">
+                        <span>Market Intelligence</span>
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="tradingview-widget-container">
+                      <div class="tradingview-widget-container__widget"></div>
+                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+                      {
+                      "symbol": "BITSTAMP:BTCUSD",
+                      "width": "100%",
+                      "height": "220",
+                      "locale": "en",
+                      "dateRange": "12M",
+                      "colorTheme": "light",
+                      "isTransparent": true,
+                      "autosize": false,
+                      "largeChartUrl": ""
+                    }
+                      </script>
+                    </div>
+                </div>
+
+                <div class="dash-box">
+                    <div class="dash-title">
+                        <span>Algo Sentiment</span>
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="tradingview-widget-container">
+                      <div class="tradingview-widget-container__widget"></div>
+                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                      {
+                      "interval": "1m",
+                      "width": "100%",
+                      "isTransparent": true,
+                      "height": "220",
+                      "symbol": "FOREXCOM:SPXUSD",
+                      "showIntervalTabs": false,
+                      "displayMode": "single",
+                      "locale": "en",
+                      "colorTheme": "light"
+                    }
+                      </script>
+                    </div>
+                </div>
+
+                <div class="dash-box">
+                    <div class="dash-title">
+                        <span>Firm Wire</span>
+                        <i class="fas fa-rss"></i>
+                    </div>
+                    <ul style="list-style: none; font-size: 0.85rem; padding-top: 10px;">
+                        <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                            <strong style="color: var(--bank-blue); display: block;">INCORPORATION UPDATE</strong>
+                            J.P. Freglien Systems Ltd pending formal registration (Q2 2026).
+                        </li>
+                        <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                            <strong style="color: var(--bank-blue); display: block;">LATENCY TEST</strong>
+                            Core engine validated at < 85ms execution speed on testnet.
+                        </li>
+                        <li>
+                            <strong style="color: var(--bank-blue); display: block;">RESEARCH</strong>
+                            Linear Regression Volatility Model v2.1 entering final backtest.
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="divisions">
+        <div class="container">
+            <div class="section-title">Corporate Structure</div>
+            <div class="split-layout">
+                
+                <div class="corp-card">
+                    <span class="corp-sub">Parent Company</span>
+                    <h2>JPF Systems Ltd</h2>
+                    <p style="color: #444; margin-bottom: 20px;">
+                        The technology holding company and intellectual property vault. JPF Systems engineers the "pipes" of the financial market, focusing exclusively on:
+                    </p>
+                    <ul style="list-style: none; color: #555;">
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check" style="color: var(--bank-gold); margin-right: 10px;"></i> High-Frequency Data Ingestion</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check" style="color: var(--bank-gold); margin-right: 10px;"></i> Python-based Execution Algorithms</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-check" style="color: var(--bank-gold); margin-right: 10px;"></i> Institutional Risk Protocols</li>
+                    </ul>
+                </div>
+
+                <div class="corp-card">
+                    <span class="corp-sub">Subsidiary Division</span>
+                    <h2>JPF Capital</h2>
+                    <p style="color: #444; margin-bottom: 20px;">
+                        The proprietary research and trading arm. JPF Capital utilizes the infrastructure built by Systems Ltd to validate economic theories in live markets.
+                    </p>
+                    <ul style="list-style: none; color: #555;">
+                        <li style="margin-bottom: 10px;"><i class="fas fa-chart-line" style="color: var(--bank-blue); margin-right: 10px;"></i> Statistical Arbitrage Strategies</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-chart-line" style="color: var(--bank-blue); margin-right: 10px;"></i> Volatility & Mean Reversion</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-chart-line" style="color: var(--bank-blue); margin-right: 10px;"></i> Capital Preservation Focus</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="launch-bar">
+        <div class="container">
+            <h3 style="font-family: var(--font-heading); margin-bottom: 10px;">System Deployment Countdown</h3>
+            <p style="opacity: 0.8;">Targeting Q4 2026 Live Operations</p>
+            
+            <div class="countdown-flex">
+                <div class="count-item"><span id="days">00</span><label>Days</label></div>
+                <div class="count-item"><span id="hours">00</span><label>Hours</label></div>
+                <div class="count-item"><span id="minutes">00</span><label>Mins</label></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>J.P. Freglien Systems Ltd</h4>
+                    <p>Registered Office:<br>Durham, United Kingdom</p>
+                    <br>
+                    <p>Contact:<br>ir@jpfsystems.co</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Firm</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Governance</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press Releases</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-top: 1px solid #333; padding-top: 20px; text-align: center; opacity: 0.5;">
+                &copy; 2026 J.P. Freglien Systems Ltd. All Rights Reserved. <br>
+                This website is for informational purposes only. Capital at risk.
+            </div>
         </div>
     </footer>
 
     <script>
-        // Set Q4 2026 Target
+        // 1. COUNTDOWN TIMER
         var countDownDate = new Date("Oct 1, 2026 00:00:00").getTime();
-
         var x = setInterval(function() {
             var now = new Date().getTime();
             var distance = countDownDate - now;
-
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").innerHTML = days;
-            document.getElementById("hours").innerHTML = hours;
-            document.getElementById("minutes").innerHTML = minutes;
-            document.getElementById("seconds").innerHTML = seconds;
+            document.getElementById("days").innerHTML = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerHTML = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerHTML = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         }, 1000);
+
+        // 2. WORLD CLOCKS (Top Bar)
+        function updateClocks() {
+            const now = new Date();
+            // London
+            const ldn = new Date(now.toLocaleString("en-US", {timeZone: "Europe/London"}));
+            document.getElementById("clock-ldn").innerText = ldn.getHours().toString().padStart(2,0) + ":" + ldn.getMinutes().toString().padStart(2,0);
+            // NY
+            const ny = new Date(now.toLocaleString("en-US", {timeZone: "America/New_York"}));
+            document.getElementById("clock-ny").innerText = ny.getHours().toString().padStart(2,0) + ":" + ny.getMinutes().toString().padStart(2,0);
+        }
+        setInterval(updateClocks, 1000);
+        updateClocks();
     </script>
 </body>
 </html>
