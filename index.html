@@ -3,253 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.P. Freglien Systems Holdings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>J.P. Freglien Systems Ltd | Quantitative Infrastructure</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- CORE VARIABLES & RESET --- */
+        /* --- INSTITUTIONAL THEME VARIABLES --- */
         :root {
-            --bg-color: #050505;
-            --card-bg: #111111;
-            --text-main: #e0e0e0;
-            --text-muted: #888888;
-            --accent: #00ff88; /* Matrix Green */
-            --accent-dim: rgba(0, 255, 136, 0.1);
-            --font-tech: 'Orbitron', sans-serif;
+            --primary-blue: #0047AB; /* Matching your Logo Blue */
+            --dark-navy: #0a1f33;    /* Text Color */
+            --light-grey: #f4f6f8;   /* Backgrounds */
+            --white: #ffffff;
+            --border: #e0e0e0;
+            
+            --font-heading: 'Playfair Display', serif; /* The "Bank" Look */
             --font-body: 'Inter', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--white);
+            color: var(--dark-navy);
             font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
+            line-height: 1.7;
         }
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
-        ul { list-style: none; }
-
+        
         /* --- LAYOUT UTILITIES --- */
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 40px;
         }
 
-        section {
-            padding: 80px 0;
-            border-bottom: 1px solid #222;
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: var(--primary-blue);
+            color: white;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
         }
+        
+        .btn:hover { background: var(--dark-navy); }
+        .btn-outline { background: transparent; border: 1px solid var(--dark-navy); color: var(--dark-navy); }
+        .btn-outline:hover { background: var(--dark-navy); color: white; }
 
-        /* --- HEADER / NAV --- */
+        /* --- HEADER --- */
         header {
-            position: fixed;
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            background: white;
+            position: sticky;
             top: 0;
-            width: 100%;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
             z-index: 1000;
-            border-bottom: 1px solid #222;
         }
 
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 70px;
         }
 
-        .logo {
-            font-family: var(--font-tech);
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-size: 1.1rem;
-        }
-        
-        .logo span { color: var(--accent); }
-
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .nav-links a:hover { color: var(--accent); }
-
-        /* --- HERO SECTION (LAUNCH TRACKER) --- */
-        #hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
-        }
-
-        .hero-content h1 {
-            font-family: var(--font-tech);
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .hero-content p {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-        }
-
-        .status-box {
-            border: 1px solid var(--accent);
-            background: var(--accent-dim);
-            padding: 20px 40px;
-            display: inline-block;
-            margin-bottom: 40px;
-        }
-
-        .countdown {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .time-unit {
-            text-align: center;
-        }
-
-        .time-unit span {
+        .logo-container img {
+            height: 60px; /* Adjust based on your logo file */
             display: block;
-            font-family: var(--font-tech);
-            font-size: 2rem;
-            color: white;
         }
 
-        .time-unit label {
-            font-size: 0.8rem;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { font-size: 0.85rem; text-transform: uppercase; color: #555; letter-spacing: 0.5px; }
+        .nav-links a:hover { color: var(--primary-blue); }
 
-        /* --- VISION SECTION --- */
-        .section-title {
-            font-family: var(--font-tech);
-            font-size: 2rem;
-            margin-bottom: 50px;
+        /* --- HERO SECTION --- */
+        #hero {
+            padding: 100px 0 80px 0;
             text-align: center;
-            color: var(--text-main);
+            background: var(--light-grey);
         }
 
-        .grid-3 {
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            color: var(--dark-navy);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* --- THE SPLIT (SYSTEMS VS CAPITAL) --- */
+        #divisions {
+            padding: 80px 0;
+        }
+
+        .split-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: 1fr 1fr; /* 50/50 Split */
+            gap: 60px;
         }
 
-        .card {
-            background: var(--card-bg);
+        .division-card {
             padding: 40px;
-            border: 1px solid #222;
-            transition: 0.3s;
+            border: 1px solid var(--border);
+            background: white;
         }
 
-        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
-        
-        .card i {
-            font-size: 2rem;
-            color: var(--accent);
+        .division-header {
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 20px;
             margin-bottom: 20px;
         }
 
-        .card h3 {
-            font-family: var(--font-tech);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+        .division-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--dark-navy);
         }
 
-        .card p { color: var(--text-muted); font-size: 0.95rem; }
+        .division-role {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 5px;
+            display: block;
+        }
 
-        /* --- FOUNDER SECTION --- */
-        #founder { background: #0a0a0a; }
+        .division-body p { margin-bottom: 20px; color: #444; }
 
-        .founder-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
+        .feature-list li {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #555;
+            display: flex;
             align-items: center;
         }
+        
+        .feature-list li i { color: var(--primary-blue); margin-right: 15px; font-size: 0.8rem; }
 
-        blockquote {
-            font-size: 1.5rem;
+        /* --- CORPORATE UPDATES --- */
+        #news {
+            background: var(--dark-navy);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 50px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .news-item {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .news-date {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-bottom: 10px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .news-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        /* --- FOUNDER --- */
+        #founder {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .founder-quote {
+            font-family: var(--font-heading);
+            font-size: 2rem;
             font-style: italic;
-            border-left: 3px solid var(--accent);
-            padding-left: 20px;
-            margin-bottom: 30px;
-            color: #fff;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            color: var(--dark-navy);
         }
 
         .signature {
-            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
         
-        .signature strong { display: block; font-size: 1.1rem; }
-        .signature span { color: var(--text-muted); font-size: 0.9rem; }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: transparent;
-            border: 1px solid var(--text-muted);
-            color: var(--text-main);
-            font-family: var(--font-tech);
+        .signature span {
+            display: block;
+            font-weight: normal;
             font-size: 0.9rem;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        
-        .btn:hover { border-color: var(--accent); color: var(--accent); }
-
-        /* --- NEWS / UPDATES (INTERACTIVE) --- */
-        .news-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-bottom: 1px solid #222;
-            align-items: center;
-        }
-        
-        .news-item:last-child { border-bottom: none; }
-
-        .news-date {
-            font-family: var(--font-tech);
-            color: var(--accent);
-            font-size: 0.8rem;
-            min-width: 120px;
-        }
-
-        .news-title { font-weight: 600; }
-        .news-tag { 
-            background: #222; 
-            padding: 5px 10px; 
-            font-size: 0.7rem; 
-            border-radius: 4px; 
-            color: #888;
+            color: #666;
+            margin-top: 5px;
         }
 
         /* --- FOOTER --- */
         footer {
-            padding: 50px 0;
+            background: #f9f9f9;
+            padding: 40px 0;
             text-align: center;
-            border-top: 1px solid #222;
-            color: var(--text-muted);
             font-size: 0.8rem;
+            color: #888;
+            border-top: 1px solid var(--border);
         }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            .hero-content h1 { font-size: 2rem; }
-            .founder-layout { grid-template-columns: 1fr; }
-            .nav-links { display: none; } /* Simplified for mobile */
+            .split-grid { grid-template-columns: 1fr; }
+            .news-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -258,69 +247,100 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">JP FREGLIEN <span>SYSTEMS</span></div>
-                <ul class="nav-links">
-                    <li><a href="#vision">Vision</a></li>
-                    <li><a href="#founder">Founder</a></li>
-                    <li><a href="#updates">Intelligence</a></li>
-                </ul>
+                <div class="logo-container">
+                    <img src="logo.png" alt="J.P. Freglien Systems">
+                </div>
+                <div class="nav-links">
+                    <a href="#divisions">Structure</a>
+                    <a href="#news">Investor Relations</a>
+                    <a href="#founder">Leadership</a>
+                </div>
             </nav>
         </div>
     </header>
 
     <section id="hero">
-        <div class="container hero-content">
-            <h1>JPF MLAT System</h1>
-            <p>Next-Generation Algorithmic Execution Infrastructure</p>
-
-            <div class="status-box">
-                <div style="font-family: var(--font-tech); letter-spacing: 2px; color: var(--accent); margin-bottom: 10px;">
-                    SYSTEM STATUS: PHASE 1
-                </div>
-                <div style="font-size: 0.9rem; color: #fff;">
-                    Out-of-Sample Validation [ACTIVE]
-                </div>
-                
-                <div class="countdown">
-                    <div class="time-unit">
-                        <span id="days">00</span>
-                        <label>Days</label>
-                    </div>
-                    <div class="time-unit">
-                        <span id="hours">00</span>
-                        <label>Hours</label>
-                    </div>
-                    <div class="time-unit">
-                        <span id="minutes">00</span>
-                        <label>Mins</label>
-                    </div>
-                </div>
-                <div style="margin-top: 15px; font-size: 0.7rem; color: #666;">Target Deployment: Q4 2026</div>
+        <div class="container">
+            <div style="font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: var(--primary-blue); font-weight: bold; margin-bottom: 20px;">
+                Est. 2026 | Durham, United Kingdom
             </div>
-
-            <br>
-            <a href="#vision" class="btn">ACCESS ROADMAP</a>
+            <h1>J.P. Freglien Systems Ltd</h1>
+            <p class="subtitle">
+                A quantitative technology holding company engineering the infrastructure of market intelligence.
+                <br>Operationalising economic theory through automated execution.
+            </p>
+            <a href="#divisions" class="btn">View Corporate Structure</a>
         </div>
     </section>
 
-    <section id="vision">
+    <section id="divisions">
         <div class="container">
-            <h2 class="section-title">The Architecture of Meritocracy</h2>
-            <div class="grid-3">
-                <div class="card">
-                    <i class="fas fa-microchip"></i>
-                    <h3>Infrastructure First</h3>
-                    <p>We are not a fund; we are a technology laboratory. We build the "pipes" of liquidity before we ever flow capital through them.</p>
+            <div class="split-grid">
+                
+                <div class="division-card">
+                    <div class="division-header">
+                        <span class="division-role">Parent Company & Technology Hub</span>
+                        <h2 class="division-title">JPF Systems</h2>
+                    </div>
+                    <div class="division-body">
+                        <p>The central R&D laboratory and intellectual property holder. JPF Systems is focused exclusively on the engineering of low-latency execution pipelines and signal processing architectures.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-microchip"></i> <strong>Infrastructure:</strong> < 85ms Latency Execution Engine</li>
+                            <li><i class="fas fa-code"></i> <strong>Core IP:</strong> Python-based Volatility Models</li>
+                            <li><i class="fas fa-server"></i> <strong>Data:</strong> Historical Tick-Data Normalization</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Code > Discretion</h3>
-                    <p>We remove human bias. Our "Glass Box" philosophy ensures every trade is the result of rigorous statistical validation.</p>
+
+                <div class="division-card">
+                    <div class="division-header">
+                        <span class="division-role">Proprietary Research Division</span>
+                        <h2 class="division-title">JPF Capital</h2>
+                    </div>
+                    <div class="division-body">
+                        <p>The strategic deployment arm. JPF Capital utilizes the "Glass Box" technology developed by the parent company to validate strategies in live market conditions.</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-chart-line"></i> <strong>Strategy:</strong> Systematic Mean-Reversion</li>
+                            <li><i class="fas fa-shield-alt"></i> <strong>Risk:</strong> Automated "Kill Switch" Protocols</li>
+                            <li><i class="fas fa-flask"></i> <strong>Focus:</strong> Economic Theory Validation</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card">
-                    <i class="fas fa-brain"></i>
-                    <h3>Hybrid Intelligence</h3>
-                    <p>Merging classical economic theory with linear regression & volatility modeling to decode market intent.</p>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="news">
+        <div class="container">
+            <div class="news-header">
+                <h2 style="font-family: var(--font-heading); font-size: 2.5rem;">Corporate Updates</h2>
+                <span style="opacity: 0.6;">Fiscal Year 2026</span>
+            </div>
+            
+            <div class="news-grid">
+                <div class="news-item">
+                    <span class="news-date">Target: Q2 2026</span>
+                    <h3 class="news-title">Incorporation & Renaming</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">
+                        The firm will formally register as <strong>J.P. Freglien Systems Ltd</strong>, finalizing our transition from a sole-proprietorship to a private limited structure.
+                    </p>
+                </div>
+
+                <div class="news-item">
+                    <span class="news-date">Q1 2026</span>
+                    <h3 class="news-title">Infrastructure Validation</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">
+                        Core execution engine has passed initial latency benchmarks. JPF MLAT system is currently undergoing out-of-sample data testing.
+                    </p>
+                </div>
+
+                <div class="news-item">
+                    <span class="news-date">Q4 2026</span>
+                    <h3 class="news-title">Phase 1 Deployment</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">
+                        Scheduled capital deployment for the JPF Capital division, utilizing the fully operational Systems infrastructure.
+                    </p>
                 </div>
             </div>
         </div>
@@ -328,94 +348,24 @@
 
     <section id="founder">
         <div class="container">
-            <div class="founder-layout">
-                <div>
-                    <h2>Founder's Note</h2>
-                    <br>
-                    <blockquote>
-                        "In a world driven by narratives, we trust only the residuals. J.P. Freglien Systems was founded on a simple premise: that alpha is not found by chasing the crowd, but by engineering the tools to see what they miss."
-                    </blockquote>
-                    <div class="signature">
-                        <strong>Justin P.</strong>
-                        <span>Founder & Lead Architect</span>
-                    </div>
-                    <a href="mailto:contact@jpfsystems.co" class="btn">CONTACT THE LAB</a>
-                </div>
-                <div style="background: #111; padding: 40px; border: 1px solid #222; text-align: center;">
-                    <i class="fas fa-fingerprint" style="font-size: 4rem; color: #333; margin-bottom: 20px;"></i>
-                    <p style="color: #666; font-size: 0.9rem;">
-                        IDENTITY VERIFIED<br>
-                        J.P. FREGLIEN SYSTEMS HOLDINGS<br>
-                        EST. 2026
-                    </p>
-                </div>
+            <div class="founder-quote">
+                "We do not predict the future; we engineer the reaction to it. J.P. Freglien Systems exists to turn economic theory into executable reality."
             </div>
-        </div>
-    </section>
-
-    <section id="updates">
-        <div class="container">
-            <h2 class="section-title">System Updates</h2>
-            <div style="background: var(--card-bg); border: 1px solid #222; padding: 0 30px;">
-                
-                <div class="news-item">
-                    <div class="news-date">FEB 06, 2026</div>
-                    <div style="flex-grow: 1; padding: 0 20px;">
-                        <div class="news-title">Company Incorporation & Structure</div>
-                        <div style="font-size: 0.8rem; color: #666;">Established J.P. Freglien Systems Holdings as primary IP vehicle.</div>
-                    </div>
-                    <span class="news-tag">CORPORATE</span>
-                </div>
-
-                <div class="news-item">
-                    <div class="news-date">JAN 15, 2026</div>
-                    <div style="flex-grow: 1; padding: 0 20px;">
-                        <div class="news-title">Infrastructure Latency Benchmark</div>
-                        <div style="font-size: 0.8rem; color: #666;">Core execution engine achieved < 85ms on testnet environment.</div>
-                    </div>
-                    <span class="news-tag">ENGINEERING</span>
-                </div>
-
-                <div class="news-item">
-                    <div class="news-date">Q4 2026 (TARGET)</div>
-                    <div style="flex-grow: 1; padding: 0 20px;">
-                        <div class="news-title">JPF MLAT Live Deployment</div>
-                        <div style="font-size: 0.8rem; color: #666;">Scheduled capital deployment for Phase 1 strategies.</div>
-                    </div>
-                    <span class="news-tag" style="color: var(--accent); border: 1px solid var(--accent); background: transparent;">UPCOMING</span>
-                </div>
-
+            <div class="signature">
+                Justin P.
+                <span>Founder & Chief Executive Officer</span>
             </div>
+            <br>
+            <a href="mailto:contact@jpfsystems.co" class="btn-outline" style="padding: 10px 25px; font-size: 0.8rem;">Contact Investor Relations</a>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 J.P. Freglien Systems Holdings. All Rights Reserved.</p>
-            <p style="margin-top: 10px; opacity: 0.5;">Durham, United Kingdom | Quantitative Infrastructure</p>
+            <p>&copy; 2026 J.P. Freglien Systems Ltd. All Rights Reserved.</p>
+            <p style="margin-top: 10px;">Registered Office: Durham, United Kingdom</p>
         </div>
     </footer>
 
-    <script>
-        // Set the date we're counting down to (October 1, 2026)
-        var countDownDate = new Date("Oct 1, 2026 00:00:00").getTime();
-
-        // Update the count down every 1 second
-        var x = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDownDate - now;
-
-            // Time calculations
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-
-            // Output the result
-            document.getElementById("days").innerHTML = days;
-            document.getElementById("hours").innerHTML = hours;
-            document.getElementById("minutes").innerHTML = minutes;
-
-        }, 1000);
-    </script>
 </body>
 </html>
