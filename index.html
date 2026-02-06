@@ -3,76 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.P. Freglien Systems Ltd | Institutional</title>
+    <title>J.P. Freglien Systems | Institutional Portal</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- INSTITUTIONAL PALETTE --- */
+        /* --- INSTITUTIONAL COLOR PALETTE --- */
         :root {
-            --bank-blue: #0047AB;    /* Royal Blue (Matches your Logo) */
-            --bank-navy: #0a1f33;    /* Deep Navy for Text */
-            --bank-gold: #C5A059;    /* Subtle Gold Accents */
-            --bg-grey: #f5f7fa;
+            --bank-blue: #0A192F;    /* Deepest Navy (Almost Black) */
+            --bank-royal: #0047AB;   /* Your Logo Blue */
+            --bank-gold: #D4AF37;    /* Metallic Gold */
+            --text-main: #CCD6F6;    /* Soft White for Dark Mode */
+            --text-muted: #8892b0;
+            --glass-bg: rgba(255, 255, 255, 0.95);
             
             --font-heading: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
         }
 
-        html { scroll-behavior: smooth; }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: #fff;
-            color: var(--bank-navy);
+            background-color: #f0f2f5;
+            color: #333;
             font-family: var(--font-body);
-            line-height: 1.8;
+            line-height: 1.7;
+            /* SUBTLE NETWORK TEXTURE */
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
         }
 
         /* --- UTILITIES --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
         a { text-decoration: none; transition: 0.3s; }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
+
+        /* --- TRADINGVIEW SCROLLING TAPE (TOP) --- */
+        #ticker-tape {
+            height: 50px;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .section-header h2 {
-            font-family: var(--font-heading);
-            font-size: 2.5rem;
-            color: var(--bank-blue);
-            margin-bottom: 15px;
-        }
-
-        .section-header span {
-            display: inline-block;
-            width: 60px;
-            height: 3px;
-            background: var(--bank-gold);
-        }
-
-        /* --- TOP BAR --- */
-        #top-ticker {
-            background: var(--bank-navy);
-            color: white;
-            padding: 10px 0;
-            font-size: 0.75rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .ticker-flex { display: flex; justify-content: space-between; align-items: center; }
-        .live-dot { height: 8px; width: 8px; background-color: #00ff88; border-radius: 50%; display: inline-block; margin-right: 8px; }
-
-        /* --- NAVIGATION --- */
+        /* --- HEADER --- */
         header {
             background: white;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #ddd;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
         .nav-container {
@@ -82,174 +61,195 @@
             height: 90px;
         }
 
+        .logo-area { display: flex; align-items: center; gap: 15px; }
         .logo-area img { height: 60px; display: block; }
-        /* Fallback text if logo fails */
-        .logo-text { font-family: var(--font-heading); font-weight: 700; color: var(--bank-blue); font-size: 1.2rem; display: none; }
+        .logo-text { font-family: var(--font-heading); font-weight: 700; color: var(--bank-royal); font-size: 1.3rem; display: none; }
 
-        .nav-menu { display: flex; gap: 35px; }
+        .nav-menu { display: flex; gap: 30px; }
         .nav-menu a {
-            color: #555;
-            font-weight: 500;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 30px 0; /* Tall hit area */
-            border-bottom: 3px solid transparent;
-        }
-        
-        .nav-menu a:hover { color: var(--bank-blue); border-bottom-color: var(--bank-blue); }
-
-        .client-btn {
-            border: 1px solid var(--bank-blue);
-            color: var(--bank-blue);
-            padding: 10px 25px;
+            color: #444;
+            font-weight: 600;
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
+            padding: 30px 0;
         }
         
-        .client-btn:hover { background: var(--bank-blue); color: white; }
+        .nav-menu a:hover { color: var(--bank-royal); }
 
         /* --- HERO SECTION --- */
         #hero {
-            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://www.transparenttextures.com/patterns/cubes.png');
-            padding: 120px 0 80px 0;
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+            padding: 120px 0 160px 0; /* Extra padding bottom for overlap */
+            color: white;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Abstract Background Shape */
+        #hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/shattered-island.png');
+            opacity: 0.1;
         }
 
         h1 {
             font-family: var(--font-heading);
-            color: var(--bank-navy);
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 20px;
-            line-height: 1.1;
+            position: relative;
+            z-index: 2;
         }
 
         .hero-lead {
-            font-size: 1.4rem;
-            color: #666;
+            font-size: 1.3rem;
             font-family: var(--font-heading);
             font-style: italic;
-            margin-bottom: 50px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* --- DASHBOARD WIDGETS --- */
-        #dashboard { margin-top: -40px; padding-bottom: 80px; }
-        
-        .dash-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
+        /* COUNTDOWN WIDGET */
+        .countdown-ui {
+            display: inline-flex;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 20px 40px;
+            border-radius: 4px;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .time-box span { font-size: 2rem; font-family: var(--font-heading); font-weight: 700; display: block; line-height: 1; color: var(--bank-gold); }
+        .time-box label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+
+        /* --- MARKET INTELLIGENCE (THE "IMPRESSIVE" PART) --- */
+        #markets {
+            margin-top: -100px; /* Overlap Hero */
+            position: relative;
+            z-index: 10;
+            padding-bottom: 80px;
+        }
+
+        .market-card {
             background: white;
-            padding: 40px;
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--bank-blue);
+            border-radius: 4px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            padding: 10px;
+            border-top: 5px solid var(--bank-royal);
         }
 
-        .widget-box { background: #fafafa; border: 1px solid #eee; padding: 20px; }
-        .widget-head {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #888;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-        }
-
-        /* --- THE FIRM (ABOUT ME) --- */
-        #firm { padding: 100px 0; background: white; }
+        /* --- SECTIONS --- */
+        .content-section { padding: 100px 0; }
         
-        .bio-grid {
+        .section-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--bank-blue);
+            margin-bottom: 60px;
+        }
+        
+        .section-title span { display: block; width: 60px; height: 3px; background: var(--bank-gold); margin: 15px auto 0 auto; }
+
+        /* --- PHILOSOPHY GRID --- */
+        .philosophy-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .bio-text h3 { font-family: var(--font-heading); font-size: 2rem; color: var(--bank-navy); margin-bottom: 20px; }
-        .bio-text p { color: #555; margin-bottom: 20px; font-size: 1.05rem; }
-        
-        .credentials-box {
-            background: var(--bg-grey);
-            padding: 40px;
-            border-left: 4px solid var(--bank-gold);
-        }
-
-        .cred-item { margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: flex-start; }
-        .cred-item i { color: var(--bank-blue); margin-right: 15px; margin-top: 5px; }
-
-        /* --- THE ALGORITHM (TECH) --- */
-        #algorithm { padding: 100px 0; background: var(--bg-grey); }
-        
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-        }
-
-        .tech-card {
-            background: white;
-            padding: 40px;
-            border-bottom: 3px solid transparent;
-            transition: 0.3s;
-        }
-        
-        .tech-card:hover { border-bottom-color: var(--bank-blue); transform: translateY(-5px); }
-
-        .tech-card h4 { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 15px; color: var(--bank-navy); }
-        .tech-card p { font-size: 0.9rem; color: #666; }
-
-        /* --- GOVERNANCE (RISK) --- */
-        #governance { padding: 100px 0; }
-
-        .gov-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
             gap: 50px;
         }
 
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-            padding: 20px 0;
+        .quote-box {
+            background: white;
+            padding: 40px;
+            border-left: 4px solid var(--bank-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .stat-label { font-weight: 600; color: #555; }
-        .stat-val { font-family: var(--font-heading); font-weight: 700; color: var(--bank-blue); }
+        .quote-text {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* --- CORPORATE WIRE (NEWS) --- */
+        .wire-container {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .wire-item {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .wire-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .wire-date {
+            min-width: 100px;
+            font-size: 0.8rem;
+            color: var(--bank-royal);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .wire-content h4 { font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 5px; color: var(--bank-blue); }
+        .wire-content p { font-size: 0.9rem; color: #666; }
 
         /* --- FOOTER --- */
         footer {
-            background: var(--bank-navy);
-            color: #ccc;
+            background: var(--bank-blue);
+            color: #a8b2d1;
             padding: 80px 0;
             font-size: 0.9rem;
         }
-
-        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; margin-bottom: 40px; }
-        .footer-col h5 { color: white; font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 25px; }
-        .footer-col ul { list-style: none; }
-        .footer-col li { margin-bottom: 12px; }
-        .footer-col a:hover { color: white; }
+        
+        .footer-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; margin-bottom: 30px; }
+        .footer-logo { font-family: var(--font-heading); font-size: 1.5rem; color: white; }
 
         /* MOBILE */
         @media (max-width: 768px) {
-            .dash-grid, .bio-grid, .tech-grid, .gov-layout { grid-template-columns: 1fr; }
+            .countdown-ui { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; }
+            .philosophy-grid { grid-template-columns: 1fr; }
             .nav-menu { display: none; }
-            h1 { font-size: 2.8rem; }
+            h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="top-ticker">
-        <div class="container ticker-flex">
-            <span><span class="live-dot"></span> SYSTEM HEARTBEAT: ONLINE | LATENCY: 82ms</span>
-            <span>OFFICIAL INSTITUTIONAL PORTAL</span>
+    <div id="ticker-tape">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+          {
+          "symbols": [
+            { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
+            { "proName": "FOREXCOM:NSXUSD", "title": "Nasdaq 100" },
+            { "proName": "FOREXCOM:UKXGBP", "title": "FTSE 100" },
+            { "proName": "FX_IDC:EURUSD", "title": "EUR/USD" },
+            { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
+            { "proName": "TVC:US10Y", "title": "US 10Y Yield" }
+          ],
+          "showSymbolLogo": true,
+          "colorTheme": "light",
+          "isTransparent": false,
+          "displayMode": "adaptive",
+          "locale": "en"
+        }
+          </script>
         </div>
     </div>
 
@@ -257,214 +257,183 @@
         <div class="container nav-container">
             <div class="logo-area">
                 <img src="logo.png" alt="JPF Systems" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block'">
-                <div class="logo-text">J.P. FREGLIEN SYSTEMS</div>
+                <div class="logo-text">J.P. FREGLIEN</div>
             </div>
             
             <nav class="nav-menu">
-                <a href="#firm">The Firm</a>
-                <a href="#algorithm">The Algorithm</a>
+                <a href="#markets">Market Intelligence</a>
+                <a href="#philosophy">Philosophy</a>
+                <a href="#wire">Corporate Wire</a>
                 <a href="#governance">Governance</a>
-                <a href="#careers">Careers</a>
             </nav>
-
-            <a href="#" class="client-btn">Client Login <i class="fas fa-arrow-right" style="font-size: 0.7rem; margin-left: 5px;"></i></a>
         </div>
     </header>
 
     <section id="hero">
         <div class="container">
+            <div style="font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; color: var(--bank-gold);">
+                Quantitative Infrastructure
+            </div>
             <h1>The Architecture of Meritocracy</h1>
             <p class="hero-lead">"We do not predict the future. We engineer the reaction to it."</p>
-            <div style="font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--bank-blue); font-weight: 700;">
-                Target Deployment: Q4 2026
+            
+            <div class="countdown-ui">
+                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--bank-gold); color: #000; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+                    System Launch Target
+                </div>
+                <div class="time-box"><span id="days">00</span><label>Days</label></div>
+                <div class="time-box"><span id="hours">00</span><label>Hours</label></div>
+                <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
+                <div class="time-box"><span id="seconds">00</span><label>Secs</label></div>
             </div>
         </div>
     </section>
 
-    <section id="dashboard">
+    <section id="markets">
         <div class="container">
-            <div class="dash-grid">
-                <div class="widget-box">
-                    <div class="widget-head">Crypto Asset Class</div>
-                    <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-                      { "symbol": "BITSTAMP:BTCUSD", "width": "100%", "height": "200", "locale": "en", "dateRange": "12M", "colorTheme": "light", "isTransparent": true, "autosize": false, "largeChartUrl": "" }
-                      </script>
-                    </div>
-                </div>
-
-                <div class="widget-box">
-                    <div class="widget-head">Equity Indices</div>
-                    <div class="tradingview-widget-container">
-                      <div class="tradingview-widget-container__widget"></div>
-                      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-                      { "symbol": "FOREXCOM:SPXUSD", "width": "100%", "height": "200", "locale": "en", "dateRange": "12M", "colorTheme": "light", "isTransparent": true, "autosize": false, "largeChartUrl": "" }
-                      </script>
-                    </div>
-                </div>
-
-                <div class="widget-box">
-                    <div class="widget-head">Firm Wire</div>
-                    <ul style="list-style: none; font-size: 0.9rem; line-height: 1.6;">
-                        <li style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                            <strong style="color: var(--bank-blue); display: block;">INCORPORATION</strong>
-                            Pending registration as <em>J.P. Freglien Systems Ltd</em> (Q2 2026).
-                        </li>
-                        <li>
-                            <strong style="color: var(--bank-blue); display: block;">INFRASTRUCTURE</strong>
-                            Core Python engine achieving <85ms latency in testnet environments.
-                        </li>
-                    </ul>
+            <div class="market-card">
+                <div class="tradingview-widget-container">
+                  <div class="tradingview-widget-container__widget"></div>
+                  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                  {
+                  "colorTheme": "light",
+                  "dateRange": "12M",
+                  "showChart": true,
+                  "locale": "en",
+                  "largeChartUrl": "",
+                  "isTransparent": true,
+                  "showSymbolLogo": true,
+                  "showFloatingTooltip": false,
+                  "width": "100%",
+                  "height": "500",
+                  "tabs": [
+                    {
+                      "title": "Equities",
+                      "symbols": [
+                        { "s": "FOREXCOM:SPXUSD", "d": "S&P 500" },
+                        { "s": "FOREXCOM:NSXUSD", "d": "Nasdaq 100" },
+                        { "s": "FOREXCOM:UKXGBP", "d": "FTSE 100" },
+                        { "s": "INDEX:NKY", "d": "Nikkei 225" },
+                        { "s": "INDEX:DEU40", "d": "DAX Index" }
+                      ]
+                    },
+                    {
+                      "title": "Bonds",
+                      "symbols": [
+                        { "s": "TVC:US10Y", "d": "US 10Y Treasury" },
+                        { "s": "TVC:GB10Y", "d": "UK Gilt 10Y" },
+                        { "s": "TVC:DE10Y", "d": "German Bund 10Y" },
+                        { "s": "TVC:JP10Y", "d": "Japan 10Y Gov" }
+                      ]
+                    },
+                    {
+                      "title": "Commodities",
+                      "symbols": [
+                        { "s": "TVC:GOLD", "d": "Gold" },
+                        { "s": "TVC:SILVER", "d": "Silver" },
+                        { "s": "TVC:USOIL", "d": "Crude Oil" }
+                      ]
+                    }
+                  ]
+                }
+                  </script>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="firm">
+    <section id="philosophy" class="content-section">
         <div class="container">
-            <div class="section-header">
-                <h2>The Firm</h2>
+            <div class="section-title">
+                Our Philosophy
                 <span></span>
             </div>
             
-            <div class="bio-grid">
-                <div class="bio-text">
-                    <h3>Founder's Note</h3>
-                    <p>J.P. Freglien Systems was founded on a singular premise: that true alpha is not found by chasing the crowd, but by rigorously engineering the tools to see what they miss.</p>
-                    <p><strong>Justin P.</strong>, Founding Director, established the firm to bridge the gap between academic economic theory and live-fire market execution. A First Class Economics undergraduate at Durham University, Justin combines institutional discipline with modern data science to build the "Glass Box" of quantitative finance.</p>
+            <div class="philosophy-grid">
+                <div class="quote-box">
+                    <div class="quote-text">
+                        "The market is the only true meritocracy left on earth. It does not care about pedigree or opinion—only efficiency."
+                    </div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--bank-royal); font-weight: 700;">
+                        — Quantitative Meritocracy
+                    </div>
                 </div>
                 
-                <div class="credentials-box">
-                    <h4 style="font-family: var(--font-heading); margin-bottom: 20px; color: var(--bank-navy);">Leadership & Credentials</h4>
-                    <div class="cred-item">
-                        <i class="fas fa-university"></i>
-                        <div>
-                            <strong>Durham University</strong><br>
-                            BSc Economics (First Class Honours, Year 1)
-                        </div>
+                <div class="quote-box">
+                    <div class="quote-text">
+                        "Theory without practice is paralysis. Practice without theory is gambling. We bridge the gap with code."
                     </div>
-                    <div class="cred-item">
-                        <i class="fas fa-gavel"></i>
-                        <div>
-                            <strong>President</strong><br>
-                            Durham University Hong Kong Society
-                        </div>
-                    </div>
-                    <div class="cred-item">
-                        <i class="fas fa-certificate"></i>
-                        <div>
-                            <strong>Certifications</strong><br>
-                            CISI Level 2 & 3 Awards, Wharton Quant Modelling
-                        </div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--bank-royal); font-weight: 700;">
+                        — Theory in Practice
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="algorithm">
+    <section id="wire" class="content-section" style="background: white;">
         <div class="container">
-            <div class="section-header">
-                <h2>The Algorithm</h2>
+            <div class="section-title">
+                Corporate Wire
                 <span></span>
             </div>
             
-            <div class="tech-grid">
-                <div class="tech-card">
-                    <h4>JPF MLAT Engine</h4>
-                    <p>Our proprietary execution stack is built in Python, utilizing the <strong>Futu OpenD API</strong> to route orders across 30+ assets. The system is engineered for speed, currently clocking sub-85ms latency in forward-testing.</p>
-                </div>
-                <div class="tech-card">
-                    <h4>Hybrid Neural Networks</h4>
-                    <p>Moving beyond simple price action, we deploy <strong>LSTM and Transformer</strong> architectures. These models ingest macroeconomic variables (Yield Curves, VIX) to predict structural market shifts rather than just noise.</p>
-                </div>
-                <div class="tech-card">
-                    <h4>Data Normalization</h4>
-                    <p>Garbage in, garbage out. Our ETL pipelines scrub and normalize tick-level data, ensuring that every trade signal is based on statistically significant residuals, not dirty data.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="governance">
-        <div class="container">
-            <div class="section-header">
-                <h2>Governance & Risk</h2>
-                <span></span>
-            </div>
-
-            <div class="gov-layout">
-                <div>
-                    <p style="font-size: 1.1rem; color: #555; margin-bottom: 30px;">
-                        We believe that capital preservation is the only metric that matters. J.P. Freglien Capital operates under a strict "Systems-First" mandate, where risk parameters are hard-coded into the execution logic.
-                    </p>
-                    <p>
-                        Every strategy undergoes rigorous out-of-sample validation before a single dollar of capital is deployed. We do not trade on "gut feeling"; we trade on statistical probability.
-                    </p>
-                </div>
-                
-                <div style="background: white; border: 1px solid #e0e0e0; padding: 30px;">
-                    <div class="stat-row">
-                        <span class="stat-label">Target Sharpe Ratio</span>
-                        <span class="stat-val">> 1.8</span>
+            <div class="wire-container">
+                <div class="wire-item">
+                    <div class="wire-date">Q2 2026<br><span style="color: #999; font-weight: 500;">TARGET</span></div>
+                    <div class="wire-content">
+                        <h4>Incorporation Pending: J.P. Freglien Systems Ltd</h4>
+                        <p>Application for private limited structure currently in preparation. Firm operating as pre-incorporation proprietorship during Phase 1 development.</p>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Value at Risk (VaR)</span>
-                        <span class="stat-val">95% Conf.</span>
+                </div>
+
+                <div class="wire-item">
+                    <div class="wire-date">Q1 2026<br><span style="color: #999; font-weight: 500;">ACTIVE</span></div>
+                    <div class="wire-content">
+                        <h4>Infrastructure Latency Validation</h4>
+                        <p>Core "JPF MLAT" execution engine achieved < 85ms order routing speed on testnet. Out-of-sample data validation currently underway.</p>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Protocol</span>
-                        <span class="stat-val">Market Neutral</span>
+                </div>
+
+                <div class="wire-item">
+                    <div class="wire-date">Q4 2026<br><span style="color: #999; font-weight: 500;">FUTURE</span></div>
+                    <div class="wire-content">
+                        <h4>System Phase 1 Deployment</h4>
+                        <p>Scheduled go-live for proprietary capital deployment across key digital asset and equity strategies.</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="careers" style="background: var(--bank-navy); color: white; padding: 80px 0; text-align: center;">
-        <div class="container">
-            <h2 style="font-family: var(--font-heading); margin-bottom: 20px;">Join the Laboratory</h2>
-            <p style="opacity: 0.8; max-width: 600px; margin: 0 auto 30px auto;">
-                We are currently building our core engineering team for the 2026/27 cycle. We look for builders, not bankers.
-            </p>
-            <a href="mailto:careers@jpfsystems.co" class="client-btn" style="background: white; color: var(--bank-navy);">View Open Roles</a>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h5>J.P. Freglien Systems Ltd</h5>
-                    <p>Registered Office:<br>Durham, United Kingdom</p>
-                    <br>
-                    <p>Contact:<br>ir@jpfsystems.co</p>
-                </div>
-                <div class="footer-col">
-                    <h5>The Firm</h5>
-                    <ul>
-                        <li><a href="#firm">About the Founder</a></li>
-                        <li><a href="#algorithm">Technology</a></li>
-                        <li><a href="#governance">Risk Framework</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h5>Legal</h5>
-                    <ul>
-                        <li><a href="#">Terms of Use</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Risk Disclosure</a></li>
-                    </ul>
+            <div class="footer-flex">
+                <div class="footer-logo">J.P. FREGLIEN SYSTEMS</div>
+                <div style="text-align: right;">
+                    <p style="color: white; margin-bottom: 5px;">Durham, United Kingdom</p>
+                    <p style="color: var(--bank-gold);">ir@jpfsystems.co</p>
                 </div>
             </div>
-            <div style="text-align: center; opacity: 0.5; font-size: 0.8rem;">
-                &copy; 2026 J.P. Freglien Systems Ltd. All Rights Reserved.<br>
-                This website is for informational purposes only. Capital at risk.
+            <div style="text-align: center; opacity: 0.5;">
+                &copy; 2026 J.P. Freglien Systems. All Rights Reserved.<br>
+                This website is for informational purposes only. J.P. Freglien Systems is a technology holding company.
             </div>
         </div>
     </footer>
 
+    <script>
+        // COUNTDOWN TIMER
+        var countDownDate = new Date("Oct 1, 2026 00:00:00").getTime();
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            
+            document.getElementById("days").innerHTML = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerHTML = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerHTML = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("seconds").innerHTML = Math.floor((distance % (1000 * 60)) / 1000);
+        }, 1000);
+    </script>
 </body>
 </html>
-
