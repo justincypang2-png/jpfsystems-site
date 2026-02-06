@@ -34,7 +34,7 @@
         .container { 
             max-width: 1400px; 
             margin: 0 auto; 
-            padding: 0 40px; /* PC Padding */
+            padding: 0 40px; 
         }
         
         a { text-decoration: none; transition: 0.3s; }
@@ -42,7 +42,7 @@
         /* --- TRADINGVIEW TAPE --- */
         #ticker-tape { height: 50px; background: #fff; border-bottom: 1px solid #e0e0e0; }
 
-        /* --- HEADER (PC & MOBILE) --- */
+        /* --- HEADER --- */
         header {
             background: white;
             border-bottom: 1px solid #ddd;
@@ -57,7 +57,7 @@
             justify-content: space-between;
             align-items: center;
             min-height: 100px;
-            flex-wrap: wrap; /* Allows wrapping on mobile */
+            flex-wrap: wrap; 
         }
 
         .logo-area { 
@@ -107,7 +107,7 @@
 
         .motto {
             font-family: var(--font-logo);
-            font-size: clamp(1rem, 2vw, 1.3rem); /* Scales with screen */
+            font-size: clamp(1rem, 2vw, 1.3rem); 
             letter-spacing: 4px;
             text-transform: uppercase;
             color: var(--bank-gold);
@@ -118,7 +118,7 @@
 
         h1 {
             font-family: var(--font-logo);
-            font-size: clamp(2.5rem, 6vw, 5rem); /* FLUID TEXT: Big on PC, fits on Mobile */
+            font-size: clamp(2.5rem, 6vw, 5rem);
             margin-bottom: 30px;
             position: relative; z-index: 2;
             line-height: 1.1;
@@ -144,9 +144,77 @@
         .time-box span { font-size: 2.2rem; font-family: var(--font-logo); font-weight: 700; display: block; line-height: 1; color: var(--bank-gold); }
         .time-box label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; font-family: var(--font-body); }
 
-        /* --- MARKETS (OVERLAP) --- */
+        /* --- MARKETS --- */
         #markets { margin-top: -100px; position: relative; z-index: 10; padding-bottom: 80px; }
         .market-card { background: white; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 15px; border-top: 8px solid var(--bank-royal); }
+
+        /* --- NEW SECTION: TIMELINE (ROADMAP) --- */
+        #roadmap { padding: 80px 0; background: #fafafa; border-bottom: 1px solid #ddd; }
+        
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* The vertical line */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: #ddd;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+
+        .time-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        /* Circles on the line */
+        .time-container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid var(--bank-royal);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* Left/Right positioning */
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; }
+        .right::after { left: -10px; }
+
+        .time-content {
+            padding: 20px 30px;
+            background: white;
+            position: relative;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--bank-gold);
+        }
+
+        .date-tag {
+            font-family: var(--font-logo);
+            color: var(--bank-royal);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .time-content h3 { font-family: var(--font-logo); font-size: 1.2rem; color: var(--bank-blue); margin-bottom: 10px; }
+        .time-content p { font-size: 0.9rem; color: #666; margin: 0; }
 
         /* --- CORPORATE ECOSYSTEM --- */
         #ecosystem { padding: 80px 0; background: white; }
@@ -161,10 +229,9 @@
         
         .section-title span { display: block; width: 80px; height: 4px; background: var(--bank-gold); margin: 20px auto 0 auto; }
 
-        /* THE GRID: PC = 2 Columns, Mobile = 1 Column */
         .structure-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* AUTOMATIC RESIZING */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
             gap: 40px;
             align-items: stretch;
         }
@@ -204,7 +271,7 @@
         .key-metric:last-child { border-bottom: none; }
         .key-metric i { color: var(--bank-royal); font-size: 1.1rem; }
 
-        /* --- FOUNDER SECTION (Centered, No Photo) --- */
+        /* --- FOUNDER SECTION --- */
         #founder { padding: 100px 0; background: #0A192F; color: white; }
         
         .founder-layout {
@@ -237,28 +304,25 @@
             .container { padding: 0 20px; } 
             
             /* Header Stack */
-            .nav-container { 
-                flex-direction: column; 
-                padding: 20px 0;
-                gap: 20px;
-            }
+            .nav-container { flex-direction: column; padding: 20px 0; gap: 20px; }
             .logo-area { width: 100%; justify-content: center; }
-            .nav-menu { 
-                width: 100%; 
-                justify-content: center; 
-                flex-wrap: wrap; 
-                gap: 15px;
-            }
+            .nav-menu { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
             .nav-menu a { font-size: 0.75rem; }
 
-            /* Hero Adjustments */
+            /* Hero */
             .countdown-ui { padding: 20px; width: 100%; gap: 15px; }
             .time-box span { font-size: 1.8rem; }
-            
-            /* Overlap Fix for Mobile */
             #markets { margin-top: -50px; }
             
-            /* Footer Stack */
+            /* TIMELINE MOBILE ADJUSTMENTS */
+            .timeline::after { left: 31px; } /* Move line to left */
+            .time-container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .time-container::after { left: 21px; } /* Move dot to left */
+            .left::after { left: 21px; }
+            .right { left: 0; }
+            .left { text-align: left; } /* Reset text align */
+            
+            /* Footer */
             footer .container div { flex-direction: column; text-align: center; gap: 20px; }
             footer .container div div { text-align: center !important; }
         }
@@ -273,7 +337,6 @@
           {
           "symbols": [
             { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
-            { "proName": "FOREXCOM:NSXUSD", "title": "Nasdaq 100" },
             { "proName": "FOREXCOM:UKXGBP", "title": "FTSE 100" },
             { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
             { "proName": "TVC:US10Y", "title": "US 10Y Yield" }
@@ -292,7 +355,6 @@
         <div class="container nav-container">
             <div class="logo-area">
                 <img src="logo.png" style="height: 60px;" onerror="this.style.display='none';">
-                
                 <div class="logo-text">
                     J.P. FREGLIEN<br>
                     SYSTEMS
@@ -300,9 +362,9 @@
             </div>
             
             <nav class="nav-menu">
+                <a href="#roadmap">Timeline</a>
                 <a href="#ecosystem">Structure</a>
                 <a href="#founder">Leadership</a>
-                <a href="#markets">Markets</a>
                 <a href="#contact">IR</a>
             </nav>
         </div>
@@ -344,7 +406,7 @@
                   "height": "500",
                   "tabs": [
                     { "title": "Equities", "symbols": [ { "s": "FOREXCOM:SPXUSD" }, { "s": "FOREXCOM:UKXGBP" }, { "s": "INDEX:NKY" } ] },
-                    { "title": "Rates", "symbols": [ { "s": "TVC:US10Y" }, { "s": "TVC:GB10Y" }, { "s": "TVC:DE10Y" } ] },
+                    { "title": "Rates", "symbols": [ { "s": "TVC:US10Y" }, { "s": "TVC:GB10Y" } ] },
                     { "title": "Digital", "symbols": [ { "s": "BITSTAMP:BTCUSD" }, { "s": "BITSTAMP:ETHUSD" } ] }
                   ]
                 }
@@ -354,34 +416,64 @@
         </div>
     </section>
 
+    <section id="roadmap">
+        <div class="container">
+            <div class="section-title">Strategic Roadmap<span></span></div>
+            
+            <div class="timeline">
+                <div class="time-container left">
+                    <div class="time-content">
+                        <span class="date-tag">JAN 2026</span>
+                        <h3>Architecture Inception</h3>
+                        <p>Conceptualization of the JPF MLAT "Glass Box" engine and initial Python framework development.</p>
+                    </div>
+                </div>
+
+                <div class="time-container right">
+                    <div class="time-content">
+                        <span class="date-tag">Q1 2026 (ACTIVE)</span>
+                        <h3>Latency Validation</h3>
+                        <p>Infrastructure stress-testing. Core execution engine achieved sub-85ms benchmarks on testnet.</p>
+                    </div>
+                </div>
+
+                <div class="time-container left">
+                    <div class="time-content">
+                        <span class="date-tag">Q2 2026 (PENDING)</span>
+                        <h3>Corporate Registration</h3>
+                        <p>Formal incorporation of <strong>J.P. Freglien Systems Ltd</strong> as a private limited entity.</p>
+                    </div>
+                </div>
+
+                <div class="time-container right">
+                    <div class="time-content">
+                        <span class="date-tag" style="color: var(--bank-gold);">Q4 2026 (TARGET)</span>
+                        <h3>System Deployment</h3>
+                        <p>Phase 1 Capital Deployment. Live activation of 30-asset derivative portfolio strategies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="ecosystem">
         <div class="container">
             <div class="section-title">The Ecosystem<span></span></div>
-            
             <div class="structure-grid">
-                
                 <div class="structure-col">
                     <span class="role-tag">The Holding Company</span>
                     <h3>J.P. Freglien Systems</h3>
-                    <p>
-                        The central technology entity. It focuses exclusively on the engineering of the <strong>JPF MLAT System</strong>—a low-latency execution pipeline designed to handle high-frequency data ingestion and order routing.
-                    </p>
+                    <p>The central technology entity. It focuses exclusively on the engineering of the <strong>JPF MLAT System</strong>—a low-latency execution pipeline.</p>
                     <div class="key-metric"><i class="fas fa-microchip"></i> <span>IP & Infrastructure Holder</span></div>
                     <div class="key-metric"><i class="fas fa-bolt"></i> <span>< 85ms Latency Architecture</span></div>
-                    <div class="key-metric"><i class="fas fa-database"></i> <span>Data Normalization</span></div>
                 </div>
-
                 <div class="structure-col">
                     <span class="role-tag">The Research Division</span>
                     <h3>J.P. Freglien Capital</h3>
-                    <p>
-                        The proprietary research arm. JPF Capital utilizes the "Systems" infrastructure to develop quantitative strategies and macro-economic models, validating them via a <strong>Derivative Simulated 30-Asset Portfolio</strong>.
-                    </p>
+                    <p>The proprietary research arm. Validating economic models via a <strong>Derivative Simulated 30-Asset Portfolio</strong>.</p>
                     <div class="key-metric"><i class="fas fa-chart-line"></i> <span>Quant Strategy Development</span></div>
-                    <div class="key-metric"><i class="fas fa-globe"></i> <span>Macro-Economic Analysis</span></div>
                     <div class="key-metric"><i class="fas fa-shield-alt"></i> <span>Risk & VaR Modeling (95%)</span></div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -392,19 +484,10 @@
                 <div class="founder-bio">
                     <h2>Justin P.</h2>
                     <span class="founder-role">Founding Director & Lead Architect</span>
-                    
                     <div class="bio-text">
-                        <p>
-                            Justin is the Founding Director of J.P. Freglien Systems. With a background in Economics from <strong>Durham University</strong>, he established the firm to bridge the gap between academic models and high-frequency market reality.
-                        </p>
-                        <p>
-                            His vision is to create a fintech ecosystem where economic theory is not just studied, but operationalized. By merging Linear Regression modeling with automated execution, he aims to replace speculation with statistical validation.
-                        </p>
+                        <p>Justin is the Founding Director of J.P. Freglien Systems. With a background in Economics from <strong>Durham University</strong>, he established the firm to bridge the gap between academic models and high-frequency market reality.</p>
                     </div>
-
-                    <div class="quote-box">
-                        "Theory without practice is paralysis. We bridge the gap with code."
-                    </div>
+                    <div class="quote-box">"Theory without practice is paralysis. We bridge the gap with code."</div>
                 </div>
             </div>
         </div>
