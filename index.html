@@ -128,23 +128,22 @@
 
         /* COUNTDOWN (FIXED OVERLAP) */
         .countdown-ui {
-            display: flex; /* Changed from inline-flex to flex */
+            display: flex; 
             flex-wrap: wrap;
             justify-content: center;
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
-            padding: 40px 50px 30px 50px; /* More top padding for title */
+            padding: 40px 50px 30px 50px; 
             gap: 40px;
             position: relative; z-index: 2;
-            margin-top: 40px; /* Spacing from text */
+            margin-top: 40px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
         }
         
-        /* The Title inside the countdown */
         .countdown-title {
             position: absolute;
             top: -15px;
@@ -194,8 +193,12 @@
         .pillar-item h4 { font-family: var(--font-logo); font-size: 1.1rem; color: var(--bank-blue); margin-bottom: 5px; }
         .pillar-item p { font-size: 0.9rem; color: #666; margin: 0; }
 
+        /* --- NEWS (MARKET PULSE) --- */
+        #news { padding: 80px 0; background: #fafafa; }
+        .news-widget-box { height: 500px; border: 1px solid #eee; background: white; }
+
         /* --- TIMELINE (ROADMAP) --- */
-        #roadmap { padding: 80px 0; background: #fafafa; border-bottom: 1px solid #ddd; }
+        #roadmap { padding: 80px 0; background: white; border-bottom: 1px solid #ddd; }
         
         .timeline {
             position: relative;
@@ -258,10 +261,6 @@
 
         .time-content h3 { font-family: var(--font-logo); font-size: 1.2rem; color: var(--bank-blue); margin-bottom: 10px; }
         .time-content p { font-size: 0.9rem; color: #666; margin: 0; }
-        
-        /* --- NEWS (MARKET PULSE) --- */
-        #news { padding: 80px 0; background: white; }
-        .news-widget-box { height: 500px; border: 1px solid #eee; }
 
         /* --- CORPORATE ECOSYSTEM --- */
         #ecosystem { padding: 80px 0; background: white; }
@@ -331,11 +330,14 @@
         .founder-role { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--bank-gold); margin-bottom: 40px; display: block; }
         .bio-text { font-size: 1.1rem; color: #a8b2d1; margin-bottom: 40px; line-height: 1.9; }
         
+        /* Updated Quote Box with Cinzel Font */
         .quote-box {
             border-left: 4px solid var(--bank-gold);
             padding-left: 30px;
-            font-family: var(--font-logo);
+            font-family: 'Cinzel', serif; /* SPECIFIC FONT REQUEST */
             font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.6;
             font-style: italic;
             color: white;
             text-align: left;
@@ -343,8 +345,8 @@
         }
 
         /* --- FOOTER --- */
-        footer { background: #050d1a; color: #8892b0; padding: 80px 0; font-size: 0.9rem; }
-        .footer-logo { font-family: var(--font-logo); font-size: 1.8rem; color: white; font-weight: 700; margin-bottom: 10px; display: block;}
+        footer { background: #050d1a; color: #8892b0; padding: 80px 0; font-size: 0.8rem; }
+        .footer-logo { font-family: var(--font-logo); font-size: 1.5rem; color: white; font-weight: 700; margin-bottom: 10px; display: block;}
 
         /* --- MOBILE SPECIFIC OVERRIDES --- */
         @media (max-width: 900px) {
@@ -506,7 +508,7 @@
         </div>
     </section>
 
-    <section id="news" style="background: #fafafa;">
+    <section id="news">
         <div class="container">
             <div class="section-title">Market Pulse<span></span></div>
             <div class="news-widget-box">
@@ -519,7 +521,7 @@
                   "isTransparent": true,
                   "displayMode": "regular",
                   "width": "100%",
-                  "height": "500",
+                  "height": "100%",
                   "locale": "en"
                 }
                   </script>
@@ -528,7 +530,7 @@
         </div>
     </section>
 
-    <section id="roadmap" style="background: white;">
+    <section id="roadmap">
         <div class="container">
             <div class="section-title">Strategic Roadmap<span></span></div>
             
@@ -607,20 +609,45 @@
 
     <footer id="contact">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 40px;">
+                
+                <div style="max-width: 300px;">
                     <span class="footer-logo">J.P. FREGLIEN SYSTEMS</span>
-                    <p style="opacity: 0.6;">Durham, United Kingdom</p>
+                    <p style="opacity: 0.7; margin-bottom: 10px;">Durham, United Kingdom</p>
+                    <a href="mailto:enquiries@jpfsystems.co" style="color: #C5A059; text-decoration: none; border-bottom: 1px solid #C5A059;">enquiries@jpfsystems.co</a>
                 </div>
-                <div style="text-align: right;">
-                    <a href="mailto:enquiries@jpfsystems.co" style="color: var(--bank-gold); border-bottom: 1px solid var(--bank-gold);">enquiries@jpfsystems.co</a>
+
+                <div>
+                    <h4 style="color: white; font-family: 'Cinzel', serif; margin-bottom: 15px;">Firm</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;"><a href="#about" style="color: #8892b0;">About Us</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#ecosystem" style="color: #8892b0;">Structure</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#founder" style="color: #8892b0;">Leadership</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: white; font-family: 'Cinzel', serif; margin-bottom: 15px;">Legal</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;"><a href="#" style="color: #8892b0;">Privacy Policy</a></li>
+                        <li style="margin-bottom: 8px;"><a href="#" style="color: #8892b0;">Terms of Use</a></li>
+                    </ul>
                 </div>
             </div>
+
             <br><hr style="border-color: rgba(255,255,255,0.05);"><br>
-            <p style="text-align: center; opacity: 0.4;">
-                &copy; 2026 J.P. Freglien Systems. All Rights Reserved.<br>
-                Disclaimer: J.P. Freglien Capital operates simulated portfolios for research and validation purposes only.
-            </p>
+
+            <div style="text-align: justify; opacity: 0.5; font-size: 0.7rem; line-height: 1.6;">
+                <p style="margin-bottom: 10px;">
+                    <strong>REGULATORY NOTICE:</strong> J.P. Freglien Systems is a technology research project and pre-incorporation entity. It is <strong>not</strong> authorised or regulated by the Financial Conduct Authority (FCA). This website and its contents are for educational and informational purposes only and do not constitute a financial promotion, investment advice, or an inducement to engage in investment activity under Section 21 of the Financial Services and Markets Act 2000 (FSMA).
+                </p>
+                <p style="margin-bottom: 10px;">
+                    <strong>SIMULATED PERFORMANCE:</strong> All "Capital" and "Portfolio" references relate to <strong>simulated, paper-trading environments</strong> used for software validation. No real capital is at risk, and no public funds are solicited or managed. Past performance of simulated models does not guarantee future results.
+                </p>
+                <p>
+                    &copy; 2026 J.P. Freglien Systems. All Rights Reserved. | Registered Office: Durham, United Kingdom.
+                </p>
+            </div>
         </div>
     </footer>
 
