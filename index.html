@@ -148,6 +148,31 @@
         #markets { margin-top: -100px; position: relative; z-index: 10; padding-bottom: 80px; }
         .market-card { background: white; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 15px; border-top: 8px solid var(--bank-royal); }
 
+        /* --- ABOUT US SECTION --- */
+        #about { padding: 80px 0; background: white; }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text p { margin-bottom: 20px; font-size: 1.05rem; color: #444; text-align: justify; }
+        .about-text h3 { font-family: var(--font-logo); font-size: 2rem; color: var(--bank-blue); margin-bottom: 25px; }
+
+        .about-pillars {
+            background: #fafafa;
+            padding: 40px;
+            border-left: 4px solid var(--bank-gold);
+        }
+
+        .pillar-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .pillar-item:last-child { margin-bottom: 0; }
+        .pillar-item i { color: var(--bank-royal); font-size: 1.2rem; margin-top: 5px; }
+        .pillar-item h4 { font-family: var(--font-logo); font-size: 1.1rem; color: var(--bank-blue); margin-bottom: 5px; }
+        .pillar-item p { font-size: 0.9rem; color: #666; margin: 0; }
+
         /* --- TIMELINE (ROADMAP) --- */
         #roadmap { padding: 80px 0; background: #fafafa; border-bottom: 1px solid #ddd; }
         
@@ -157,7 +182,6 @@
             margin: 0 auto;
         }
 
-        /* The vertical line */
         .timeline::after {
             content: '';
             position: absolute;
@@ -176,7 +200,6 @@
             width: 50%;
         }
 
-        /* Circles on the line */
         .time-container::after {
             content: '';
             position: absolute;
@@ -190,7 +213,6 @@
             z-index: 1;
         }
 
-        /* Left/Right positioning */
         .left { left: 0; text-align: right; }
         .right { left: 50%; }
         .right::after { left: -10px; }
@@ -303,7 +325,7 @@
         @media (max-width: 900px) {
             .container { padding: 0 20px; } 
             
-            /* Header Stack */
+            /* Header */
             .nav-container { flex-direction: column; padding: 20px 0; gap: 20px; }
             .logo-area { width: 100%; justify-content: center; }
             .nav-menu { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
@@ -314,13 +336,16 @@
             .time-box span { font-size: 1.8rem; }
             #markets { margin-top: -50px; }
             
-            /* TIMELINE MOBILE ADJUSTMENTS */
-            .timeline::after { left: 31px; } /* Move line to left */
+            /* About Us */
+            .about-grid { grid-template-columns: 1fr; }
+            
+            /* Timeline */
+            .timeline::after { left: 31px; } 
             .time-container { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .time-container::after { left: 21px; } /* Move dot to left */
+            .time-container::after { left: 21px; } 
             .left::after { left: 21px; }
             .right { left: 0; }
-            .left { text-align: left; } /* Reset text align */
+            .left { text-align: left; } 
             
             /* Footer */
             footer .container div { flex-direction: column; text-align: center; gap: 20px; }
@@ -362,6 +387,7 @@
             </div>
             
             <nav class="nav-menu">
+                <a href="#about">About</a>
                 <a href="#roadmap">Timeline</a>
                 <a href="#ecosystem">Structure</a>
                 <a href="#founder">Leadership</a>
@@ -411,6 +437,46 @@
                   ]
                 }
                   </script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="section-title">About The Firm<span></span></div>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>Engineering the Future of Finance</h3>
+                    <p>
+                        J.P. Freglien Systems is a quantitative technology holding company established in Durham, United Kingdom. We operate at the intersection of academic economics and high-frequency infrastructure, rejecting the notion that theoretical models cannot withstand the rigour of live execution.
+                    </p>
+                    <p>
+                        Founded by Justin P., the firm was built to operationalise the concept of "Theory in Practice." We are not a traditional fund driven by sentiment; we are a laboratory where Linear Regression frameworks and automated risk protocols replace human bias.
+                    </p>
+                </div>
+                <div class="about-pillars">
+                    <div class="pillar-item">
+                        <i class="fas fa-university"></i>
+                        <div>
+                            <h4>Academic Foundation</h4>
+                            <p>Built on First Class Honours principles from Durham University Economics.</p>
+                        </div>
+                    </div>
+                    <div class="pillar-item">
+                        <i class="fas fa-code"></i>
+                        <div>
+                            <h4>Algorithmic Core</h4>
+                            <p>Every strategy is codified in Python with strictly defined risk parameters.</p>
+                        </div>
+                    </div>
+                    <div class="pillar-item">
+                        <i class="fas fa-globe-europe"></i>
+                        <div>
+                            <h4>Global Perspective</h4>
+                            <p>Infrastructure designed to span London, New York, and Hong Kong markets.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -524,4 +590,3 @@
     </script>
 </body>
 </html>
-
