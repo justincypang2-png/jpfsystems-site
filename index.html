@@ -192,6 +192,42 @@
   .chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint);font-weight:700}
   .refine{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
   .refine .qlabel{color:var(--ink);font-weight:700}
+
+  /* sticky header */
+  header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(6px);transition:box-shadow .2s}
+  header.scrolled{box-shadow:0 6px 20px rgba(18,24,38,.08)}
+  header nav{align-items:center}
+  .hsearch{min-height:44px;padding:0 18px;margin-left:6px;border:0;border-radius:10px;background:var(--blue);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
+  .hsearch:hover{background:var(--blue-dark)}
+  html{scroll-padding-top:88px}
+  /* shop badges */
+  .shopline{display:flex;align-items:center;gap:10px}
+  .sbadge{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:14px;letter-spacing:.02em}
+  .t1{background:#E7EFFC;color:#0847A6}.t2{background:#E5F4EC;color:#0B5E38}.t3{background:#FDF0E1;color:#7A4100}.t4{background:#F1EAFB;color:#5B2E9E}
+  /* live board */
+  .board{padding:56px 0}
+  .bsub{color:var(--muted);margin:-18px 0 22px}
+  .bgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .bcard{border:2px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px}
+  .bcard .shopline h3{font-size:17px;margin:0;line-height:1.2}
+  .bleft{font-size:22px;font-weight:800;letter-spacing:-.01em}
+  .bleft small{display:block;font-size:15px;font-weight:400;color:var(--muted)}
+  .bar{height:8px;border-radius:99px;background:var(--soft);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:var(--ok);transition:width .6s ease}
+  .bcard.soon .bleft{color:#8A4B00}.bcard.soon .bar i{background:#C26A00}
+  .bcard.shut{background:var(--soft);border-style:dashed}
+  .bcard.shut .bleft{color:var(--muted);font-size:18px}
+  .bnote{font-size:14px;color:var(--muted)}
+  /* scroll reveal + result stagger (motion only when the visitor allows it) */
+  @media(prefers-reduced-motion:no-preference){
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;transition-delay:var(--d,0ms)}
+    .reveal.in{opacity:1;transform:none}
+    .rlist .opt{animation:rise .4s ease both;animation-delay:var(--d,0ms)}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  }
+  @media(max-width:1000px){ .bgrid{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:880px){ header .wrap nav{display:flex} header .wrap nav a{display:none} }
+  @media(max-width:520px){ .bgrid{grid-template-columns:1fr 1fr;gap:8px} .bcard{padding:12px} .bleft{font-size:19px} }
   /* Google: centred hero */
   .hero .narrow{text-align:center}
   .hero .narrow .lead{margin-left:auto;margin-right:auto}
@@ -312,7 +348,7 @@
     <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
     NoLag
   </a>
-  <nav aria-label="Main"><a href="#how">How it works</a><a href="#doit">Do it for me</a><a href="#faq">Questions</a></nav>
+  <nav aria-label="Main"><a href="#board">Open now</a><a href="#how">How it works</a><a href="#doit">Do it for me</a><button type="button" class="hsearch" id="hsearch" hidden>Search</button></nav>
 </div></header>
 
 <main id="top">
@@ -356,6 +392,17 @@
     <a class="btn" href="#ask" id="toask">Do it for me</a>
   </div>
   <p class="disclaimer">Times and delivery charges are typical for each service, not live stock. *Amazon same-day is free on Prime orders over £20; "Cheapest" uses typical charges, and app delivery fees vary. Check on the shop's site before you buy. Last checked: November 2026.</p>
+</div></section>
+
+<section id="board" class="board" aria-labelledby="b-title"><div class="wrap">
+  <div class="bhead">
+    <div>
+      <h2 class="s" id="b-title">Still delivering today</h2>
+      <p class="bsub">Time left to order for delivery today, across London. <span id="b-updated"></span></p>
+    </div>
+  </div>
+  <ul class="bgrid" id="bgrid"></ul>
+  <p class="disclaimer">Typical cut-off times for each service. Some shops close earlier in your area.</p>
 </div></section>
 
 <section id="doit" class="alt"><div class="wrap doit">
@@ -873,11 +920,11 @@
       list.innerHTML=`<li class="opt closed" style="grid-template-columns:1fr"><div><h3>We can't help with alcohol or tobacco</h3><p class="via">You'll need to order these directly from a shop that checks ID on delivery.</p></div></li>`;
     } else {
       list.innerHTML=open.map((s,i)=>{ const soon=s.cutoff-now<1.5; return `
-        <li class="opt${i===0?' best':''}">
+        <li class="opt${i===0?' best':''}" style="--d:${i*70}ms">
           <div class="eta"><b>${s.etaBig}</b><small>${s.etaSmall}</small></div>
           <div>
             ${i===0?`<span class="badge">${badge}</span>`:''}
-            <h3>${s.name}</h3>
+            <div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div>
             <p class="via">${s.via}${s.areaNote?'. '+s.areaNote:''}</p>
             <p class="promise${soon?' soon':''}">Order within <b class="cd" data-cut="${s.cutoff}">${left(s.cutoff-now)}</b> to get it ${s.promise}.</p>
             <div class="facts"><span>Delivery <b>${s.fee}</b></span>${s.note?`<span>${s.note}</span>`:''}</div>
@@ -886,7 +933,7 @@
         </li>`; }).join('') + shut.map(s=>`
         <li class="opt closed">
           <div class="eta"><b>Tomorrow</b><small>closed today</small></div>
-          <div><h3>${s.name}</h3><p class="via">Too late for today: orders close at ${clock(s.cutoff)}.</p></div>
+          <div><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><p class="via">Too late for today: orders close at ${clock(s.cutoff)}.</p></div>
           <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search for tomorrow<span class="sr"> on ${s.name} (opens in a new tab)</span></a>
         </li>`).join('');
     }
@@ -915,6 +962,43 @@
     if(e.target.closest('#toask')){ e.preventDefault(); $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); }
     if(e.target.closest('#backtosearch')){ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>$('q').focus({preventScroll:true}),350); }
   });
+
+
+  // ---------- shop badges ----------
+  const BADGE={amznow:['AN','t3'],boots:['B','t1'],ubereats:['UE','t2'],deliveroo:['D','t2'],johnlewis:['JL','t4'],currys:['C','t4'],argos:['A','t1'],amazon:['A','t3']};
+  const badgeFor = s => { const [t,c]=BADGE[s.id]||[s.name[0],'t1']; return `<span class="sbadge ${c}" aria-hidden="true">${t}</span>`; };
+
+  // ---------- live "still delivering today" board ----------
+  const OPEN_FROM=8; // bars drain from 8am to each cut-off
+  function drawBoard(){
+    const now=londonHours();
+    const rows=SOURCES.map(s=>({s,left:s.cutoff-now})).sort((a,b)=>(a.left<=0)-(b.left<=0) || a.left-b.left);
+    $('bgrid').innerHTML=rows.map(({s,left:l})=>{
+      if(l<=0) return `<li class="bcard shut"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><div class="bleft">Closed today<small>orders closed at ${clock(s.cutoff)}</small></div></li>`;
+      const pct=Math.max(3,Math.min(100,100*l/(s.cutoff-OPEN_FROM)));
+      return `<li class="bcard${l<1.5?' soon':''}"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div>
+        <div class="bleft">${left(l)} left<small>order by ${clock(s.cutoff)}, arrives ${s.promise.replace(/^in /,'in ')}</small></div>
+        <div class="bar" aria-hidden="true"><i style="width:${pct.toFixed(1)}%"></i></div>${s.areaNote?`<span class="bnote">${s.areaNote}</span>`:''}</li>`;
+    }).join('');
+    $('b-updated').textContent='Updated '+clock(Math.floor(now*60)/60)+'.';
+  }
+  drawBoard(); setInterval(drawBoard,30000);
+
+  // ---------- sticky header: shadow + Search button once the hero is out of view ----------
+  const hdr=document.querySelector('header'), hs=$('hsearch');
+  const heroObs=('IntersectionObserver' in window) ? new IntersectionObserver(([e])=>{ hs.hidden=e.isIntersecting; },{rootMargin:'-80px 0px 0px 0px'}) : null;
+  if(heroObs) heroObs.observe($('sf'));
+  addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>4),{passive:true});
+  hs.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); setTimeout(()=>{ qIn.focus({preventScroll:true}); qIn.select(); },350); });
+
+  // ---------- scroll reveal (only when motion is allowed and supported) ----------
+  if('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches){
+    const groups=[['#bgrid > li',60],['#how .steps > li',90],['.fees > .fee-box',90],['#cover .cover > div',90],['#doit .doit > *',90],['.faq details',50],['.cta .wrap',0],['h2.s',0]];
+    const els=[];
+    groups.forEach(([sel,step])=>document.querySelectorAll(sel).forEach((el,i)=>{ if(el.closest('.hero')||el.closest('#results')) return; el.classList.add('reveal'); el.style.setProperty('--d',(i*step)+'ms'); els.push(el); }));
+    const ro=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } }),{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(el=>ro.observe(el));
+  }
 
   // ---------- preview-only walkthrough (never shown on jpfsystems.co) ----------
   if(DEMO){
