@@ -174,6 +174,25 @@
   .ex{font-size:15px;color:var(--muted);margin-top:10px}
 
 
+
+  /* type-ahead suggestions */
+  .searchwrap{position:relative}
+  .sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:#fff;border:2px solid var(--ink);border-radius:16px;box-shadow:0 18px 50px rgba(18,24,38,.18);padding:8px;max-height:min(70vh,520px);overflow:auto}
+  .sgroup+.sgroup{border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+  .shead{font-size:14px;font-weight:700;color:var(--muted);padding:6px 10px 4px}
+  .sopt{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 10px;border-radius:10px;cursor:pointer}
+  .sopt[aria-selected="true"],.sopt:hover{background:var(--blue-tint)}
+  .sopt .t{font-size:18px}
+  .sopt .t mark{background:none;color:inherit;font-weight:700}
+  .sopt .k{font-size:14px;color:var(--muted);white-space:nowrap}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+  .qlabel{color:var(--muted);font-size:16px;margin-right:2px}
+  .chip{min-height:44px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-size:16px;cursor:pointer}
+  .chip:hover{border-color:var(--ink)}
+  .chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint);font-weight:700}
+  .refine{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
+  .refine .qlabel{color:var(--ink);font-weight:700}
+  .kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-size:14px;color:var(--muted);margin-left:6px}
   /* search-first layout */
   .narrow{max-width:900px}
   .hero{padding:56px 0 48px}
@@ -265,10 +284,11 @@
 <div class="hero"><div class="wrap narrow">
   <h1>What do you need today?</h1>
   <p class="lead">Search once. See every shop that can deliver it to you in London today, fastest first.</p>
+  <div class="searchwrap">
   <form class="search" id="sf" role="search" novalidate>
     <div class="sfield grow">
       <label for="q">Item</label>
-      <input type="text" id="q" name="q" autocomplete="off" placeholder="e.g. USB-C laptop charger, rice cooker, birthday balloons">
+      <input type="text" id="q" name="q" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugg" aria-describedby="qhint" placeholder="A product, or what it's for: 'ps5', 'birthday', 'power cut'">
     </div>
     <div class="sfield pc">
       <label for="qpc">Postcode</label>
@@ -276,6 +296,10 @@
     </div>
     <button class="sgo" type="submit">Search</button>
   </form>
+  <div class="sugg" id="sugg" role="listbox" aria-label="Suggestions" hidden></div>
+  </div>
+  <p class="sr" id="qhint">Suggestions appear as you type. Use the up and down arrows to move through them and Enter to choose.</p>
+  <div class="quick" id="quick"><span class="qlabel">Popular:</span></div>
   <p class="error-msg" id="s-err" role="alert"></p>
   <ul class="promises row">
     <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Free to search.</b> You buy straight from the shop.</span></li>
@@ -288,6 +312,7 @@
   <div class="rhead">
     <h2 id="r-title" tabindex="-1"></h2>
     <p class="rsub" id="r-sub"></p>
+    <div class="refine" id="refine" hidden></div>
   </div>
   <ol class="rlist" id="rlist"></ol>
   <div class="helpcard">
@@ -548,6 +573,155 @@
   });
 
 
+
+  // ---------- type-ahead: products and ideas ----------
+  // Each family: words that trigger it, and the precise options it offers.
+  // q = what we send to the shops; cats = which shops fit; ex = words that mean "wrong item" (used later by the result checker).
+  const FAMILIES=[
+    {k:['ps5','playstation 5','playstation','ps 5'], ask:'Which PS5 item?', opts:[
+      {l:'PS5 console',q:'PS5 console',cats:['tech'],ex:['controller','case','skin','stand','game','cover']},
+      {l:'PS5 Digital Edition console',q:'PS5 Digital Edition console',cats:['tech']},
+      {l:'PS5 DualSense controller',q:'PS5 DualSense controller',cats:['tech']},
+      {l:'PS5 games',q:'PS5 game',cats:['tech']},
+      {l:'PS5 charging station',q:'PS5 controller charging station',cats:['tech']}]},
+    {k:['xbox','series x','series s'], ask:'Which Xbox item?', opts:[
+      {l:'Xbox Series X console',q:'Xbox Series X console',cats:['tech']},
+      {l:'Xbox Series S console',q:'Xbox Series S console',cats:['tech']},
+      {l:'Xbox wireless controller',q:'Xbox wireless controller',cats:['tech']},
+      {l:'Xbox games',q:'Xbox Series X game',cats:['tech']}]},
+    {k:['switch','nintendo','switch 2'], ask:'Which Nintendo item?', opts:[
+      {l:'Nintendo Switch 2 console',q:'Nintendo Switch 2 console',cats:['tech']},
+      {l:'Nintendo Switch controller (Joy-Con)',q:'Nintendo Switch Joy-Con',cats:['tech']},
+      {l:'Nintendo Switch games',q:'Nintendo Switch game',cats:['tech']},
+      {l:'Nintendo Switch case',q:'Nintendo Switch case',cats:['tech']}]},
+    {k:['iphone','apple phone'], ask:'Which iPhone item?', opts:[
+      {l:'iPhone charger (20W USB-C)',q:'iPhone 20W USB-C charger',cats:['tech']},
+      {l:'USB-C to Lightning cable',q:'USB-C to Lightning cable',cats:['tech']},
+      {l:'iPhone case',q:'iPhone case',cats:['tech']},
+      {l:'iPhone screen protector',q:'iPhone screen protector',cats:['tech']}]},
+    {k:['charger','charging','laptop charger','phone charger'], ask:'Which charger?', opts:[
+      {l:'USB-C laptop charger (65W)',q:'65W USB-C laptop charger',cats:['tech']},
+      {l:'Phone charger (USB-C)',q:'USB-C phone charger',cats:['tech']},
+      {l:'MacBook charger',q:'MacBook USB-C power adapter',cats:['tech']},
+      {l:'Wireless charger',q:'wireless charger',cats:['tech']},
+      {l:'Power bank',q:'power bank',cats:['tech']}]},
+    {k:['hdmi','monitor cable','tv cable'], opts:[
+      {l:'HDMI cable (2m)',q:'HDMI cable 2m',cats:['tech']},
+      {l:'USB-C to HDMI adapter',q:'USB-C to HDMI adapter',cats:['tech']}]},
+    {k:['headphones','earbuds','airpods','headset'], ask:'Which kind?', opts:[
+      {l:'Apple AirPods',q:'Apple AirPods',cats:['tech']},
+      {l:'Wireless earbuds',q:'wireless earbuds',cats:['tech']},
+      {l:'Over-ear headphones',q:'over-ear headphones',cats:['tech']},
+      {l:'Gaming headset',q:'gaming headset',cats:['tech']}]},
+    {k:['ink','printer','cartridge','toner'], opts:[
+      {l:'Printer ink cartridges',q:'printer ink cartridge',cats:['tech']},
+      {l:'Printer paper (A4)',q:'A4 printer paper',cats:['tech','home']}]},
+    {k:['wifi','router','internet','ethernet'], opts:[
+      {l:'Wi-Fi extender',q:'wifi extender',cats:['tech']},
+      {l:'Ethernet cable',q:'ethernet cable',cats:['tech']}]},
+    {k:['battery','batteries','aa','aaa'], opts:[
+      {l:'AA batteries',q:'AA batteries',cats:['home','tech']},
+      {l:'AAA batteries',q:'AAA batteries',cats:['home','tech']},
+      {l:'9V battery',q:'9V battery',cats:['home','tech']}]},
+    {k:['bulb','light bulb','lightbulb'], ask:'Which fitting?', opts:[
+      {l:'Light bulb, screw fitting (E27)',q:'E27 LED light bulb',cats:['home']},
+      {l:'Light bulb, bayonet fitting (B22)',q:'B22 LED light bulb',cats:['home']},
+      {l:'Spotlight bulb (GU10)',q:'GU10 LED bulb',cats:['home']}]},
+    {k:['kettle'], opts:[{l:'Kettle',q:'electric kettle',cats:['home']}]},
+    {k:['toaster'], opts:[{l:'Toaster',q:'toaster',cats:['home']}]},
+    {k:['rice cooker'], opts:[{l:'Rice cooker',q:'rice cooker',cats:['home']}]},
+    {k:['air fryer','airfryer'], opts:[{l:'Air fryer',q:'air fryer',cats:['home']}]},
+    {k:['heater','heating'], opts:[{l:'Fan heater',q:'fan heater',cats:['home']},{l:'Oil-filled radiator',q:'oil filled radiator',cats:['home']}]},
+    {k:['blanket','electric blanket'], opts:[{l:'Electric blanket',q:'electric blanket',cats:['home']}]},
+    {k:['extension','extension lead','plug'], opts:[{l:'Extension lead (4-way)',q:'4 way extension lead',cats:['home']},{l:'Travel plug adapter',q:'travel adapter',cats:['home','tech']}]},
+    {k:['drill','screwdriver','tool','toolkit'], opts:[{l:'Cordless drill',q:'cordless drill',cats:['home']},{l:'Screwdriver set',q:'screwdriver set',cats:['home']},{l:'Tool kit',q:'household tool kit',cats:['home']}]},
+    {k:['torch','flashlight'], opts:[{l:'Torch',q:'LED torch',cats:['home']}]},
+    {k:['flowers','bouquet','roses'], opts:[{l:'Flower bouquet',q:'flower bouquet',cats:['gift']},{l:'Red roses',q:'red roses bouquet',cats:['gift']}]},
+    {k:['balloon','balloons'], opts:[{l:'Helium balloons',q:'helium balloons',cats:['gift']},{l:'Number balloons',q:'number balloons',cats:['gift']}]},
+    {k:['cake','birthday cake'], opts:[{l:'Birthday cake',q:'birthday cake',cats:['gift']}]},
+    {k:['perfume','aftershave','fragrance'], opts:[{l:'Perfume',q:'perfume',cats:['gift','beauty']},{l:'Aftershave',q:'aftershave',cats:['gift','beauty']}]},
+    {k:['lego'], opts:[{l:'LEGO set',q:'LEGO set',cats:['gift']}]},
+    {k:['toy','toys'], opts:[{l:'Toys',q:'toy',cats:['gift']}]},
+    {k:['paracetamol','painkiller','ibuprofen','headache'], opts:[{l:'Paracetamol',q:'paracetamol',cats:['health']},{l:'Ibuprofen',q:'ibuprofen',cats:['health']}]},
+    {k:['cold','flu','sore throat'], opts:[{l:'Cold and flu relief',q:'cold and flu',cats:['health']},{l:'Throat lozenges',q:'throat lozenges',cats:['health']}]},
+    {k:['thermometer'], opts:[{l:'Digital thermometer',q:'digital thermometer',cats:['health']}]},
+    {k:['plaster','plasters','first aid'], opts:[{l:'Plasters',q:'plasters',cats:['health']},{l:'First aid kit',q:'first aid kit',cats:['health']}]},
+    {k:['nappies','nappy','diapers'], ask:'Which size?', opts:[
+      {l:'Nappies, size 1–2',q:'nappies size 2',cats:['health']},{l:'Nappies, size 3–4',q:'nappies size 4',cats:['health']},{l:'Nappies, size 5–6',q:'nappies size 6',cats:['health']}]},
+    {k:['formula','baby milk'], opts:[{l:'Baby formula',q:'first infant milk',cats:['health']}]},
+    {k:['phone case','case'], opts:[{l:'Phone case',q:'phone case',cats:['tech']}]},
+    {k:['umbrella'], opts:[{l:'Umbrella',q:'umbrella',cats:['home']}]}
+  ];
+  // Ideas: situations rather than products.
+  const IDEAS=[
+    {k:['birthday','gift','present','last minute gift'], t:'Last-minute birthday', items:['Flower bouquet','Birthday cake','Helium balloons','Perfume','LEGO set']},
+    {k:['party','hosting','guests','dinner'], t:'Hosting tonight', items:['Ice','Candles','Paper plates','Bluetooth speaker','Phone charger (USB-C)']},
+    {k:['baby','newborn','toddler'], t:'Baby essentials', items:['Nappies, size 3–4','Baby formula','Baby wipes','Calpol']},
+    {k:['ill','sick','unwell','poorly'], t:'Feeling ill', items:['Paracetamol','Cold and flu relief','Digital thermometer','Tissues','Throat lozenges']},
+    {k:['moving','move','new flat','new house'], t:'Moving in', items:['Extension lead (4-way)','Light bulb, screw fitting (E27)','Tool kit','Kettle','Bin bags']},
+    {k:['travel','holiday','trip','flight'], t:'Before a trip', items:['Travel plug adapter','Power bank','Phone charger (USB-C)','Suitcase lock']},
+    {k:['work','office','meeting','presentation'], t:'Work emergency', items:['USB-C to HDMI adapter','HDMI cable (2m)','USB-C laptop charger (65W)','Printer ink cartridges']},
+    {k:['power cut','blackout','no power','outage'], t:'Power cut', items:['Torch','AA batteries','Power bank','Candles']},
+    {k:['heating','boiler','freezing','cold house'], t:'Heating broken', items:['Fan heater','Oil-filled radiator','Electric blanket','Hot water bottle']},
+    {k:['date','anniversary','valentine','romantic'], t:'Date night', items:['Red roses','Chocolates','Perfume','Candles']},
+    {k:['gaming','game night'], t:'Game night', items:['PS5 DualSense controller','Xbox wireless controller','Gaming headset','PS5 games']}
+  ];
+  const POPULAR=['Phone charger (USB-C)','PS5 DualSense controller','HDMI cable (2m)','Flower bouquet','Paracetamol','Helium balloons'];
+  const ALLOPTS={}; FAMILIES.forEach(f=>f.opts.forEach(o=>{ALLOPTS[o.l.toLowerCase()]={...o,fam:f};}));
+  const optFor = label => ALLOPTS[label.toLowerCase()] || {l:label,q:label,cats:null};
+  const norm = t => t.toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
+  const hit = (keys,t) => { // 2 = exact, 1 = prefix/contains, 0 = none
+    let best=0; for(const k of keys){ if(t===k) return 2; if(t.length>=2 && (k.startsWith(t) || t.includes(k) || k.split(' ').some(w=>w.startsWith(t)))) best=1; } return best; };
+  function exactFamily(t){ t=norm(t); return FAMILIES.find(f=>f.opts.length>1 && f.k.includes(t)); }
+
+  const qIn=$('q'), sugg=$('sugg'); let active=-1, items=[], chosen=null;
+  function suggestionsFor(text){
+    const t=norm(text); if(!t) return [];
+    const groups=[], fams=FAMILIES.map(f=>({f,h:hit(f.k,t)})).filter(x=>x.h).sort((a,b)=>b.h-a.h).slice(0,2);
+    const prod=[]; fams.forEach(({f})=>f.opts.forEach(o=>prod.push({l:o.l,kind:'product'})));
+    const idea=IDEAS.find(i=>hit(i.k,t));
+    groups.push({h:null, rows:[{l:text.trim(),kind:'free'}]});
+    if(prod.length) groups.push({h:'Products', rows:prod.slice(0,6)});
+    if(idea) groups.push({h:'Ideas: '+idea.t, rows:idea.items.map(l=>({l,kind:'idea'}))});
+    return groups;
+  }
+  function mark(label,text){ const t=norm(text); if(!t) return esc(label); const i=label.toLowerCase().indexOf(t); return i<0?esc(label):esc(label.slice(0,i))+'<mark>'+esc(label.slice(i,i+t.length))+'</mark>'+esc(label.slice(i+t.length)); }
+  function openSugg(){
+    const groups=suggestionsFor(qIn.value); items=[];
+    if(!groups.length || (groups.length===1)){ closeSugg(); return; }
+    sugg.innerHTML=groups.map((g,gi)=>`<div class="sgroup" role="group"${g.h?` aria-label="${esc(g.h)}"`:''}>${g.h?`<div class="shead" role="presentation">${esc(g.h)}</div>`:''}${
+      g.rows.map(r=>{const id='so'+items.length; items.push(r); return `<div class="sopt" role="option" id="${id}" aria-selected="false" data-i="${items.length-1}"><span class="t">${r.kind==='free'?'Search “'+esc(r.l)+'”':mark(r.l,qIn.value)}</span><span class="k">${r.kind==='idea'?'idea':r.kind==='product'?'':'Enter'}</span></div>`;}).join('')}</div>`).join('');
+    sugg.hidden=false; qIn.setAttribute('aria-expanded','true'); setActive(-1);
+  }
+  function closeSugg(){ sugg.hidden=true; qIn.setAttribute('aria-expanded','false'); qIn.removeAttribute('aria-activedescendant'); active=-1; }
+  function setActive(i){
+    active=i; sugg.querySelectorAll('.sopt').forEach(el=>el.setAttribute('aria-selected',String(+el.dataset.i===i)));
+    if(i>=0){ const el=$('so'+i); qIn.setAttribute('aria-activedescendant','so'+i); el.scrollIntoView({block:'nearest'}); } else qIn.removeAttribute('aria-activedescendant');
+  }
+  function choose(i){
+    const r=items[i]; closeSugg();
+    if(r.kind==='free'){ chosen=null; } else { chosen=optFor(r.l); qIn.value=r.l; }
+    $('sf').requestSubmit();
+  }
+  qIn.addEventListener('input',()=>{ chosen=null; openSugg(); });
+  qIn.addEventListener('focus',()=>{ if(qIn.value.trim()) openSugg(); });
+  qIn.addEventListener('keydown',e=>{
+    if(sugg.hidden && e.key==='ArrowDown'){ openSugg(); return; }
+    if(sugg.hidden) return;
+    if(e.key==='ArrowDown'){ e.preventDefault(); setActive(Math.min(items.length-1,active+1)); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); setActive(Math.max(-1,active-1)); }
+    else if(e.key==='Enter' && active>=0){ e.preventDefault(); choose(active); }
+    else if(e.key==='Escape'){ closeSugg(); }
+  });
+  sugg.addEventListener('mousedown',e=>{ const el=e.target.closest('.sopt'); if(el){ e.preventDefault(); choose(+el.dataset.i); } });
+  document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) closeSugg(); });
+  document.addEventListener('keydown',e=>{ // press / to search
+    if(e.key==='/' && !/input|textarea|select/i.test(document.activeElement.tagName)){ e.preventDefault(); qIn.focus(); qIn.select(); }
+  });
+  // popular chips
+  $('quick').insertAdjacentHTML('beforeend', POPULAR.map(l=>`<button type="button" class="chip" data-l="${esc(l)}">${esc(l)}</button>`).join('')+'<span class="qlabel" style="margin-left:6px">Tip: press <span class="kbd">/</span> to search</span>');
+  $('quick').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); });
+
   // ---------- same-day search ----------
   // Typical service facts (not live stock). Review these every couple of weeks and update "Last checked".
   // cutoff = latest London time (24h, decimal hours) you can usually still order for delivery today.
@@ -592,17 +766,30 @@
     err.classList.remove('show');
     if(q.length<2){ err.textContent='Type what you need, for example "USB-C laptop charger".'; err.classList.add('show'); $('q').focus(); return; }
     if(pc && !/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i.test(pc) && !/^[A-Z]{1,2}\d[A-Z\d]?$/i.test(pc)){ err.textContent='That postcode doesn\'t look right. Try one like SE15 4AB, or leave it blank.'; err.classList.add('show'); $('qpc').focus(); return; }
-    renderResults(q,pc);
+    closeSugg();
+    // decide what we are really searching for
+    let spec = chosen && chosen.l.toLowerCase()===q.toLowerCase() ? chosen : null;
+    let fam = null;
+    if(!spec){ fam=exactFamily(q); spec = fam ? {...fam.opts[0],fam} : optFor(q); }
+    renderResults(spec,pc,fam);
   });
 
-  function renderResults(q,pc){
+  function renderResults(spec,pc,ambig){
+    const q=spec.q, label=spec.l;
     const now=londonHours(), list=$('rlist');
-    const cats=Object.keys(CATS).filter(c=>CATS[c].test(q));
+    const cats=spec.cats || Object.keys(CATS).filter(c=>CATS[c].test(q));
+    // "Did you mean" row for ambiguous searches like "ps5"
+    const fam=spec.fam || ambig, ref=$('refine');
+    if(fam && fam.opts.length>1){
+      ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Did you mean?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
+      ref.hidden=false;
+      ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); };
+    } else ref.hidden=true;
     let opts=SOURCES.filter(s=>!cats.length || s.cats.some(c=>cats.includes(c)));
     opts=opts.filter(s=>!s.area || (pc ? s.area.test(pc) : false));
     const open=opts.filter(s=>now<s.cutoff).sort((a,b)=>a.speed-b.speed);
     const shut=opts.filter(s=>now>=s.cutoff);
-    const safeQ=esc(q);
+    const safeQ=esc(label);
     if(BANNED.test(q)){
       list.innerHTML=`<li class="opt closed"><div><h3>We can't help with alcohol or tobacco</h3><p class="via">You'll need to order these directly from a shop that checks ID on delivery.</p></div></li>`;
     } else {
@@ -628,13 +815,13 @@
     }
     const n=open.length;
     $('r-title').textContent = BANNED.test(q) ? 'Not something we can help with' :
-      n ? `${n} way${n>1?'s':''} to get “${q}” today` : `Nothing can still deliver “${q}” today`;
+      n ? `${n} way${n>1?'s':''} to get “${label}” today` : `Nothing can still deliver “${label}” today`;
     $('r-sub').textContent = (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n?'Fastest first.':'Try first thing tomorrow, or ask us to find another way.');
     $('results').hidden=false; $('r-title').focus();
     $('results').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'});
     // carry the search into the "do it for me" form
-    $('item').value=q; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
-    lastSearch={q,pc,shown:open.map(s=>s.id)};
+    $('item').value=label; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
+    lastSearch={q:label,sent:q,pc,shown:open.map(s=>s.id)};
   }
   let lastSearch=null;
   document.addEventListener('click',e=>{
@@ -646,7 +833,7 @@
   // ---------- preview-only walkthrough (never shown on jpfsystems.co) ----------
   if(DEMO){
     $('demobar').style.display='block';
-    $('fillex').onclick=()=>{ $('q').value='USB-C laptop charger'; $('qpc').value='SE15 4AB'; $('sf').requestSubmit(); };
+    $('fillex').onclick=()=>{ $('q').value='ps5'; $('qpc').value='SE15 4AB'; chosen=null; $('sf').requestSubmit(); };
     $('fillex').textContent='Try a search';
     $('demobar').querySelector('span').textContent='Preview: search results use typical times, and requests are not sent.';
     window.fillConcierge=()=>{
