@@ -86,6 +86,46 @@
   footer{padding:36px 0 50px;color:var(--slate);font-size:14px}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
+  /* demo mode (preview only) */
+  .demobar{display:none;background:var(--ink);color:#fff;font-size:14px;padding:10px 0}
+  .demobar .wrap{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .demobar button{background:#fff;color:var(--ink);border:0;border-radius:8px;padding:7px 12px;font:inherit;font-weight:600;cursor:pointer}
+  .demo{position:fixed;inset:0;background:rgba(16,24,40,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .demo.open{display:flex}
+  .dpanel{background:var(--paper);border-radius:18px;max-width:640px;width:100%;max-height:92vh;overflow:auto;padding:24px 26px}
+  .dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+  .dhead small{color:var(--slate)}
+  .dclose{background:none;border:0;font-size:22px;cursor:pointer;color:var(--slate)}
+  .dpanel h3{font-family:var(--display);font-size:24px;letter-spacing:-.02em;margin:4px 0 6px}
+  .dpanel .why{color:var(--slate);margin:0 0 16px}
+  .dots{display:flex;gap:6px;margin:6px 0 14px}
+  .dots i{height:4px;flex:1;border-radius:4px;background:var(--line)}
+  .dots i.on{background:var(--hot)}
+  .mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+  .mail .mh{background:var(--bg);padding:10px 14px;border-bottom:1px solid var(--line)}
+  .mail .mh div{color:var(--slate)}
+  .mail .mh b{color:var(--ink)}
+  .mail table{width:100%;border-collapse:collapse}
+  .mail td{padding:8px 14px;border-top:1px solid var(--line);vertical-align:top}
+  .mail td:first-child{color:var(--slate);width:34%}
+  .src{display:grid;grid-template-columns:1fr auto auto;gap:6px 14px;font-size:14px;align-items:center}
+  .src div{padding:8px 0;border-bottom:1px solid var(--line)}
+  .src .win{font-weight:600;color:var(--ok)}
+  .src .no{color:var(--slate)}
+  .bubble{background:var(--sky);border-radius:14px 14px 14px 4px;padding:14px 16px;white-space:pre-line;font-size:15px}
+  .bubble.them{background:var(--bg);border-radius:14px 14px 4px 14px;margin-left:auto;max-width:80%;margin-top:10px}
+  .paycard{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .paycard b{font-family:var(--display);font-size:24px}
+  .paycard span{background:var(--ink);color:#fff;border-radius:8px;padding:8px 12px;font-weight:600;font-size:14px}
+  .logrow{font-size:13px;width:100%;border-collapse:collapse}
+  .logrow th{color:var(--slate);font-weight:500;text-align:left;padding:6px;border-bottom:1px solid var(--line)}
+  .logrow td{padding:8px 6px;border-bottom:1px solid var(--line)}
+  .dnav{display:flex;justify-content:space-between;margin-top:20px}
+  .dnav button{font:inherit;font-weight:600;border-radius:10px;padding:10px 16px;cursor:pointer;border:1px solid var(--line);background:#fff}
+  .dnav button.next{background:var(--hot);color:#fff;border-color:var(--hot)}
+  .dnav button[disabled]{visibility:hidden}
+  .ex{font-size:12px;color:var(--slate);margin-top:10px}
+
   @media(max-width:860px){
     .hero .wrap{grid-template-columns:1fr;gap:28px}
     .steps,.fees,.cover{grid-template-columns:1fr}
@@ -96,6 +136,20 @@
 </style>
 </head>
 <body>
+<div class="demobar" id="demobar"><div class="wrap">
+  <span>Preview mode: requests are not sent. Submit the form to walk through what happens behind the scenes.</span>
+  <button type="button" id="fillex">Fill in an example</button>
+</div></div>
+<div class="demo" id="demo" role="dialog" aria-modal="true" aria-labelledby="dtitle">
+  <div class="dpanel">
+    <div class="dhead"><small id="dstep"></small><button class="dclose" id="dclose" aria-label="Close walkthrough">×</button></div>
+    <div class="dots" id="ddots"></div>
+    <h3 id="dtitle"></h3>
+    <p class="why" id="dwhy"></p>
+    <div id="dbody"></div>
+    <div class="dnav"><button type="button" id="dback">Back</button><button type="button" class="next" id="dnext">Next</button></div>
+  </div>
+</div>
 <header><div class="wrap">
   <a class="logo" href="#">No<b>Lag</b></a>
   <nav><a href="#how">How it works</a><a href="#fees">Fees</a><a href="#cover">What we cover</a><a href="#faq">Questions</a></nav>
@@ -222,13 +276,83 @@
 
   // live clock + plausible ETA (2h15 from now, rounded to 15 min)
   function pad(n){return String(n).padStart(2,'0')}
+  function londonNow(){
+    const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+    const get=t=>+parts.find(p=>p.type===t).value; return {h:get('hour'),m:get('minute')};
+  }
   function tick(){
-    const now=new Date(); const l=new Date(now.toLocaleString('en-GB',{timeZone:'Europe/London'}));
-    document.getElementById('now').textContent=pad(l.getHours())+':'+pad(l.getMinutes());
-    const e=new Date(l.getTime()+135*60000); e.setMinutes(Math.ceil(e.getMinutes()/15)*15,0,0);
-    document.getElementById('eta').textContent= e.getDate()!==l.getDate() ? 'tomorrow morning' : pad(e.getHours())+':'+pad(e.getMinutes());
+    const {h,m}=londonNow();
+    document.getElementById('now').textContent=pad(h)+':'+pad(m);
+    let mins=h*60+m+135; mins=Math.ceil(mins/15)*15;           // about 2h15 from now, rounded up to 15 min
+    const eh=Math.floor(mins/60);
+    document.getElementById('eta').textContent=(eh>=22||h<7) ? 'tomorrow morning' : pad(eh)+':'+pad(mins%60);
   }
   tick(); setInterval(tick,15000);
+
+  // ---- demo mode: on anything other than the live domain ----
+  const DEMO = !/(^|\.)jpfsystems\.co$/.test(location.hostname);
+  const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  if(DEMO){
+    document.getElementById('demobar').style.display='block';
+    document.getElementById('fillex').onclick=()=>{
+      document.getElementById('item').value='65W USB-C laptop charger, Lenovo-compatible';
+      document.getElementById('postcode').value='SE15 4AB';
+      document.getElementById('by').value='9pm tonight';
+      document.getElementById('budget').value='5'; document.getElementById('fee').textContent='£5';
+      document.getElementById('name').value='Sam';
+      document.getElementById('contact').value='07700 900123';
+      document.getElementById('ask').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+  }
+  const EXAMPLES={
+    '2':{src:[['Boots via Deliveroo','35 min','£0.99 delivery',true],['Amazon Now','not in this postcode','',false],['Tesco via Uber Eats','out of stock','',false],['Argos Fast Track','by 10pm','£3.95',false]],win:'Boots via Deliveroo',eta:'in about 35 minutes',price:12.50,del:0.99},
+    '5':{src:[['Argos Fast Track','by 9:30pm','£3.95',true],['Amazon same-day','by 10pm','free over £20',false],['Currys same-day','2-hour slot, from 8pm','£9.95',false],['John Lewis via Uber Eats','not stocked nearby','',false]],win:'Argos Fast Track',eta:'by 9:30pm tonight',price:34.99,del:3.95},
+    '10':{src:[['Currys same-day','8–10pm slot','£9.95',true],['Amazon same-day','sold out for today','',false],['Argos Fast Track','not at local store','',false],['GameStop via Uber Eats','not stocked','',false]],win:'Currys same-day',eta:'between 8 and 10pm tonight',price:229.00,del:9.95}
+  };
+  let dstep=0, dsteps=[];
+  function openDemo(d){
+    const ex=EXAMPLES[d.fee.replace('£','')]||EXAMPLES['5'];
+    const pc=esc(d.postcode.toUpperCase()), item=esc(d.item), by=esc(d.by), name=esc(d.name||'there'), fee=esc(d.fee);
+    const total=(ex.price+ex.del).toFixed(2);
+    dsteps=[
+      {t:'A new request lands in your inbox', w:'Seconds after the customer presses "Find it for me", this email arrives at enquiries@jpfsystems.co. The customer sees "On it".',
+       b:`<div class="mail"><div class="mh"><div>To: <b>enquiries@jpfsystems.co</b></div><div>Subject: <b>NoLag request: ${item.slice(0,60)} → ${pc} by ${by}</b></div></div>
+          <table><tr><td>Item</td><td>${item}</td></tr><tr><td>Postcode</td><td>${pc}</td></tr><tr><td>Needed by</td><td>${by}</td></tr><tr><td>Fee tier</td><td>${fee}</td></tr><tr><td>Name</td><td>${name}</td></tr><tr><td>Contact</td><td>${esc(d.contact)}</td></tr></table></div>`},
+      {t:'You search every same-day source', w:'You check who can get this exact item to '+pc+' before '+by+'. Start a timer: the target is under 10 minutes.',
+       b:`<div class="src">${ex.src.map(s=>`<div class="${s[3]?'win':'no'}">${s[3]?'✓ ':''}${s[0]}</div><div class="${s[3]?'win':'no'}">${s[1]}</div><div class="no">${s[2]}</div>`).join('')}</div><p class="ex">Example results. In a real run you check these yourself, for that postcode, at that moment.</p>`},
+      {t:'You send the quote', w:'Reply by text or email within 15 minutes. One clear answer, plus a payment link for the item only.',
+       b:`<div class="bubble">Hi ${name}, it's NoLag. Found it.\n\n${item}\nFrom: ${ex.win}\nArrives: ${ex.eta}\nItem £${ex.price.toFixed(2)} + their delivery £${ex.del.toFixed(2)} = £${total}\n\nPay the item here and I'll order straight away. Our ${fee} fee only comes after it arrives, and is £0 if it's late or wrong.</div>
+          <div class="paycard"><div><div class="ex" style="margin:0">Payment link (item only)</div><b>£${total}</b></div><span>Pay NoLag</span></div>`},
+      {t:'They pay, you place the order', w:'Once the item payment comes in, you order on '+esc(ex.win)+' with the customer\'s address, then watch the tracking.',
+       b:`<div class="bubble them">Paid 👍</div><div class="bubble" style="margin-top:10px">Ordered. It's coming ${ex.eta}. I'll keep an eye on it and message you if anything changes.</div>`},
+      {t:'Delivered: now the fee', w:'Only once it has arrived, on time and correct, you send the fee link. Late or wrong means no fee, and you log that too.',
+       b:`<div class="bubble them">Got it, thanks!</div><div class="bubble" style="margin-top:10px">Great. Here's the ${fee} NoLag fee. Next time you need something today, just ask.</div>
+          <div class="paycard"><div><div class="ex" style="margin:0">Payment link (fee)</div><b>${fee}</b></div><span>Pay NoLag</span></div>`},
+      {t:'You log the order', w:'Every row feeds the 9 December check: did a stranger pay, did your search beat the obvious app, and how long did it take you?',
+       b:`<table class="logrow"><tr><th>Item</th><th>Fee</th><th>Stranger</th><th>Paid</th><th>Search won</th><th>Minutes</th></tr>
+          <tr><td>${item.slice(0,40)}</td><td>${fee}</td><td>yes</td><td>yes</td><td>${ex.win.startsWith('Amazon')?'no':'yes'}</td><td>8</td></tr></table>
+          <p class="ex">Then ask them one question: "What would you have done if we didn't exist?" Their answer is the best evidence you'll get.</p>`}
+    ];
+    dstep=0; renderDemo(); document.getElementById('demo').classList.add('open'); document.getElementById('dnext').focus();
+  }
+  function renderDemo(){
+    const s=dsteps[dstep];
+    document.getElementById('dstep').textContent=`Behind the scenes · step ${dstep+1} of ${dsteps.length}`;
+    document.getElementById('ddots').innerHTML=dsteps.map((_,i)=>`<i class="${i<=dstep?'on':''}"></i>`).join('');
+    document.getElementById('dtitle').textContent=s.t; document.getElementById('dwhy').textContent=s.w;
+    document.getElementById('dbody').innerHTML=s.b;
+    document.getElementById('dback').disabled=dstep===0;
+    document.getElementById('dnext').textContent=dstep===dsteps.length-1?'Finish':'Next';
+  }
+  function closeDemo(){
+    document.getElementById('demo').classList.remove('open');
+    form.reset(); fee.textContent='£5'; form.style.display='block'; document.getElementById('done').style.display='none';
+    const b=form.querySelector('button'); b.disabled=false; b.textContent='Find it for me';
+  }
+  document.getElementById('dnext').onclick=()=>{ if(dstep<dsteps.length-1){dstep++;renderDemo();} else closeDemo(); };
+  document.getElementById('dback').onclick=()=>{ if(dstep>0){dstep--;renderDemo();} };
+  document.getElementById('dclose').onclick=closeDemo;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && document.getElementById('demo').classList.contains('open')) closeDemo(); });
 
   // fee follows the budget select
   const budget=document.getElementById('budget'), fee=document.getElementById('fee');
@@ -243,6 +367,12 @@
     const data=Object.fromEntries(new FormData(form).entries()); data.fee='£'+budget.value; data.submitted=new Date().toISOString();
     data._subject='NoLag request: '+data.item.slice(0,60)+' → '+data.postcode.toUpperCase()+' by '+data.by;
     data._template='table'; data._captcha='false';
+    if(DEMO){
+      document.getElementById('done-pc').textContent=data.postcode.toUpperCase();
+      form.style.display='none'; document.getElementById('done').style.display='block';
+      setTimeout(()=>openDemo(data),900);
+      return;
+    }
     try{
       if(!CONFIG.FORM_ENDPOINT) throw new Error('no endpoint configured');
       const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(data)});
