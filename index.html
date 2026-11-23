@@ -192,7 +192,36 @@
   .chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint);font-weight:700}
   .refine{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
   .refine .qlabel{color:var(--ink);font-weight:700}
-  .kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-size:14px;color:var(--muted);margin-left:6px}
+  /* Google: centred hero */
+  .hero .narrow{text-align:center}
+  .hero .narrow .lead{margin-left:auto;margin-right:auto}
+  .hero .narrow .search,.hero .narrow .sugg{text-align:left}
+  .trust{color:var(--muted);font-size:16px;margin:14px 0 0}
+  /* Airbnb: category icons */
+  .cats{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:26px 0 0}
+  .cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:84px;min-height:72px;padding:10px 8px 8px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);font:inherit;font-size:15px;font-weight:600;cursor:pointer;border-radius:10px 10px 0 0}
+  .cat svg{width:28px;height:28px}
+  .cat:hover{color:var(--ink);border-bottom-color:var(--line)}
+  .cat[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+  .hero .quick{justify-content:center;margin-top:14px;min-height:44px}
+  /* Skyscanner: sort tabs */
+  .sorts{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 14px}
+  .sort{border:0;border-right:2px solid var(--line);background:#fff;font:inherit;min-height:60px;padding:8px 10px;cursor:pointer;text-align:left;color:var(--ink)}
+  .sort:last-child{border-right:0}
+  .sort b{display:block;font-size:17px}
+  .sort small{color:var(--muted);font-size:15px}
+  .sort[aria-pressed="true"]{background:var(--blue-tint);box-shadow:inset 0 -4px 0 var(--blue)}
+  /* Uber: arrival time first */
+  .rlist .opt{grid-template-columns:156px 1fr auto}
+  .eta b{white-space:nowrap}
+  .eta{border-right:2px solid var(--line);padding-right:16px;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+  .eta b{font-size:24px;line-height:1.1;letter-spacing:-.01em}
+  .eta small{color:var(--muted);font-size:15px}
+  .opt.best .eta b{color:var(--blue)}
+  /* Amazon: order-within promise */
+  .promise{margin:6px 0 4px;font-size:17px}
+  .promise .cd{color:var(--ok)}
+  .promise.soon .cd{color:#8A4B00}
   /* search-first layout */
   .narrow{max-width:900px}
   .hero{padding:56px 0 48px}
@@ -246,6 +275,12 @@
     .sfield.pc{width:auto}
     .promises.row{grid-template-columns:1fr;gap:10px}
     .opt{grid-template-columns:1fr}
+    .rlist .opt{grid-template-columns:1fr}
+    .eta{border-right:0;border-bottom:2px solid var(--line);padding:0 0 10px;flex-direction:row;align-items:baseline;gap:10px}
+    .sort{padding:8px 8px;min-height:64px}
+    .sort b{font-size:15px;line-height:1.2}
+    .sort small{font-size:13px;line-height:1.25;display:block;margin-top:2px}
+    .cat{min-width:72px}
     .opt a.shop{width:100%}
     .helpcard{flex-direction:column;align-items:stretch}
     .doit{grid-template-columns:1fr;gap:24px}
@@ -283,7 +318,7 @@
 <main id="top">
 <div class="hero"><div class="wrap narrow">
   <h1>What do you need today?</h1>
-  <p class="lead">Search once. See every shop that can deliver it to you in London today, fastest first.</p>
+  <p class="lead">Every shop that can deliver it to you in London today, in one search.</p>
   <div class="searchwrap">
   <form class="search" id="sf" role="search" novalidate>
     <div class="sfield grow">
@@ -299,13 +334,10 @@
   <div class="sugg" id="sugg" role="listbox" aria-label="Suggestions" hidden></div>
   </div>
   <p class="sr" id="qhint">Suggestions appear as you type. Use the up and down arrows to move through them and Enter to choose.</p>
-  <div class="quick" id="quick"><span class="qlabel">Popular:</span></div>
   <p class="error-msg" id="s-err" role="alert"></p>
-  <ul class="promises row">
-    <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Free to search.</b> You buy straight from the shop.</span></li>
-    <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Same-day only.</b> Shows who can still make it today.</span></li>
-    <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Short on time?</b> We'll find it and order it for you.</span></li>
-  </ul>
+  <p class="trust">Free to search. Buy straight from the shop, or let us do it for you from £2.</p>
+  <div class="cats" id="cats" role="group" aria-label="Browse by category"></div>
+  <div class="quick" id="quick" aria-live="polite"></div>
 </div></div>
 
 <section id="results" class="results" hidden aria-labelledby="r-title"><div class="wrap narrow">
@@ -314,6 +346,7 @@
     <p class="rsub" id="r-sub"></p>
     <div class="refine" id="refine" hidden></div>
   </div>
+  <div class="sorts" id="sorts" role="group" aria-label="Sort results" hidden></div>
   <ol class="rlist" id="rlist"></ol>
   <div class="helpcard">
     <div>
@@ -322,7 +355,7 @@
     </div>
     <a class="btn" href="#ask" id="toask">Do it for me</a>
   </div>
-  <p class="disclaimer">Times and delivery charges are typical for each service, not live stock. Check on the shop's site before you buy. Last checked: November 2026.</p>
+  <p class="disclaimer">Times and delivery charges are typical for each service, not live stock. *Amazon same-day is free on Prime orders over £20; "Cheapest" uses typical charges, and app delivery fees vary. Check on the shop's site before you buy. Last checked: November 2026.</p>
 </div></section>
 
 <section id="doit" class="alt"><div class="wrap doit">
@@ -676,7 +709,8 @@
 
   const qIn=$('q'), sugg=$('sugg'); let active=-1, items=[], chosen=null;
   function suggestionsFor(text){
-    const t=norm(text); if(!t) return [];
+    const t=norm(text);
+    if(!t){ const r=getRecent(); return r.length?[{h:'Recent searches',rows:r.map(l=>({l,kind:'recent'}))}]:[]; }
     const groups=[], fams=FAMILIES.map(f=>({f,h:hit(f.k,t)})).filter(x=>x.h).sort((a,b)=>b.h-a.h).slice(0,2);
     const prod=[]; fams.forEach(({f})=>f.opts.forEach(o=>prod.push({l:o.l,kind:'product'})));
     const idea=IDEAS.find(i=>hit(i.k,t));
@@ -688,9 +722,9 @@
   function mark(label,text){ const t=norm(text); if(!t) return esc(label); const i=label.toLowerCase().indexOf(t); return i<0?esc(label):esc(label.slice(0,i))+'<mark>'+esc(label.slice(i,i+t.length))+'</mark>'+esc(label.slice(i+t.length)); }
   function openSugg(){
     const groups=suggestionsFor(qIn.value); items=[];
-    if(!groups.length || (groups.length===1)){ closeSugg(); return; }
+    if(!groups.length || (groups.length===1 && groups[0].rows[0].kind==='free')){ closeSugg(); return; }
     sugg.innerHTML=groups.map((g,gi)=>`<div class="sgroup" role="group"${g.h?` aria-label="${esc(g.h)}"`:''}>${g.h?`<div class="shead" role="presentation">${esc(g.h)}</div>`:''}${
-      g.rows.map(r=>{const id='so'+items.length; items.push(r); return `<div class="sopt" role="option" id="${id}" aria-selected="false" data-i="${items.length-1}"><span class="t">${r.kind==='free'?'Search “'+esc(r.l)+'”':mark(r.l,qIn.value)}</span><span class="k">${r.kind==='idea'?'idea':r.kind==='product'?'':'Enter'}</span></div>`;}).join('')}</div>`).join('');
+      g.rows.map(r=>{const id='so'+items.length; items.push(r); return `<div class="sopt" role="option" id="${id}" aria-selected="false" data-i="${items.length-1}"><span class="t">${r.kind==='free'?'Search “'+esc(r.l)+'”':mark(r.l,qIn.value)}</span><span class="k">${r.kind==='idea'?'idea':r.kind==='recent'?'recent':r.kind==='product'?'':'Enter'}</span></div>`;}).join('')}</div>`).join('');
     sugg.hidden=false; qIn.setAttribute('aria-expanded','true'); setActive(-1);
   }
   function closeSugg(){ sugg.hidden=true; qIn.setAttribute('aria-expanded','false'); qIn.removeAttribute('aria-activedescendant'); active=-1; }
@@ -704,7 +738,7 @@
     $('sf').requestSubmit();
   }
   qIn.addEventListener('input',()=>{ chosen=null; openSugg(); });
-  qIn.addEventListener('focus',()=>{ if(qIn.value.trim()) openSugg(); });
+  qIn.addEventListener('focus',()=>openSugg());
   qIn.addEventListener('keydown',e=>{
     if(sugg.hidden && e.key==='ArrowDown'){ openSugg(); return; }
     if(sugg.hidden) return;
@@ -715,33 +749,61 @@
   });
   sugg.addEventListener('mousedown',e=>{ const el=e.target.closest('.sopt'); if(el){ e.preventDefault(); choose(+el.dataset.i); } });
   document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) closeSugg(); });
-  document.addEventListener('keydown',e=>{ // press / to search
-    if(e.key==='/' && !/input|textarea|select/i.test(document.activeElement.tagName)){ e.preventDefault(); qIn.focus(); qIn.select(); }
-  });
-  // popular chips
-  $('quick').insertAdjacentHTML('beforeend', POPULAR.map(l=>`<button type="button" class="chip" data-l="${esc(l)}">${esc(l)}</button>`).join('')+'<span class="qlabel" style="margin-left:6px">Tip: press <span class="kbd">/</span> to search</span>');
+  // Airbnb-style categories: each opens a row of one-tap searches
+  const ICON={
+    popular:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/>',
+    tech:'<rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M2 19h20"/>',
+    home:'<path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/>',
+    gifts:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M3 9h18M12 9v11M12 9c-2.5 0-4.5-1-4.5-2.8S9.8 3.8 12 9c2.2-5.2 4.5-4.6 4.5-2.8S14.5 9 12 9"/>',
+    health:'<path d="M12 20s-7-4.4-7-9.6A4 4 0 0 1 12 8a4 4 0 0 1 7 2.4C19 15.6 12 20 12 20z"/>',
+    baby:'<path d="M9 3h6M10 3v3M14 3v3M8 9a2 2 0 0 1 2-3h4a2 2 0 0 1 2 3v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/><path d="M8 13h8"/>',
+    party:'<ellipse cx="12" cy="9" rx="5" ry="6"/><path d="M12 15l-1 2h2zM12 17c0 2-2 2.5-2 4"/>'
+  };
+  const CAT_SETS=[
+    {id:'popular',l:'Popular',items:['Phone charger (USB-C)','PS5 DualSense controller','HDMI cable (2m)','Flower bouquet','Paracetamol','Helium balloons']},
+    {id:'tech',l:'Tech',items:['USB-C laptop charger (65W)','PS5 console','Wireless earbuds','USB-C to HDMI adapter','Printer ink cartridges','Power bank']},
+    {id:'home',l:'Home',items:['Fan heater','Kettle','Extension lead (4-way)','Light bulb, screw fitting (E27)','Air fryer','Tool kit']},
+    {id:'gifts',l:'Gifts',items:['Flower bouquet','Perfume','LEGO set','Birthday cake','Aftershave','Red roses']},
+    {id:'health',l:'Health',items:['Paracetamol','Cold and flu relief','Digital thermometer','Plasters','First aid kit']},
+    {id:'baby',l:'Baby',items:['Nappies, size 3–4','Baby formula','Baby wipes','Calpol']},
+    {id:'party',l:'Party',items:['Helium balloons','Number balloons','Candles','Paper plates','Bluetooth speaker']}
+  ];
+  const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  $('cats').innerHTML=CAT_SETS.map((c,i)=>`<button type="button" class="cat" data-c="${c.id}" aria-pressed="${i===0}">${svg(ICON[c.id])}${c.l}</button>`).join('');
+  function showCat(id){
+    const c=CAT_SETS.find(x=>x.id===id);
+    $('cats').querySelectorAll('.cat').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.c===id)));
+    $('quick').innerHTML=c.items.map(l=>`<button type="button" class="chip" data-l="${esc(l)}">${esc(l)}</button>`).join('');
+  }
+  showCat('popular');
+  $('cats').addEventListener('click',e=>{ const b=e.target.closest('.cat'); if(b) showCat(b.dataset.c); });
   $('quick').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); });
+
+  // Google-style recent searches (kept only in this browser)
+  const RKEY='nolag-recent';
+  function getRecent(){ try{ return JSON.parse(localStorage.getItem(RKEY)||'[]'); }catch(e){ return []; } }
+  function saveRecent(l){ try{ const r=[l,...getRecent().filter(x=>x.toLowerCase()!==l.toLowerCase())].slice(0,5); localStorage.setItem(RKEY,JSON.stringify(r)); }catch(e){} }
 
   // ---------- same-day search ----------
   // Typical service facts (not live stock). Review these every couple of weeks and update "Last checked".
   // cutoff = latest London time (24h, decimal hours) you can usually still order for delivery today.
   const SOURCES=[
-    {id:'amznow', name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
+    {id:'amznow', etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes',feeVal:1.99, name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
      eta:'about 30 minutes', fee:'£1.99 with Prime, £3.99 without', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
      url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
-    {id:'boots', name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
+    {id:'boots', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes',feeVal:2.99, name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
      eta:'about 20 to 45 minutes', fee:'app delivery fee', url:q=>`https://www.boots.com/sitesearch?searchTerm=${encodeURIComponent(q)}`},
-    {id:'ubereats', name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
+    {id:'ubereats', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes',feeVal:2.99, name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
      eta:'about 20 to 45 minutes', fee:'app delivery fee', url:q=>`https://www.ubereats.com/gb/search?q=${encodeURIComponent(q)}`},
-    {id:'deliveroo', name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
+    {id:'deliveroo', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes',feeVal:2.99, name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
      eta:'about 20 to 45 minutes', fee:'app delivery fee', note:'Search in the Deliveroo app or site', url:q=>`https://deliveroo.co.uk/`},
-    {id:'johnlewis', name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
+    {id:'johnlewis', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour',feeVal:2.99, name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
      eta:'about 30 to 60 minutes', fee:'app delivery fee', url:q=>`https://www.johnlewis.com/search?search-term=${encodeURIComponent(q)}`},
-    {id:'currys', name:'Currys', via:'same-day delivery from local stores', cats:['tech','home'], cutoff:18, speed:180,
+    {id:'currys', etaBig:'2-hour slot',etaSmall:'this evening',promise:'in a 2-hour slot this evening',feeVal:9.95, name:'Currys', via:'same-day delivery from local stores', cats:['tech','home'], cutoff:18, speed:180,
      eta:'a 2-hour slot this evening', fee:'about £9.95', url:q=>`https://www.currys.co.uk/search?q=${encodeURIComponent(q)}`},
-    {id:'argos', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:18, speed:240,
+    {id:'argos', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight',feeVal:3.95, name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:18, speed:240,
      eta:'by 10pm tonight', fee:'about £3.95', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
-    {id:'amazon', name:'Amazon same-day', via:'Amazon, Prime same-day delivery', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
+    {id:'amazon', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight',feeVal:0, name:'Amazon same-day', via:'Amazon, Prime same-day delivery', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
      eta:'by 10pm tonight', fee:'free on Prime orders over £20', url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`}
   ];
   const CATS={
@@ -774,11 +836,18 @@
     renderResults(spec,pc,fam);
   });
 
-  function renderResults(spec,pc,ambig){
-    const q=spec.q, label=spec.l;
+  // Skyscanner-style sorting. "Best" trades waiting time against delivery cost (30 minutes of waiting ≈ £1).
+  const SORTS={
+    fast:{l:'Fastest',f:(a,b)=>a.speed-b.speed},
+    cheap:{l:'Cheapest delivery',f:(a,b)=>a.feeVal-b.feeVal||a.speed-b.speed},
+    best:{l:'Best overall',f:(a,b)=>(a.speed/30+a.feeVal)-(b.speed/30+b.feeVal)}
+  };
+  let current=null, sortMode='best';
+  function renderResults(spec,pc,ambig){ current={spec,pc,ambig}; saveRecent(spec.l); draw(true); }
+  function draw(jump){
+    const {spec,pc,ambig}=current, q=spec.q, label=spec.l;
     const now=londonHours(), list=$('rlist');
     const cats=spec.cats || Object.keys(CATS).filter(c=>CATS[c].test(q));
-    // "Did you mean" row for ambiguous searches like "ps5"
     const fam=spec.fam || ambig, ref=$('refine');
     if(fam && fam.opts.length>1){
       ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Did you mean?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
@@ -787,42 +856,59 @@
     } else ref.hidden=true;
     let opts=SOURCES.filter(s=>!cats.length || s.cats.some(c=>cats.includes(c)));
     opts=opts.filter(s=>!s.area || (pc ? s.area.test(pc) : false));
-    const open=opts.filter(s=>now<s.cutoff).sort((a,b)=>a.speed-b.speed);
-    const shut=opts.filter(s=>now>=s.cutoff);
-    const safeQ=esc(label);
-    if(BANNED.test(q)){
-      list.innerHTML=`<li class="opt closed"><div><h3>We can't help with alcohol or tobacco</h3><p class="via">You'll need to order these directly from a shop that checks ID on delivery.</p></div></li>`;
+    const open=opts.filter(s=>now<s.cutoff), shut=opts.filter(s=>now>=s.cutoff);
+    const banned=BANNED.test(q);
+    // sort tabs: each shows the winner's headline figure
+    const sorts=$('sorts');
+    if(open.length>1 && !banned){
+      sorts.innerHTML=Object.entries(SORTS).map(([k,v])=>{ const top=[...open].sort(v.f)[0];
+        const sub = k==='cheap' ? (top.feeVal? '£'+top.feeVal.toFixed(2)+' delivery' : 'Free delivery*') : top.etaBig+', '+top.name.replace('Shops on ','');
+        return `<button type="button" class="sort" data-s="${k}" aria-pressed="${k===sortMode}"><b>${v.l}</b><small>${esc(sub)}</small></button>`; }).join('');
+      sorts.hidden=false;
+      sorts.onclick=e=>{ const b=e.target.closest('.sort'); if(!b) return; sortMode=b.dataset.s; draw(false); };
+    } else sorts.hidden=true;
+    open.sort(SORTS[sortMode].f);
+    const safeQ=esc(label), badge={fast:'Fastest',cheap:'Cheapest delivery',best:'Best overall'}[sortMode];
+    if(banned){
+      list.innerHTML=`<li class="opt closed" style="grid-template-columns:1fr"><div><h3>We can't help with alcohol or tobacco</h3><p class="via">You'll need to order these directly from a shop that checks ID on delivery.</p></div></li>`;
     } else {
-      list.innerHTML=open.map((s,i)=>`
+      list.innerHTML=open.map((s,i)=>{ const soon=s.cutoff-now<1.5; return `
         <li class="opt${i===0?' best':''}">
+          <div class="eta"><b>${s.etaBig}</b><small>${s.etaSmall}</small></div>
           <div>
-            ${i===0?'<span class="badge">Fastest still open</span>':''}
+            ${i===0?`<span class="badge">${badge}</span>`:''}
             <h3>${s.name}</h3>
             <p class="via">${s.via}${s.areaNote?'. '+s.areaNote:''}</p>
-            <div class="facts">
-              <span>Arrives <b>${s.eta}</b></span>
-              <span>Delivery <b>${s.fee}</b></span>
-              ${s.cutoff-now<1.5?`<span class="warn">Order in the next ${left(s.cutoff-now)}</span>`:`<span>Order by <b>${clock(s.cutoff)}</b></span>`}
-            </div>
-            ${s.note?`<p class="via" style="margin:8px 0 0">${s.note}</p>`:''}
+            <p class="promise${soon?' soon':''}">Order within <b class="cd" data-cut="${s.cutoff}">${left(s.cutoff-now)}</b> to get it ${s.promise}.</p>
+            <div class="facts"><span>Delivery <b>${s.fee}</b></span>${s.note?`<span>${s.note}</span>`:''}</div>
           </div>
           <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search ${s.name.replace('Shops on ','')}<span class="sr"> for ${safeQ} (opens in a new tab)</span></a>
-        </li>`).join('') + shut.map(s=>`
+        </li>`; }).join('') + shut.map(s=>`
         <li class="opt closed">
+          <div class="eta"><b>Tomorrow</b><small>closed today</small></div>
           <div><h3>${s.name}</h3><p class="via">Too late for today: orders close at ${clock(s.cutoff)}.</p></div>
           <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search for tomorrow<span class="sr"> on ${s.name} (opens in a new tab)</span></a>
         </li>`).join('');
     }
     const n=open.length;
-    $('r-title').textContent = BANNED.test(q) ? 'Not something we can help with' :
+    $('r-title').textContent = banned ? 'Not something we can help with' :
       n ? `${n} way${n>1?'s':''} to get “${label}” today` : `Nothing can still deliver “${label}” today`;
-    $('r-sub').textContent = (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n?'Fastest first.':'Try first thing tomorrow, or ask us to find another way.');
-    $('results').hidden=false; $('r-title').focus();
-    $('results').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'});
-    // carry the search into the "do it for me" form
-    $('item').value=label; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
-    lastSearch={q:label,sent:q,pc,shown:open.map(s=>s.id)};
+    $('r-sub').textContent = (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n?'':'Try first thing tomorrow, or ask us to find another way.');
+    $('results').hidden=false;
+    if(jump){
+      $('r-title').focus();
+      $('results').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'});
+      $('item').value=label; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
+    }
+    lastSearch={q:label,sent:q,pc,sort:sortMode,shown:open.map(s=>s.id)};
   }
+  // Amazon-style live countdown: refresh every 30 seconds, redraw when a shop closes
+  setInterval(()=>{
+    if(!current || $('results').hidden) return;
+    const now=londonHours(); let closed=false;
+    document.querySelectorAll('.cd').forEach(el=>{ const d=+el.dataset.cut-now; if(d<=0) closed=true; else el.textContent=left(d); el.closest('.promise').classList.toggle('soon',d<1.5); });
+    if(closed) draw(false);
+  },30000);
   let lastSearch=null;
   document.addEventListener('click',e=>{
     const a=e.target.closest('a.shop'); if(a && lastSearch) console.info('NoLag click',{shop:a.dataset.shop,...lastSearch}); // swap for analytics later
