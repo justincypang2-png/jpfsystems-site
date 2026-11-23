@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NoLag: need something today in London? We'll find who can get it to you fastest</title>
-<meta name="description" content="Tell us what you need and your postcode. We check every same-day option in London, order it for you and track it. Small flat fee, only paid if it arrives on time.">
+<title>NoLag: search every same-day shop in London at once</title>
+<meta name="description" content="Type what you need and your postcode. See every shop that can deliver it to you in London today, fastest first. Or let us order it for you.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -173,6 +173,65 @@
   .dnav button[disabled]{visibility:hidden}
   .ex{font-size:15px;color:var(--muted);margin-top:10px}
 
+
+  /* search-first layout */
+  .narrow{max-width:900px}
+  .hero{padding:56px 0 48px}
+  .hero .wrap.narrow{display:block}
+  .hero h1{max-width:none;font-size:clamp(36px,5vw,58px);margin:0 0 10px}
+  .hero .lead{max-width:44ch;margin-bottom:26px}
+  .search{display:flex;gap:10px;align-items:flex-end;background:#fff;border:2px solid var(--ink);border-radius:18px;padding:12px;box-shadow:0 12px 40px rgba(18,24,38,.10)}
+  .sfield{display:flex;flex-direction:column;gap:2px}
+  .sfield.grow{flex:1}
+  .sfield.pc{width:150px}
+  .sfield label{font-size:15px;font-weight:700;padding-left:4px}
+  .sfield input{border:0 !important;min-height:48px;font-size:20px;padding:6px 4px;outline-offset:2px}
+  .sfield.grow{border-right:2px solid var(--line);padding-right:10px}
+  button.sgo{min-height:60px;padding:0 28px;background:var(--blue);color:#fff;border:0;border-radius:12px;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+  button.sgo:hover{background:var(--blue-dark)}
+  #s-err{display:none;margin:10px 4px 0}
+  #s-err.show{display:block}
+  .promises.row{grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}
+  .promises.row li{font-size:16px}
+  .promises.row svg{width:22px;height:22px}
+
+  .results{padding:36px 0 56px}
+  .rhead h2{font-size:28px;line-height:1.2;margin:0 0 4px}
+  .rsub{color:var(--muted);margin:0 0 18px}
+  .rlist{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .opt{display:grid;grid-template-columns:1fr auto;gap:14px 20px;align-items:center;border:2px solid var(--line);border-radius:16px;padding:18px 20px;background:#fff}
+  .opt.best{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+  .opt .badge{display:inline-block;background:var(--blue);color:#fff;font-size:14px;font-weight:700;border-radius:999px;padding:2px 10px;margin-bottom:6px}
+  .opt h3{margin:0;font-size:21px}
+  .opt .via{color:var(--muted);font-size:16px;margin:2px 0 8px}
+  .facts{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:17px}
+  .facts b{font-weight:700}
+  .facts .warn{color:#8A4B00;font-weight:600}
+  .opt a.shop{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 20px;border-radius:12px;font-weight:700;text-decoration:none;background:var(--blue);color:#fff;white-space:nowrap}
+  .opt a.shop:hover{background:var(--blue-dark)}
+  .opt:not(.best) a.shop{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+  .opt:not(.best) a.shop:hover{background:var(--blue-tint)}
+  .opt.closed{background:var(--soft);border-style:dashed}
+  .opt.closed h3,.opt.closed .facts{color:var(--muted)}
+  .helpcard{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:22px;padding:22px;border-radius:16px;background:var(--ink);color:#fff}
+  .helpcard h3{margin:0 0 4px;font-size:22px}
+  .helpcard p{margin:0;color:#D3D8E2}
+  .helpcard a.btn{background:#fff;color:var(--ink);flex:none}
+  .helpcard a.btn:hover{background:var(--blue-tint);color:var(--ink)}
+  .disclaimer{color:var(--muted);font-size:15px;margin:16px 0 0}
+  .doit{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:start}
+  .doit .s{margin-bottom:14px}
+  @media(max-width:880px){
+    .search{flex-direction:column;align-items:stretch;gap:6px}
+    .sfield.grow{border-right:0;border-bottom:2px solid var(--line);padding:0 0 8px}
+    .sfield.pc{width:auto}
+    .promises.row{grid-template-columns:1fr;gap:10px}
+    .opt{grid-template-columns:1fr}
+    .opt a.shop{width:100%}
+    .helpcard{flex-direction:column;align-items:stretch}
+    .doit{grid-template-columns:1fr;gap:24px}
+  }
+
   @media(max-width:880px){
     .hero{padding:28px 0 40px}
     .hero .wrap{grid-template-columns:1fr;gap:26px}
@@ -187,7 +246,7 @@
 </style>
 </head>
 <body>
-<a class="skip" href="#ask">Skip to the request form</a>
+<a class="skip" href="#q">Skip to search</a>
 
 <div class="demobar" id="demobar"><div class="wrap">
   <span>Preview: requests are not sent. Send the form to see what happens behind the scenes.</span>
@@ -199,24 +258,61 @@
     <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
     NoLag
   </a>
-  <nav aria-label="Main"><a href="#how">How it works</a><a href="#fees">Fees</a><a href="#faq">Questions</a></nav>
+  <nav aria-label="Main"><a href="#how">How it works</a><a href="#doit">Do it for me</a><a href="#faq">Questions</a></nav>
 </div></header>
 
 <main id="top">
-<div class="hero"><div class="wrap">
+<div class="hero"><div class="wrap narrow">
+  <h1>What do you need today?</h1>
+  <p class="lead">Search once. See every shop that can deliver it to you in London today, fastest first.</p>
+  <form class="search" id="sf" role="search" novalidate>
+    <div class="sfield grow">
+      <label for="q">Item</label>
+      <input type="text" id="q" name="q" autocomplete="off" placeholder="e.g. USB-C laptop charger, rice cooker, birthday balloons">
+    </div>
+    <div class="sfield pc">
+      <label for="qpc">Postcode</label>
+      <input type="text" id="qpc" name="qpc" autocomplete="postal-code" autocapitalize="characters" placeholder="SE15 4AB">
+    </div>
+    <button class="sgo" type="submit">Search</button>
+  </form>
+  <p class="error-msg" id="s-err" role="alert"></p>
+  <ul class="promises row">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Free to search.</b> You buy straight from the shop.</span></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Same-day only.</b> Shows who can still make it today.</span></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Short on time?</b> We'll find it and order it for you.</span></li>
+  </ul>
+</div></div>
+
+<section id="results" class="results" hidden aria-labelledby="r-title"><div class="wrap narrow">
+  <div class="rhead">
+    <h2 id="r-title" tabindex="-1"></h2>
+    <p class="rsub" id="r-sub"></p>
+  </div>
+  <ol class="rlist" id="rlist"></ol>
+  <div class="helpcard">
+    <div>
+      <h3>Can't find it, or no time to check?</h3>
+      <p>We'll search every shop, order it and track it for you. £2, £5 or £10, paid only once it arrives.</p>
+    </div>
+    <a class="btn" href="#ask" id="toask">Do it for me</a>
+  </div>
+  <p class="disclaimer">Times and delivery charges are typical for each service, not live stock. Check on the shop's site before you buy. Last checked: November 2026.</p>
+</div></section>
+
+<section id="doit" class="alt"><div class="wrap doit">
   <div>
-    <h1>Need something today? We'll find who can get it to you fastest.</h1>
-    <p class="lead">Tell us what you need and your London postcode. We check every same-day option, order it for you and keep an eye on it until it arrives.</p>
+    <h2 class="s">Or let us do it for you</h2>
+    <p class="lead" style="font-size:19px">Tell us the item and when you need it. We check every same-day option, order it for you and keep an eye on it until it arrives.</p>
     <ul class="promises">
       <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>A reply within 15 minutes</b> with where it's coming from and when.</span></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Shop prices, no markup.</b> Our fee is £2, £5 or £10, shown before you send.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Shop prices, no markup.</b> Our fee is £2, £5 or £10.</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>No fee if it's late or wrong.</b> You only pay it once it has arrived.</span></li>
     </ul>
   </div>
-
   <div class="card" id="ask" tabindex="-1">
     <form id="f" novalidate aria-describedby="formhint">
-      <h2>What do you need?</h2>
+      <h2>Tell us what you need</h2>
       <p class="hint" id="formhint">All questions are needed. It takes about a minute.</p>
 
       <div class="summary" id="summary" role="alert" tabindex="-1">
@@ -299,19 +395,19 @@
       <b>Your request didn't send.</b> Check your connection and press "Send my request" again, or email us at <span class="contactline"></span>.
     </div>
   </div>
-</div></div>
+</div></section>
 
 <section id="how"><div class="wrap">
   <h2 class="s">How it works</h2>
   <ol class="steps">
-    <li><h3>Tell us what you need</h3><p>The item, your postcode and when you need it. One short form.</p></li>
-    <li><h3>We find the fastest option</h3><p>We check Amazon same-day, Argos, Currys, John Lewis, Boots and the shops on Deliveroo and Uber Eats, then send you one clear answer.</p></li>
-    <li><h3>We order it and track it</h3><p>You pay the shop price by secure link. We place the order and watch it until it reaches your door.</p></li>
+    <li><h3>Search once</h3><p>Type the item and your postcode. We show every shop that can still deliver it to you today, fastest first.</p></li>
+    <li><h3>Pick a shop and buy</h3><p>Open the shop you like and check out there, at their normal price. No account with us needed.</p></li>
+    <li><h3>Or let us do it</h3><p>No time to check? We find it, order it and track it for a small fee, paid only once it arrives.</p></li>
   </ol>
 </div></section>
 
 <section id="fees" class="alt"><div class="wrap">
-  <h2 class="s">One small fee, based on the item's price</h2>
+  <h2 class="s">Searching is free. If we do it for you, one small fee.</h2>
   <div class="fees">
     <div class="fee-box"><b>£2</b><p>Items under £20, like a cable or a card</p></div>
     <div class="fee-box"><b>£5</b><p>Items £20 to £100, like a charger or a gift</p></div>
@@ -350,7 +446,7 @@
 <section id="faq" class="alt"><div class="wrap">
   <h2 class="s">Questions</h2>
   <div class="faq">
-    <details><summary>Why not just order it myself?</summary><p>You can. NoLag helps when you don't know which shop can deliver that exact thing today, and you don't have time to check six apps and websites. We do the searching and tell you the fastest answer.</p></details>
+    <details><summary>Is searching really free?</summary><p>Yes. You buy from the shop at its normal price. We may earn a small commission from some shops, which never changes what you pay.</p></details>
     <details><summary>How do I pay?</summary><p>We send you a quote first. If you're happy, you pay the item price by a secure link and we order it. Our fee is a second link, sent only after it has arrived.</p></details>
     <details><summary>What if it's late or wrong?</summary><p>You pay no fee. We'll also chase the shop or courier for you. The item itself is covered by the shop's normal returns.</p></details>
     <details><summary>Where do you deliver?</summary><p>London, starting in <span class="borough">Southwark and Lambeth</span>. Send your postcode anyway and we'll tell you straight away if we can help.</p></details>
@@ -360,8 +456,8 @@
 
 <div class="cta"><div class="wrap">
   <h2 class="s" style="margin:0 auto 10px">Need something today?</h2>
-  <p>It takes about a minute to ask.</p>
-  <a class="btn" href="#ask">Make a request</a>
+  <p>Search every same-day shop in London at once.</p>
+  <a class="btn" href="#top" id="backtosearch">Search now</a>
 </div></div>
 </main>
 
@@ -451,10 +547,109 @@
     }
   });
 
+
+  // ---------- same-day search ----------
+  // Typical service facts (not live stock). Review these every couple of weeks and update "Last checked".
+  // cutoff = latest London time (24h, decimal hours) you can usually still order for delivery today.
+  const SOURCES=[
+    {id:'amznow', name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
+     eta:'about 30 minutes', fee:'£1.99 with Prime, £3.99 without', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
+     url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
+    {id:'boots', name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
+     eta:'about 20 to 45 minutes', fee:'app delivery fee', url:q=>`https://www.boots.com/sitesearch?searchTerm=${encodeURIComponent(q)}`},
+    {id:'ubereats', name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
+     eta:'about 20 to 45 minutes', fee:'app delivery fee', url:q=>`https://www.ubereats.com/gb/search?q=${encodeURIComponent(q)}`},
+    {id:'deliveroo', name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
+     eta:'about 20 to 45 minutes', fee:'app delivery fee', note:'Search in the Deliveroo app or site', url:q=>`https://deliveroo.co.uk/`},
+    {id:'johnlewis', name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
+     eta:'about 30 to 60 minutes', fee:'app delivery fee', url:q=>`https://www.johnlewis.com/search?search-term=${encodeURIComponent(q)}`},
+    {id:'currys', name:'Currys', via:'same-day delivery from local stores', cats:['tech','home'], cutoff:18, speed:180,
+     eta:'a 2-hour slot this evening', fee:'about £9.95', url:q=>`https://www.currys.co.uk/search?q=${encodeURIComponent(q)}`},
+    {id:'argos', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:18, speed:240,
+     eta:'by 10pm tonight', fee:'about £3.95', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
+    {id:'amazon', name:'Amazon same-day', via:'Amazon, Prime same-day delivery', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
+     eta:'by 10pm tonight', fee:'free on Prime orders over £20', url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`}
+  ];
+  const CATS={
+    tech:/charg|cable|usb|hdmi|headphone|earbud|airpod|laptop|phone|ipad|tablet|ink|printer|router|mouse|keyboard|console|ps5|playstation|xbox|switch|nintendo|game|batter|adapter|monitor|\btv\b|speaker|camera|sd card|memory/i,
+    home:/cooker|kettle|toaster|heater|fan\b|iron\b|hoover|vacuum|lamp|bulb|drill|screw|tool|plug|extension|blender|microwave|pan\b|duvet|pillow|towel|bin\b|lock|battery|fuse|tape|glue|paint|hammer/i,
+    gift:/flower|cake|balloon|perfume|gift|toy|lego|book|card\b|chocolate|candle|present|wrap/i,
+    health:/paracetamol|ibuprofen|plaster|nappies|nappy|formula|calpol|cold|flu|vitamin|thermometer|pregnancy|tampon|pads|condom/i,
+    beauty:/shampoo|makeup|make-up|lipstick|mascara|skincare|moisturis|razor|toothpaste|deodorant|hair|nail|serum/i,
+    grocery:/milk|bread|eggs|snack|water|coffee|tea\b|ice|crisps|fruit/i
+  };
+  const BANNED=/\b(beer|wine|prosecco|champagne|vodka|gin|whisky|rum|spirits|alcohol|cigarette|tobacco|vape)\b/i;
+  function londonHours(){
+    const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+    const g=t=>+parts.find(p=>p.type===t).value; return g('hour')+g('minute')/60;
+  }
+  function left(h){ const m=Math.round(h*60); return m>=60 ? `${Math.floor(m/60)} h ${m%60} min` : `${m} min`; }
+  function clock(h){ const H=Math.floor(h), M=Math.round((h-H)*60); const ap=H>=12?'pm':'am'; const h12=((H+11)%12)+1; return M?`${h12}:${String(M).padStart(2,'0')}${ap}`:`${h12}${ap}`; }
+
+  $('sf').addEventListener('submit', e=>{
+    e.preventDefault();
+    const q=$('q').value.trim(), pc=$('qpc').value.trim().toUpperCase(), err=$('s-err');
+    err.classList.remove('show');
+    if(q.length<2){ err.textContent='Type what you need, for example "USB-C laptop charger".'; err.classList.add('show'); $('q').focus(); return; }
+    if(pc && !/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i.test(pc) && !/^[A-Z]{1,2}\d[A-Z\d]?$/i.test(pc)){ err.textContent='That postcode doesn\'t look right. Try one like SE15 4AB, or leave it blank.'; err.classList.add('show'); $('qpc').focus(); return; }
+    renderResults(q,pc);
+  });
+
+  function renderResults(q,pc){
+    const now=londonHours(), list=$('rlist');
+    const cats=Object.keys(CATS).filter(c=>CATS[c].test(q));
+    let opts=SOURCES.filter(s=>!cats.length || s.cats.some(c=>cats.includes(c)));
+    opts=opts.filter(s=>!s.area || (pc ? s.area.test(pc) : false));
+    const open=opts.filter(s=>now<s.cutoff).sort((a,b)=>a.speed-b.speed);
+    const shut=opts.filter(s=>now>=s.cutoff);
+    const safeQ=esc(q);
+    if(BANNED.test(q)){
+      list.innerHTML=`<li class="opt closed"><div><h3>We can't help with alcohol or tobacco</h3><p class="via">You'll need to order these directly from a shop that checks ID on delivery.</p></div></li>`;
+    } else {
+      list.innerHTML=open.map((s,i)=>`
+        <li class="opt${i===0?' best':''}">
+          <div>
+            ${i===0?'<span class="badge">Fastest still open</span>':''}
+            <h3>${s.name}</h3>
+            <p class="via">${s.via}${s.areaNote?'. '+s.areaNote:''}</p>
+            <div class="facts">
+              <span>Arrives <b>${s.eta}</b></span>
+              <span>Delivery <b>${s.fee}</b></span>
+              ${s.cutoff-now<1.5?`<span class="warn">Order in the next ${left(s.cutoff-now)}</span>`:`<span>Order by <b>${clock(s.cutoff)}</b></span>`}
+            </div>
+            ${s.note?`<p class="via" style="margin:8px 0 0">${s.note}</p>`:''}
+          </div>
+          <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search ${s.name.replace('Shops on ','')}<span class="sr"> for ${safeQ} (opens in a new tab)</span></a>
+        </li>`).join('') + shut.map(s=>`
+        <li class="opt closed">
+          <div><h3>${s.name}</h3><p class="via">Too late for today: orders close at ${clock(s.cutoff)}.</p></div>
+          <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search for tomorrow<span class="sr"> on ${s.name} (opens in a new tab)</span></a>
+        </li>`).join('');
+    }
+    const n=open.length;
+    $('r-title').textContent = BANNED.test(q) ? 'Not something we can help with' :
+      n ? `${n} way${n>1?'s':''} to get “${q}” today` : `Nothing can still deliver “${q}” today`;
+    $('r-sub').textContent = (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n?'Fastest first.':'Try first thing tomorrow, or ask us to find another way.');
+    $('results').hidden=false; $('r-title').focus();
+    $('results').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'});
+    // carry the search into the "do it for me" form
+    $('item').value=q; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
+    lastSearch={q,pc,shown:open.map(s=>s.id)};
+  }
+  let lastSearch=null;
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a.shop'); if(a && lastSearch) console.info('NoLag click',{shop:a.dataset.shop,...lastSearch}); // swap for analytics later
+    if(e.target.closest('#toask')){ e.preventDefault(); $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); }
+    if(e.target.closest('#backtosearch')){ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>$('q').focus({preventScroll:true}),350); }
+  });
+
   // ---------- preview-only walkthrough (never shown on jpfsystems.co) ----------
   if(DEMO){
     $('demobar').style.display='block';
-    $('fillex').onclick=()=>{
+    $('fillex').onclick=()=>{ $('q').value='USB-C laptop charger'; $('qpc').value='SE15 4AB'; $('sf').requestSubmit(); };
+    $('fillex').textContent='Try a search';
+    $('demobar').querySelector('span').textContent='Preview: search results use typical times, and requests are not sent.';
+    window.fillConcierge=()=>{
       $('item').value='A 65W USB-C laptop charger for a Lenovo';
       $('postcode').value='SE15 4AB';
       form.querySelector('[name=when][value="By this evening"]').checked=true;
