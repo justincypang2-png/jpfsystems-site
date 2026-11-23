@@ -1,666 +1,259 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.P. Freglien Systems | Institutional</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* --- CORE VARIABLES --- */
-        :root {
-            --bank-blue: #0A192F;    /* Deepest Navy */
-            --bank-royal: #0047AB;   /* Logo Blue */
-            --bank-gold: #C5A059;    /* Metallic Gold */
-            
-            --font-logo: 'Cinzel', serif; 
-            --font-body: 'Inter', sans-serif;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NoLag — the exact thing you need, in London, today</title>
+<meta name="description" content="Tell us the exact item you need in London today. We check every same-day source, find the fastest, place the order and track it. Flat fee, paid only if we deliver.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5F8; --paper:#FFFFFF; --ink:#101828; --slate:#5F6B7A; --line:#D9DEE6;
+    --hot:#F2541B; --hot-dark:#C8400F; --ok:#1E9E6A; --sky:#E3ECF5;
+    --display:'Bricolage Grotesque',sans-serif; --body:Inter,system-ui,sans-serif;
+    --max:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  header{padding:22px 0}
+  header .wrap{display:flex;align-items:center;justify-content:space-between}
+  .logo{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.02em;text-decoration:none}
+  .logo b{color:var(--hot)}
+  header nav a{text-decoration:none;color:var(--slate);margin-left:22px;font-size:15px}
+  header nav a:hover{color:var(--ink)}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* hero */
+  .hero{padding:36px 0 64px}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:start}
+  .clock{font-family:var(--display);font-weight:500;font-size:18px;color:var(--slate);margin:0 0 14px}
+  .clock time{color:var(--hot);font-weight:700;font-variant-numeric:tabular-nums}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,5.2vw,64px);line-height:1.02;letter-spacing:-.03em;margin:0 0 20px;max-width:14ch}
+  .lead{font-size:19px;color:var(--slate);max-width:36ch;margin:0 0 28px}
+  .lead strong{color:var(--ink);font-weight:600}
+  .proof{display:flex;gap:28px;flex-wrap:wrap;color:var(--slate);font-size:14px}
+  .proof div b{display:block;color:var(--ink);font-family:var(--display);font-size:22px;font-weight:700}
 
-        body {
-            background-color: #f0f2f5;
-            color: #333;
-            font-family: var(--font-body);
-            line-height: 1.7;
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-            overflow-x: hidden;
-        }
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 1px 0 rgba(16,24,40,.04)}
+  .card h2{font-family:var(--display);font-size:22px;margin:0 0 6px;letter-spacing:-.02em}
+  .card p.sub{margin:0 0 18px;color:var(--slate);font-size:15px}
+  label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
+  label small{color:var(--slate);font-weight:400}
+  input,select,textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  textarea{min-height:84px;resize:vertical}
+  input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(242,84,27,.35);outline-offset:1px;border-color:var(--hot)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tier{display:flex;justify-content:space-between;align-items:center;background:var(--sky);border-radius:10px;padding:10px 14px;margin-top:16px;font-size:14px}
+  .tier b{font-family:var(--display);font-size:20px}
+  button.go{width:100%;margin-top:16px;background:var(--hot);color:#fff;border:0;border-radius:12px;padding:16px;font:inherit;font-weight:600;font-size:17px;cursor:pointer}
+  button.go:hover{background:var(--hot-dark)}
+  button.go[disabled]{opacity:.6;cursor:wait}
+  .fine{font-size:13px;color:var(--slate);margin:12px 0 0;text-align:center}
+  .done{display:none;text-align:center;padding:20px 6px}
+  .done h3{font-family:var(--display);font-size:24px;margin:8px 0}
+  .done .tick{width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin:0 auto;font-size:22px}
+  .err{display:none;color:#B42318;font-size:14px;margin-top:10px}
 
-        /* --- UTILITIES --- */
-        .container { 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            padding: 0 40px; 
-        }
-        
-        a { text-decoration: none; transition: 0.3s; }
+  /* sections */
+  section{padding:56px 0;border-top:1px solid var(--line)}
+  h2.s{font-family:var(--display);font-size:clamp(26px,3vw,36px);letter-spacing:-.025em;margin:0 0 28px;max-width:24ch}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .step span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--display);font-weight:700;margin-bottom:12px}
+  .step h3{margin:0 0 6px;font-size:18px;font-family:var(--display);letter-spacing:-.01em}
+  .step p{margin:0;color:var(--slate)}
 
-        /* --- TRADINGVIEW TAPE --- */
-        #ticker-tape { height: 50px; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  .fees{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .fee{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .fee b{font-family:var(--display);font-size:34px;letter-spacing:-.02em;display:block}
+  .fee span{color:var(--slate);font-size:14px}
+  .fee p{margin:10px 0 0;font-size:15px}
+  .note{margin-top:18px;padding:16px 18px;background:var(--sky);border-radius:12px;max-width:70ch}
 
-        /* --- HEADER --- */
-        header {
-            background: white;
-            border-bottom: 1px solid #ddd;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
+  .cover{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .cover h3{font-family:var(--display);font-size:18px;margin:0 0 10px}
+  .cover ul{margin:0;padding-left:18px;color:var(--slate)}
+  .cover li{margin:6px 0}
 
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 100px;
-            flex-wrap: wrap; 
-        }
+  .faq details{border-bottom:1px solid var(--line);padding:14px 0}
+  .faq summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between}
+  .faq summary::after{content:'+';color:var(--slate)}
+  .faq details[open] summary::after{content:'–'}
+  .faq p{margin:10px 0 0;color:var(--slate);max-width:70ch}
 
-        .logo-area { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px;
-        }
-        
-        .logo-text { 
-            font-family: var(--font-logo); 
-            font-weight: 700; 
-            color: var(--bank-blue); 
-            font-size: 1.6rem; 
-            line-height: 1.1;
-            text-transform: uppercase;
-        }
+  footer{padding:36px 0 50px;color:var(--slate);font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
-        .nav-menu { display: flex; gap: 40px; }
-        .nav-menu a {
-            color: #0A192F;
-            font-family: var(--font-logo);
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 10px 0;
-            border-bottom: 2px solid transparent;
-        }
-        
-        .nav-menu a:hover { color: var(--bank-royal); border-bottom-color: var(--bank-royal); }
-
-        /* --- HERO SECTION --- */
-        #hero {
-            background: linear-gradient(135deg, #003366 0%, #001a33 100%);
-            padding: 140px 0 180px 0;
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #hero::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://www.transparenttextures.com/patterns/shattered-island.png');
-            opacity: 0.15;
-        }
-
-        .motto {
-            font-family: var(--font-logo);
-            font-size: clamp(1rem, 2vw, 1.3rem); 
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--bank-gold);
-            margin-bottom: 20px;
-            font-weight: 700;
-            position: relative; z-index: 2;
-        }
-
-        h1 {
-            font-family: var(--font-logo);
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            margin-bottom: 30px;
-            position: relative; z-index: 2;
-            line-height: 1.1;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            padding: 0 10px;
-        }
-
-        /* COUNTDOWN (FIXED OVERLAP) */
-        .countdown-ui {
-            display: flex; 
-            flex-wrap: wrap;
-            justify-content: center;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 40px 50px 30px 50px; 
-            gap: 40px;
-            position: relative; z-index: 2;
-            margin-top: 40px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .countdown-title {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bank-gold);
-            color: #000;
-            padding: 4px 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            white-space: nowrap;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .time-box { text-align: center; }
-        .time-box span { font-size: 2.5rem; font-family: var(--font-logo); font-weight: 700; display: block; line-height: 1; color: var(--bank-gold); margin-bottom: 5px; }
-        .time-box label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; font-family: var(--font-body); display: block; }
-
-        /* --- MARKETS --- */
-        #markets { margin-top: -100px; position: relative; z-index: 10; padding-bottom: 80px; }
-        .market-card { background: white; box-shadow: 0 30px 60px rgba(0,0,0,0.1); padding: 15px; border-top: 8px solid var(--bank-royal); }
-
-        /* --- ABOUT US SECTION --- */
-        #about { padding: 80px 0; background: white; }
-        
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .about-text p { margin-bottom: 20px; font-size: 1.05rem; color: #444; text-align: justify; }
-        .about-text h3 { font-family: var(--font-logo); font-size: 2rem; color: var(--bank-blue); margin-bottom: 25px; }
-
-        .about-pillars {
-            background: #fafafa;
-            padding: 40px;
-            border-left: 4px solid var(--bank-gold);
-        }
-
-        .pillar-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
-        .pillar-item:last-child { margin-bottom: 0; }
-        .pillar-item i { color: var(--bank-royal); font-size: 1.2rem; margin-top: 5px; }
-        .pillar-item h4 { font-family: var(--font-logo); font-size: 1.1rem; color: var(--bank-blue); margin-bottom: 5px; }
-        .pillar-item p { font-size: 0.9rem; color: #666; margin: 0; }
-
-        /* --- NEWS (MARKET PULSE) --- */
-        #news { padding: 80px 0; background: #fafafa; }
-        .news-widget-box { height: 500px; border: 1px solid #eee; background: white; }
-
-        /* --- TIMELINE (ROADMAP) --- */
-        #roadmap { padding: 80px 0; background: white; border-bottom: 1px solid #ddd; }
-        
-        .timeline {
-            position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            background-color: #ddd;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -2px;
-        }
-
-        .time-container {
-            padding: 10px 40px;
-            position: relative;
-            background-color: inherit;
-            width: 50%;
-        }
-
-        .time-container::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            right: -10px;
-            background-color: white;
-            border: 4px solid var(--bank-royal);
-            top: 20px;
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .left { left: 0; text-align: right; }
-        .right { left: 50%; }
-        .right::after { left: -10px; }
-
-        .time-content {
-            padding: 20px 30px;
-            background: white;
-            position: relative;
-            border-radius: 4px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border-top: 3px solid var(--bank-gold);
-        }
-
-        .date-tag {
-            font-family: var(--font-logo);
-            color: var(--bank-royal);
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .time-content h3 { font-family: var(--font-logo); font-size: 1.2rem; color: var(--bank-blue); margin-bottom: 10px; }
-        .time-content p { font-size: 0.9rem; color: #666; margin: 0; }
-
-        /* --- CORPORATE ECOSYSTEM --- */
-        #ecosystem { padding: 80px 0; background: white; }
-        
-        .section-title {
-            text-align: center;
-            font-family: var(--font-logo);
-            font-size: 2.5rem;
-            color: var(--bank-blue);
-            margin-bottom: 60px;
-        }
-        
-        .section-title span { display: block; width: 80px; height: 4px; background: var(--bank-gold); margin: 20px auto 0 auto; }
-
-        .structure-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 40px;
-            align-items: stretch;
-        }
-
-        .structure-col { 
-            padding: 40px; 
-            border: 1px solid #eee; 
-            background: #fafafa;
-            transition: 0.3s;
-        }
-
-        .role-tag {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--bank-royal);
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: block;
-            font-family: var(--font-logo);
-        }
-
-        .structure-col h3 { font-family: var(--font-logo); font-size: 1.8rem; margin-bottom: 20px; color: var(--bank-blue); }
-        .structure-col p { font-size: 1rem; color: #555; margin-bottom: 25px; }
-        
-        .key-metric { 
-            font-family: var(--font-body); 
-            font-weight: 500; 
-            color: #222; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .key-metric:last-child { border-bottom: none; }
-        .key-metric i { color: var(--bank-royal); font-size: 1.1rem; }
-
-        /* --- FOUNDER SECTION --- */
-        #founder { padding: 100px 0; background: #0A192F; color: white; }
-        
-        .founder-layout {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .founder-bio h2 { font-family: var(--font-logo); font-size: 3rem; color: white; margin-bottom: 10px; }
-        .founder-role { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--bank-gold); margin-bottom: 40px; display: block; }
-        .bio-text { font-size: 1.1rem; color: #a8b2d1; margin-bottom: 40px; line-height: 1.9; }
-        
-        /* Updated Quote Box with Cinzel Font */
-        .quote-box {
-            border-left: 4px solid var(--bank-gold);
-            padding-left: 30px;
-            font-family: 'Cinzel', serif; /* SPECIFIC FONT REQUEST */
-            font-size: 1.5rem;
-            font-weight: 500;
-            line-height: 1.6;
-            font-style: italic;
-            color: white;
-            text-align: left;
-            display: inline-block;
-        }
-
-        /* --- FOOTER --- */
-        footer { background: #050d1a; color: #8892b0; padding: 80px 0; font-size: 0.8rem; }
-        .footer-logo { font-family: var(--font-logo); font-size: 1.5rem; color: white; font-weight: 700; margin-bottom: 10px; display: block;}
-
-        /* --- MOBILE SPECIFIC OVERRIDES --- */
-        @media (max-width: 900px) {
-            .container { padding: 0 20px; } 
-            
-            /* Header */
-            .nav-container { flex-direction: column; padding: 20px 0; gap: 20px; }
-            .logo-area { width: 100%; justify-content: center; }
-            .nav-menu { width: 100%; justify-content: center; flex-wrap: wrap; gap: 15px; }
-            .nav-menu a { font-size: 0.75rem; }
-
-            /* Hero */
-            .countdown-ui { padding: 30px 20px; width: 100%; gap: 20px; }
-            .time-box span { font-size: 1.8rem; }
-            #markets { margin-top: -50px; }
-            
-            /* About Us */
-            .about-grid { grid-template-columns: 1fr; }
-            
-            /* Timeline */
-            .timeline::after { left: 31px; } 
-            .time-container { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .time-container::after { left: 21px; } 
-            .left::after { left: 21px; }
-            .right { left: 0; }
-            .left { text-align: left; } 
-            
-            /* Footer */
-            footer .container div { flex-direction: column; text-align: center; gap: 20px; }
-            footer .container div div { text-align: center !important; }
-        }
-    </style>
+  @media(max-width:860px){
+    .hero .wrap{grid-template-columns:1fr;gap:28px}
+    .steps,.fees,.cover{grid-template-columns:1fr}
+    header nav{display:none}
+    .row{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
+<header><div class="wrap">
+  <a class="logo" href="#">No<b>Lag</b></a>
+  <nav><a href="#how">How it works</a><a href="#fees">Fees</a><a href="#cover">What we cover</a><a href="#faq">Questions</a></nav>
+</div></header>
 
-    <div id="ticker-tape">
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-          {
-          "symbols": [
-            { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
-            { "proName": "FOREXCOM:UKXGBP", "title": "FTSE 100" },
-            { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
-            { "proName": "TVC:US10Y", "title": "US 10Y Yield" }
-          ],
-          "showSymbolLogo": true,
-          "colorTheme": "light",
-          "isTransparent": false,
-          "displayMode": "adaptive",
-          "locale": "en"
-        }
-          </script>
-        </div>
+<main>
+<div class="hero"><div class="wrap">
+  <div>
+    <p class="clock">It's <time id="now">--:--</time> in London. We can usually have it to you by <time id="eta">--:--</time>.</p>
+    <h1>The exact thing you need. Today. One message.</h1>
+    <p class="lead">A charger, a rice cooker, a birthday present, a part. <strong>Tell us the exact item and your postcode.</strong> We check every same-day source in London, find the fastest, place the order and track it to your door.</p>
+    <div class="proof">
+      <div><b>6+</b>sources checked per order</div>
+      <div><b>£2–10</b>flat fee, nothing hidden</div>
+      <div><b>£0</b>if we're late or wrong</div>
     </div>
+  </div>
 
-    <header>
-        <div class="container nav-container">
-            <div class="logo-area">
-                <img src="logo.png" style="height: 60px;" onerror="this.style.display='none';">
-                <div class="logo-text">
-                    J.P. FREGLIEN<br>
-                    SYSTEMS
-                </div>
-            </div>
-            
-            <nav class="nav-menu">
-                <a href="#about">About</a>
-                <a href="#news">News</a>
-                <a href="#roadmap">Timeline</a>
-                <a href="#ecosystem">Structure</a>
-                <a href="#founder">Leadership</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </div>
-    </header>
+  <div class="card" id="ask">
+    <form id="f" novalidate>
+      <h2>What do you need?</h2>
+      <p class="sub">Be exact. Brand, model, size, colour: whatever makes it the right one.</p>
+      <label for="item">The item(s)</label>
+      <textarea id="item" name="item" required placeholder="e.g. 65W USB-C laptop charger, Lenovo-compatible; or a 1.8L rice cooker, any decent brand"></textarea>
+      <div class="row">
+        <div><label for="postcode">Delivery postcode</label><input id="postcode" name="postcode" required placeholder="SE15 4AB" autocomplete="postal-code"></div>
+        <div><label for="by">Needed by</label><input id="by" name="by" required placeholder="7pm tonight"></div>
+      </div>
+      <label for="budget">Roughly what the item costs <small>(sets your fee)</small></label>
+      <select id="budget" name="budget">
+        <option value="2">Under £20</option>
+        <option value="5" selected>£20 – £100</option>
+        <option value="10">Over £100, or hard to find</option>
+      </select>
+      <div class="row">
+        <div><label for="name">Your name</label><input id="name" name="name" required autocomplete="name"></div>
+        <div><label for="contact">Mobile or email <small>(for the quote)</small></label><input id="contact" name="contact" required autocomplete="tel"></div>
+      </div>
+      <div class="tier">Your NoLag fee <b id="fee">£5</b></div>
+      <button class="go" type="submit">Find it for me</button>
+      <p class="fine">We reply within 15 minutes with where it's coming from and when. You pay the item cost up front, and the fee only once it has arrived.</p>
+      <p class="err" id="err">Something didn't send. Try again, or message us directly: <span class="contactline"></span>.</p>
+    </form>
+    <div class="done" id="done">
+      <div class="tick">✓</div>
+      <h3>On it.</h3>
+      <p>We're checking who can get it to <span id="done-pc"></span> fastest. Expect a quote within 15 minutes at the contact you gave.</p>
+      <p class="fine">Nothing to pay yet.</p>
+    </div>
+  </div>
+</div></div>
 
-    <section id="hero">
-        <div class="container">
-            <div class="motto">"Theory in Practice"</div>
-            <h1>The Market is our Laboratory</h1>
-            <p style="font-size: 1.1rem; opacity: 0.8; max-width: 600px; margin: 0 auto; font-family: 'Inter', sans-serif;">
-                Operationalising economic models through high-frequency execution.
-            </p>
-            
-            <div class="countdown-ui">
-                <div class="countdown-title">System Deployment (Q4 2026)</div>
-                <div class="time-box"><span id="days">00</span><label>Days</label></div>
-                <div class="time-box"><span id="hours">00</span><label>Hours</label></div>
-                <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
-            </div>
-        </div>
-    </section>
+<section id="how"><div class="wrap">
+  <h2 class="s">How it works</h2>
+  <div class="steps">
+    <div class="step"><span>1</span><h3>You tell us the exact item</h3><p>Model, size, colour, and the time you need it by. The more exact, the faster we are.</p></div>
+    <div class="step"><span>2</span><h3>We search every same-day source</h3><p>Amazon same-day, Argos, Currys, John Lewis, Boots, and the retailers on Deliveroo and Uber Eats. You get one answer: who has it, when it arrives, what it costs.</p></div>
+    <div class="step"><span>3</span><h3>We place it and track it</h3><p>You pay the item price by link. We order, watch the tracking and chase if it slips. The fee is charged only once it has arrived, on time and correct.</p></div>
+  </div>
+</div></section>
 
-    <section id="markets">
-        <div class="container">
-            <div class="market-card">
-                <div class="tradingview-widget-container">
-                  <div class="tradingview-widget-container__widget"></div>
-                  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-                  {
-                  "colorTheme": "light",
-                  "dateRange": "12M",
-                  "showChart": true,
-                  "locale": "en",
-                  "largeChartUrl": "",
-                  "isTransparent": true,
-                  "width": "100%",
-                  "height": "500",
-                  "tabs": [
-                    { "title": "Equities", "symbols": [ { "s": "FOREXCOM:SPXUSD" }, { "s": "FOREXCOM:UKXGBP" }, { "s": "INDEX:NKY" } ] },
-                    { "title": "Rates", "symbols": [ { "s": "TVC:US10Y" }, { "s": "TVC:GB10Y" } ] },
-                    { "title": "Digital", "symbols": [ { "s": "BITSTAMP:BTCUSD" }, { "s": "BITSTAMP:ETHUSD" } ] }
-                  ]
-                }
-                  </script>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="fees"><div class="wrap">
+  <h2 class="s">One flat fee, sized by the item</h2>
+  <div class="fees">
+    <div class="fee"><b>£2</b><span>item under £20</span><p>A cable, a card, a cake.</p></div>
+    <div class="fee"><b>£5</b><span>item £20 – £100</span><p>A charger, a kettle, a gift.</p></div>
+    <div class="fee"><b>£10</b><span>over £100, or hard to find</span><p>A console, a monitor, the one specific part.</p></div>
+  </div>
+  <div class="note">You pay the retailer's normal price for the item, plus their delivery charge if there is one, plus the NoLag fee. No markup on the item. If we're late or it's wrong, the fee is £0.</div>
+</div></section>
 
-    <section id="about">
-        <div class="container">
-            <div class="section-title">About The Firm<span></span></div>
-            <div class="about-grid">
-                <div class="about-text">
-                    <h3>Engineering the Future of Finance</h3>
-                    <p>
-                        J.P. Freglien Systems is a quantitative technology holding company established in Durham, United Kingdom. We operate at the intersection of academic economics and high-frequency infrastructure, rejecting the notion that theoretical models cannot withstand the rigour of live execution.
-                    </p>
-                    <p>
-                        Founded by Justin Pang, the firm was built to operationalise the concept of "Theory in Practice." We are not a traditional fund driven by sentiment; we are a laboratory where Linear Regression frameworks and automated risk protocols replace human bias.
-                    </p>
-                </div>
-                <div class="about-pillars">
-                    <div class="pillar-item">
-                        <i class="fas fa-university"></i>
-                        <div>
-                            <h4>Academic Foundation</h4>
-                            <p>Built on First Class Honours principles from Durham University Economics.</p>
-                        </div>
-                    </div>
-                    <div class="pillar-item">
-                        <i class="fas fa-code"></i>
-                        <div>
-                            <h4>Algorithmic Core</h4>
-                            <p>Every strategy is codified in Python with strictly defined risk parameters.</p>
-                        </div>
-                    </div>
-                    <div class="pillar-item">
-                        <i class="fas fa-globe-europe"></i>
-                        <div>
-                            <h4>Global Perspective</h4>
-                            <p>Infrastructure designed to span London, New York and Hong Kong markets.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="cover"><div class="wrap">
+  <h2 class="s">What we cover right now</h2>
+  <div class="cover">
+    <div>
+      <h3>Yes, today</h3>
+      <ul>
+        <li>Tech: chargers, cables, consoles and games, printer ink, routers, headphones</li>
+        <li>Home and kitchen: small appliances, tools, replacement parts</li>
+        <li>Gifts and occasions: flowers, cakes, balloons, perfume, a named toy or book</li>
+        <li>Anything else specific — ask, and we'll tell you straight if we can't</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Not yet</h3>
+      <ul>
+        <li>Alcohol, tobacco, vapes, or medicines that need a pharmacist</li>
+        <li>Items over £500</li>
+        <li>Anything over 30 kg or needing two people to carry</li>
+        <li>Addresses outside London</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
 
-    <section id="news">
-        <div class="container">
-            <div class="section-title">Financial News<span></span></div>
-            <div class="news-widget-box">
-                <div class="tradingview-widget-container">
-                  <div class="tradingview-widget-container__widget"></div>
-                  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-                  {
-                  "feedMode": "all_symbols",
-                  "colorTheme": "light",
-                  "isTransparent": true,
-                  "displayMode": "regular",
-                  "width": "100%",
-                  "height": "100%",
-                  "locale": "en"
-                }
-                  </script>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="faq"><div class="wrap">
+  <h2 class="s">Questions</h2>
+  <div class="faq">
+    <details><summary>Why not just order it myself?</summary><p>You can. NoLag is for when you don't know who stocks the exact thing for same-day, and don't have twenty minutes to check six apps and three retailer sites with different cut-offs. We do that in minutes and tell you the fastest answer.</p></details>
+    <details><summary>How do I pay?</summary><p>Once we've found it, we send you the quote: source, arrival time, item price. You pay the item price by secure link; we place the order. The NoLag fee is a second link, sent only after it has arrived.</p></details>
+    <details><summary>What if it's late or wrong?</summary><p>No fee. We'll also chase the retailer or courier for you. The item itself is covered by the retailer's normal returns.</p></details>
+    <details><summary>Where do you deliver?</summary><p>London only for now, starting in <span class="borough">a few boroughs</span>. Give us your postcode and we'll tell you straight away if we can help.</p></details>
+    <details><summary>Who is behind this?</summary><p>A small London team testing whether people want one place that answers "who can get this to me today?". Every order is handled by a person right now, which is why we reply fast and tell you honestly when something isn't possible.</p></details>
+  </div>
+</div></section>
+</main>
 
-    <section id="roadmap">
-        <div class="container">
-            <div class="section-title">Strategic Roadmap<span></span></div>
-            
-            <div class="timeline">
-                <div class="time-container left">
-                    <div class="time-content">
-                        <span class="date-tag">JAN 2026</span>
-                        <h3>Architecture Inception</h3>
-                        <p>Conceptualisation of the JPF MLAT "Glass Box" engine and initial Python framework development.</p>
-                    </div>
-                </div>
+<footer><div class="wrap">
+  <div>NoLag · London · <span class="contactline"></span></div>
+  <div>Replies 8am–10pm, seven days</div>
+</div></footer>
 
-                <div class="time-container right">
-                    <div class="time-content">
-                        <span class="date-tag">Q1 2026 (ACTIVE)</span>
-                        <h3>Latency Validation</h3>
-                        <p>Infrastructure stress-testing. Core execution engine achieved sub-85ms benchmarks on testnet.</p>
-                    </div>
-                </div>
+<script>
+  // ---- configuration: fill these in before going live ----
+  const CONFIG = {
+    // FormSubmit forwards each request to the email below. The very first submission
+    // triggers a one-time activation email to that inbox: click it, then re-send the test.
+    FORM_ENDPOINT: 'https://formsubmit.co/ajax/enquiries@jpfsystems.co',
+    CONTACT_LINE: 'enquiries@jpfsystems.co',
+    BOROUGHS: 'Southwark and Lambeth'
+  };
+  document.querySelectorAll('.contactline').forEach(e=>{const a=document.createElement('a');a.href='mailto:'+CONFIG.CONTACT_LINE;a.textContent=CONFIG.CONTACT_LINE;e.replaceChildren(a);});
+  document.querySelectorAll('.borough').forEach(e=>e.textContent=CONFIG.BOROUGHS);
 
-                <div class="time-container left">
-                    <div class="time-content">
-                        <span class="date-tag">Q2 2026 (PENDING)</span>
-                        <h3>Corporate Registration</h3>
-                        <p>Formal incorporation of <strong>J.P. Freglien Systems Ltd</strong> as a private limited entity.</p>
-                    </div>
-                </div>
+  // live clock + plausible ETA (2h15 from now, rounded to 15 min)
+  function pad(n){return String(n).padStart(2,'0')}
+  function tick(){
+    const now=new Date(); const l=new Date(now.toLocaleString('en-GB',{timeZone:'Europe/London'}));
+    document.getElementById('now').textContent=pad(l.getHours())+':'+pad(l.getMinutes());
+    const e=new Date(l.getTime()+135*60000); e.setMinutes(Math.ceil(e.getMinutes()/15)*15,0,0);
+    document.getElementById('eta').textContent= e.getDate()!==l.getDate() ? 'tomorrow morning' : pad(e.getHours())+':'+pad(e.getMinutes());
+  }
+  tick(); setInterval(tick,15000);
 
-                <div class="time-container right">
-                    <div class="time-content">
-                        <span class="date-tag" style="color: var(--bank-gold);">Q4 2026 (TARGET)</span>
-                        <h3>System Deployment</h3>
-                        <p>Phase 1 Capital Deployment. Live activation of 30-asset derivative portfolio strategies.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  // fee follows the budget select
+  const budget=document.getElementById('budget'), fee=document.getElementById('fee');
+  budget.addEventListener('change',()=>fee.textContent='£'+budget.value);
 
-    <section id="ecosystem">
-        <div class="container">
-            <div class="section-title">The Ecosystem<span></span></div>
-            <div class="structure-grid">
-                <div class="structure-col">
-                    <span class="role-tag">The Holding Company</span>
-                    <h3>J.P. Freglien Systems</h3>
-                    <p>The central technology entity. It focuses exclusively on the engineering of the <strong>JPF MLAT System</strong>—a low-latency execution pipeline.</p>
-                    <div class="key-metric"><i class="fas fa-microchip"></i> <span>IP & Infrastructure Holder</span></div>
-                    <div class="key-metric"><i class="fas fa-bolt"></i> <span>< 85ms Latency Architecture</span></div>
-                </div>
-                <div class="structure-col">
-                    <span class="role-tag">The Research Division</span>
-                    <h3>J.P. Freglien Capital</h3>
-                    <p>The proprietary research arm. Validating economic models via a <strong>Derivative Simulated 30-Asset Portfolio</strong>.</p>
-                    <div class="key-metric"><i class="fas fa-chart-line"></i> <span>Quant Strategy Development</span></div>
-                    <div class="key-metric"><i class="fas fa-shield-alt"></i> <span>Risk & VaR Modelling (95%)</span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="founder">
-        <div class="container">
-            <div class="founder-layout">
-                <div class="founder-bio">
-                    <h2>Justin C.Y. Pang</h2>
-                    <span class="founder-role">Founding Director</span>
-                    <div class="bio-text">
-                        <p>Justin is the Founding Director of J.P. Freglien Systems. With a background in Economics from <strong>Durham University</strong>, he established the firm to bridge the gap between academic models and high-frequency market reality.</p>
-                    </div>
-                    <div class="quote-box">"The financial market is the ultimate meritocracy, it does not respect opinion, pedigree or narrative—only efficiency. I believe that disciplined adherence to quantitative data based on theoretic frameworks is not just a strategy; it is the only way to survive the noise."</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer id="contact">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 40px;">
-                
-                <div style="max-width: 300px;">
-                    <span class="footer-logo">J.P. FREGLIEN SYSTEMS</span>
-                    <p style="opacity: 0.7; margin-bottom: 10px;">Durham, United Kingdom</p>
-                    <a href="mailto:enquiries@jpfsystems.co" style="color: #C5A059; text-decoration: none; border-bottom: 1px solid #C5A059;">enquiries@jpfsystems.co</a>
-                </div>
-
-                <div>
-                    <h4 style="color: white; font-family: 'Cinzel', serif; margin-bottom: 15px;">Firm</h4>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 8px;"><a href="#about" style="color: #8892b0;">About Us</a></li>
-                        <li style="margin-bottom: 8px;"><a href="#ecosystem" style="color: #8892b0;">Structure</a></li>
-                        <li style="margin-bottom: 8px;"><a href="#founder" style="color: #8892b0;">Leadership</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 style="color: white; font-family: 'Cinzel', serif; margin-bottom: 15px;">Legal</h4>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 8px;"><a href="#" style="color: #8892b0;">Privacy Policy</a></li>
-                        <li style="margin-bottom: 8px;"><a href="#" style="color: #8892b0;">Terms of Use</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <br><hr style="border-color: rgba(255,255,255,0.05);"><br>
-
-            <div style="text-align: justify; opacity: 0.5; font-size: 0.7rem; line-height: 1.6;">
-                <p style="margin-bottom: 10px;">
-                    <strong>REGULATORY NOTICE:</strong> J.P. Freglien Systems is a technology research project and pre-incorporation entity. It is <strong>not</strong> authorised or regulated by the Financial Conduct Authority (FCA). This website and its contents are for educational and informational purposes only and do not constitute a financial promotion, investment advice, or an inducement to engage in investment activity under Section 21 of the Financial Services and Markets Act 2000 (FSMA).
-                </p>
-                <p style="margin-bottom: 10px;">
-                    <strong>SIMULATED PERFORMANCE:</strong> All "Capital" and "Portfolio" references relate to <strong>simulated, paper-trading environments</strong> used for software validation. No real capital is at risk, and no public funds are solicited or managed. Past performance of simulated models does not guarantee future results.
-                </p>
-                <p>
-                    &copy; 2026 J.P. Freglien Systems. All Rights Reserved. | Registered Office: Durham, United Kingdom.
-                </p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        var countDownDate = new Date("Oct 1, 2026 00:00:00").getTime();
-        var x = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDownDate - now;
-            document.getElementById("days").innerHTML = Math.floor(distance / (1000 * 60 * 60 * 24));
-            document.getElementById("hours").innerHTML = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById("minutes").innerHTML = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        }, 1000);
-    </script>
+  // submit
+  const form=document.getElementById('f'), err=document.getElementById('err');
+  form.addEventListener('submit', async (ev)=>{
+    ev.preventDefault(); err.style.display='none';
+    if(!form.reportValidity()) return;
+    const btn=form.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
+    const data=Object.fromEntries(new FormData(form).entries()); data.fee='£'+budget.value; data.submitted=new Date().toISOString();
+    data._subject='NoLag request: '+data.item.slice(0,60)+' → '+data.postcode.toUpperCase()+' by '+data.by;
+    data._template='table'; data._captcha='false';
+    try{
+      if(!CONFIG.FORM_ENDPOINT) throw new Error('no endpoint configured');
+      const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(data)});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok || String(j.success)==='false') throw new Error('bad response');
+      document.getElementById('done-pc').textContent=data.postcode.toUpperCase();
+      form.style.display='none'; document.getElementById('done').style.display='block';
+    }catch(e){
+      err.style.display='block'; btn.disabled=false; btn.textContent='Find it for me';
+    }
+  });
+</script>
 </body>
 </html>
-
