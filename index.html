@@ -3,389 +3,520 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NoLag — the exact thing you need, in London, today</title>
-<meta name="description" content="Tell us the exact item you need in London today. We check every same-day source, find the fastest, place the order and track it. Flat fee, paid only if we deliver.">
+<title>NoLag: need something today in London? We'll find who can get it to you fastest</title>
+<meta name="description" content="Tell us what you need and your postcode. We check every same-day option in London, order it for you and track it. Small flat fee, only paid if it arrives on time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* JPF palette: deep navy, royal blue, metallic gold; Cinzel display, Inter body */
+  /* Design notes
+     - One typeface: Atkinson Hyperlegible Next (built for legibility).
+     - One action colour: blue #0B5CD5 (white text on it = 5.6:1; on white = 5.6:1).
+     - Body 18px, muted text #4A5363 (8.0:1 on white), every target at least 48px tall.
+     - Choices are native radio buttons styled as large cards: keyboard and screen-reader friendly. */
   :root{
-    --bg:#F0F2F5; --paper:#FFFFFF; --ink:#0A192F; --slate:#5B6475; --line:#DCE1E8;
-    --hot:#C5A059; --hot-dark:#B08A43; --royal:#0047AB; --ok:#1E8A5F; --sky:#E8EEF7;
-    --navy-1:#003366; --navy-2:#001A33; --mist:#A8B2D1; --foot:#050D1A;
-    --display:'Cinzel',serif; --body:Inter,system-ui,sans-serif;
-    --max:1120px;
+    --ink:#121826; --muted:#4A5363; --line:#D5DAE3; --soft:#F2F5FA; --paper:#FFFFFF;
+    --blue:#0B5CD5; --blue-dark:#0847A6; --blue-tint:#E7EFFC;
+    --ok:#0E7A47; --ok-tint:#E5F4EC; --err:#B3261E; --err-tint:#FCEDEC;
+    --focus:#FFB000;
+    --font:'Atkinson Hyperlegible Next','Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --r:14px; --max:1080px;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
-  a{color:inherit}
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-  header{padding:18px 0;background:var(--paper);border-bottom:1px solid var(--line)}
-  header .wrap{display:flex;align-items:center;justify-content:space-between}
-  .logo{font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.04em;text-decoration:none;color:var(--ink)}
-  .logo b{color:var(--hot)}
-  header nav a{text-decoration:none;color:var(--slate);margin-left:22px;font-size:15px}
-  header nav a:hover{color:var(--ink)}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.6;-webkit-text-size-adjust:100%}
+  a{color:var(--blue);text-underline-offset:3px}
+  a:hover{color:var(--blue-dark)}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+  .skip{position:absolute;left:12px;top:-60px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;z-index:100;text-decoration:none}
+  .skip:focus{top:12px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-  /* hero */
-  .hero{padding:56px 0 72px;background:linear-gradient(135deg,var(--navy-1) 0%,var(--navy-2) 100%);color:#fff}
-  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:start}
-  .clock{font-family:var(--body);font-weight:500;font-size:17px;color:var(--mist);margin:0 0 16px}
-  .clock time{color:var(--hot);font-weight:600;font-variant-numeric:tabular-nums}
-  h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,4.6vw,58px);line-height:1.1;letter-spacing:.01em;margin:0 0 22px;max-width:15ch;color:#fff}
-  .lead{font-size:19px;color:var(--mist);max-width:38ch;margin:0 0 30px}
-  .lead strong{color:#fff;font-weight:600}
-  .proof{display:flex;gap:32px;flex-wrap:wrap;color:var(--mist);font-size:14px}
-  .proof div b{display:block;color:var(--hot);font-family:var(--display);font-size:24px;font-weight:700}
+  header{border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:72px;gap:16px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+  .mark{width:34px;height:34px;border-radius:10px;background:var(--blue);display:grid;place-items:center}
+  .mark svg{width:20px;height:20px}
+  header nav{display:flex;gap:6px}
+  header nav a{color:var(--ink);text-decoration:none;padding:10px 12px;border-radius:10px;font-size:17px}
+  header nav a:hover{background:var(--soft);color:var(--ink)}
 
-  .card{background:var(--paper);color:var(--ink);border:0;border-top:6px solid var(--hot);border-radius:14px;padding:26px;box-shadow:0 30px 60px rgba(0,10,30,.35)}
-  .card h2{font-family:var(--display);font-size:22px;margin:0 0 6px;letter-spacing:.02em}
-  .card p.sub{margin:0 0 18px;color:var(--slate);font-size:15px}
-  label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
-  label small{color:var(--slate);font-weight:400}
-  input,select,textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
-  textarea{min-height:84px;resize:vertical}
-  input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid rgba(0,71,171,.3);outline-offset:1px;border-color:var(--royal)}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .tier{display:flex;justify-content:space-between;align-items:center;background:var(--sky);border-radius:10px;padding:10px 14px;margin-top:16px;font-size:14px}
-  .tier b{font-family:var(--display);font-size:22px;color:var(--royal)}
-  button.go{width:100%;margin-top:16px;background:var(--hot);color:var(--ink);border:0;border-radius:12px;padding:16px;font:inherit;font-weight:600;font-size:17px;cursor:pointer}
-  button.go:hover{background:var(--hot-dark);color:#fff}
-  button.go[disabled]{opacity:.6;cursor:wait}
-  .fine{font-size:13px;color:var(--slate);margin:12px 0 0;text-align:center}
-  .done{display:none;text-align:center;padding:20px 6px}
-  .done h3{font-family:var(--display);font-size:24px;margin:8px 0}
-  .done .tick{width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin:0 auto;font-size:22px}
-  .err{display:none;color:#B42318;font-size:14px;margin-top:10px}
+  .hero{padding:48px 0 56px;background:var(--soft)}
+  .hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:start}
+  h1{font-size:clamp(34px,4.4vw,52px);line-height:1.12;letter-spacing:-.02em;font-weight:800;margin:6px 0 18px;max-width:16ch}
+  .lead{font-size:21px;color:var(--muted);margin:0 0 28px;max-width:34ch}
+  .promises{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+  .promises li{display:flex;gap:12px;align-items:flex-start;font-size:18px}
+  .promises svg{flex:none;width:26px;height:26px;margin-top:1px}
+  .promises b{font-weight:700}
 
-  /* sections */
-  section{padding:56px 0;border-top:1px solid var(--line)}
-  h2.s{font-family:var(--display);font-size:clamp(26px,3vw,34px);letter-spacing:.01em;margin:0 0 30px;max-width:26ch;color:var(--ink)}
-  h2.s::after{content:'';display:block;width:64px;height:3px;background:var(--hot);margin-top:14px}
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-  .step span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--royal);color:#fff;font-family:var(--display);font-weight:700;margin-bottom:12px}
-  .step h3{margin:0 0 6px;font-size:18px;font-family:var(--display);letter-spacing:.01em}
-  .step p{margin:0;color:var(--slate)}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:0 12px 40px rgba(18,24,38,.08)}
+  .card h2{font-size:26px;line-height:1.2;margin:0 0 4px;letter-spacing:-.01em}
+  .card .hint{color:var(--muted);margin:0 0 6px;font-size:17px}
+  .field{margin-top:22px}
+  .field>label,legend{display:block;font-weight:700;font-size:18px;margin:0 0 4px;padding:0}
+  .help{display:block;color:var(--muted);font-size:16px;margin:0 0 8px;font-weight:400}
+  fieldset{border:0;margin:22px 0 0;padding:0;min-width:0}
+  input[type=text],textarea{width:100%;font:inherit;font-size:18px;color:var(--ink);background:#fff;border:2px solid #8A93A3;border-radius:12px;padding:12px 14px;min-height:52px}
+  textarea{min-height:96px;resize:vertical}
+  input::placeholder,textarea::placeholder{color:#6B7483}
+  input:hover,textarea:hover{border-color:var(--ink)}
+  input:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-color:var(--ink)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
+  .choices{display:grid;gap:10px}
+  .choices.three{grid-template-columns:repeat(3,1fr)}
+  .choice{position:relative;display:block}
+  .choice input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+  .choice>span{display:flex;flex-direction:column;justify-content:center;min-height:64px;padding:10px 14px;border:2px solid #8A93A3;border-radius:12px;background:#fff;line-height:1.3}
+  .choice b{font-size:17px}
+  .choice small{color:var(--muted);font-size:15px}
+  .choice .fee{color:var(--blue);font-weight:700;font-size:16px}
+  .choice input:hover+span{border-color:var(--ink)}
+  .choice input:checked+span{border-color:var(--blue);background:var(--blue-tint);box-shadow:inset 0 0 0 1px var(--blue)}
+  .choice input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
+  #specificWrap{margin-top:10px}
+
+  .sum{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:24px;padding:14px 16px;background:var(--soft);border-radius:12px}
+  .sum b{font-size:24px}
+  .sum small{display:block;color:var(--muted);font-size:15px}
+  button.go{display:block;width:100%;margin-top:16px;min-height:58px;background:var(--blue);color:#fff;border:0;border-radius:14px;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+  button.go:hover{background:var(--blue-dark)}
+  button.go[disabled]{opacity:.7;cursor:wait}
+  .fine{color:var(--muted);font-size:16px;margin:12px 0 0;text-align:center}
+
+  .error-msg{display:none;color:var(--err);font-weight:600;font-size:16px;margin:6px 0 0}
+  .invalid .error-msg{display:block}
+  .invalid input[type=text],.invalid textarea{border-color:var(--err)}
+  .invalid .choice>span{border-color:var(--err)}
+  .summary{display:none;margin-top:18px;padding:14px 16px;border-left:5px solid var(--err);background:var(--err-tint);border-radius:8px}
+  .summary h3{margin:0 0 6px;font-size:18px}
+  .summary ul{margin:0;padding-left:20px}
+  .summary a{color:var(--err);font-weight:600}
+
+  .done{display:none}
+  .done .tick{width:52px;height:52px;border-radius:50%;background:var(--ok);display:grid;place-items:center;margin-bottom:12px}
+  .done h2{margin-bottom:8px}
+  .done ol{padding-left:22px;margin:12px 0 0}
+  .done li{margin:6px 0}
+  .send-err{display:none;margin-top:14px;padding:14px 16px;border-left:5px solid var(--err);background:var(--err-tint);border-radius:8px}
+
+  section{padding:64px 0}
+  section.alt{background:var(--soft)}
+  h2.s{font-size:clamp(28px,3.2vw,38px);line-height:1.15;letter-spacing:-.015em;margin:0 0 28px;max-width:24ch}
+  .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;counter-reset:s}
+  .steps li{counter-increment:s}
+  .steps li::before{content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;margin-bottom:14px}
+  .steps h3{font-size:21px;margin:0 0 6px}
+  .steps p{margin:0;color:var(--muted)}
   .fees{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .fee{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--royal);border-radius:10px;padding:20px}
-  .fee b{font-family:var(--display);font-size:34px;color:var(--ink);display:block}
-  .fee span{color:var(--slate);font-size:14px}
-  .fee p{margin:10px 0 0;font-size:15px}
-  .note{margin-top:18px;padding:16px 18px;background:var(--paper);border-left:4px solid var(--hot);border-radius:6px;max-width:70ch}
-
+  .fee-box{border:2px solid var(--line);border-radius:var(--r);padding:22px;background:#fff}
+  .fee-box b{display:block;font-size:40px;line-height:1;letter-spacing:-.02em;margin-bottom:8px}
+  .fee-box p{margin:0;color:var(--muted)}
+  .note{margin-top:20px;max-width:64ch;display:flex;gap:12px;align-items:flex-start;padding:16px 18px;background:var(--ok-tint);border-radius:var(--r)}
+  .note svg{flex:none;width:26px;height:26px;margin-top:2px}
   .cover{display:grid;grid-template-columns:1fr 1fr;gap:40px}
-  .cover h3{font-family:var(--display);font-size:18px;margin:0 0 10px;color:var(--royal)}
-  .cover ul{margin:0;padding-left:18px;color:var(--slate)}
-  .cover li{margin:6px 0}
+  .cover h3{font-size:21px;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+  .cover h3 svg{width:24px;height:24px}
+  .cover ul{margin:0;padding-left:22px}
+  .cover li{margin:8px 0}
+  .faq{max-width:760px}
+  .faq details{border-bottom:1px solid var(--line)}
+  .faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:60px;padding:12px 0;font-weight:700;font-size:19px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:'';flex:none;width:12px;height:12px;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg);margin-right:6px}
+  .faq details[open] summary::after{transform:rotate(-135deg)}
+  .faq p{margin:0 0 18px;color:var(--muted);max-width:64ch}
+  .cta{text-align:center;padding:56px 0}
+  .cta p{color:var(--muted);margin:0 0 20px}
+  a.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 28px;background:var(--blue);color:#fff;border-radius:14px;font-weight:700;font-size:19px;text-decoration:none}
+  a.btn:hover{background:var(--blue-dark);color:#fff}
+  footer{border-top:1px solid var(--line);padding:32px 0 44px;color:var(--muted);font-size:16px}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
-  .faq details{border-bottom:1px solid var(--line);padding:14px 0}
-  .faq summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between}
-  .faq summary::after{content:'+';color:var(--slate)}
-  .faq details[open] summary::after{content:'–'}
-  .faq p{margin:10px 0 0;color:var(--slate);max-width:70ch}
-
-  footer{padding:40px 0 50px;background:var(--foot);color:#8892B0;font-size:14px}
-  footer a{color:var(--hot);text-decoration:none;border-bottom:1px solid var(--hot)}
-  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-
-  /* demo mode (preview only) */
-  .demobar{display:none;background:var(--ink);color:#fff;font-size:14px;padding:10px 0}
+  .demobar{display:none;background:var(--ink);color:#fff;font-size:16px;padding:10px 0}
   .demobar .wrap{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .demobar button{background:#fff;color:var(--ink);border:0;border-radius:8px;padding:7px 12px;font:inherit;font-weight:600;cursor:pointer}
-  .demo{position:fixed;inset:0;background:rgba(16,24,40,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .demobar button{background:#fff;color:var(--ink);border:0;border-radius:10px;min-height:44px;padding:0 14px;font:inherit;font-weight:700;cursor:pointer}
+  .demo{position:fixed;inset:0;background:rgba(18,24,38,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
   .demo.open{display:flex}
-  .dpanel{background:var(--paper);border-radius:18px;max-width:640px;width:100%;max-height:92vh;overflow:auto;padding:24px 26px}
-  .dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-  .dhead small{color:var(--slate)}
-  .dclose{background:none;border:0;font-size:22px;cursor:pointer;color:var(--slate)}
-  .dpanel h3{font-family:var(--display);font-size:23px;letter-spacing:.01em;margin:4px 0 6px}
-  .dpanel .why{color:var(--slate);margin:0 0 16px}
+  .dpanel{background:#fff;border-radius:20px;max-width:640px;width:100%;max-height:92vh;overflow:auto;padding:24px 26px}
+  .dhead{display:flex;justify-content:space-between;align-items:center}
+  .dhead small{color:var(--muted);font-size:15px}
+  .dclose{background:none;border:0;min-width:44px;min-height:44px;font-size:28px;cursor:pointer;color:var(--ink);border-radius:10px}
   .dots{display:flex;gap:6px;margin:6px 0 14px}
-  .dots i{height:4px;flex:1;border-radius:4px;background:var(--line)}
-  .dots i.on{background:var(--royal)}
-  .mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
-  .mail .mh{background:var(--bg);padding:10px 14px;border-bottom:1px solid var(--line)}
-  .mail .mh div{color:var(--slate)}
+  .dots i{height:5px;flex:1;border-radius:4px;background:var(--line)}
+  .dots i.on{background:var(--blue)}
+  .dpanel h3{font-size:24px;line-height:1.2;margin:4px 0 6px}
+  .dpanel .why{color:var(--muted);margin:0 0 16px}
+  .mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:16px}
+  .mail .mh{background:var(--soft);padding:10px 14px;border-bottom:1px solid var(--line);color:var(--muted)}
   .mail .mh b{color:var(--ink)}
   .mail table{width:100%;border-collapse:collapse}
   .mail td{padding:8px 14px;border-top:1px solid var(--line);vertical-align:top}
-  .mail td:first-child{color:var(--slate);width:34%}
-  .src{display:grid;grid-template-columns:1fr auto auto;gap:6px 14px;font-size:14px;align-items:center}
-  .src div{padding:8px 0;border-bottom:1px solid var(--line)}
-  .src .win{font-weight:600;color:var(--ok)}
-  .src .no{color:var(--slate)}
-  .bubble{background:var(--sky);border-radius:14px 14px 14px 4px;padding:14px 16px;white-space:pre-line;font-size:15px}
-  .bubble.them{background:var(--bg);border-radius:14px 14px 4px 14px;margin-left:auto;max-width:80%;margin-top:10px}
-  .paycard{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-  .paycard b{font-family:var(--display);font-size:24px;color:var(--ink)}
-  .paycard span{background:var(--royal);color:#fff;border-radius:8px;padding:8px 12px;font-weight:600;font-size:14px}
-  .logrow{font-size:13px;width:100%;border-collapse:collapse}
-  .logrow th{color:var(--slate);font-weight:500;text-align:left;padding:6px;border-bottom:1px solid var(--line)}
+  .mail td:first-child{color:var(--muted);width:34%}
+  .src{display:grid;grid-template-columns:1fr auto auto;gap:0 14px;font-size:16px}
+  .src div{padding:10px 0;border-bottom:1px solid var(--line)}
+  .src .win{font-weight:700;color:var(--ok)}
+  .src .no{color:var(--muted)}
+  .bubble{background:var(--blue-tint);border-radius:16px 16px 16px 4px;padding:14px 16px;white-space:pre-line;font-size:17px}
+  .bubble.them{background:var(--soft);border-radius:16px 16px 4px 16px;margin-left:auto;max-width:80%;margin-top:10px}
+  .paycard{border:2px solid var(--line);border-radius:14px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .paycard b{font-size:26px}
+  .paycard span{background:var(--blue);color:#fff;border-radius:10px;padding:10px 14px;font-weight:700}
+  .logrow{font-size:15px;width:100%;border-collapse:collapse}
+  .logrow th{color:var(--muted);font-weight:600;text-align:left;padding:6px;border-bottom:1px solid var(--line)}
   .logrow td{padding:8px 6px;border-bottom:1px solid var(--line)}
   .dnav{display:flex;justify-content:space-between;margin-top:20px}
-  .dnav button{font:inherit;font-weight:600;border-radius:10px;padding:10px 16px;cursor:pointer;border:1px solid var(--line);background:#fff}
-  .dnav button.next{background:var(--hot);color:var(--ink);border-color:var(--hot)}
+  .dnav button{font:inherit;font-weight:700;border-radius:12px;min-height:48px;padding:0 18px;cursor:pointer;border:2px solid var(--line);background:#fff;color:var(--ink)}
+  .dnav button.next{background:var(--blue);color:#fff;border-color:var(--blue)}
   .dnav button[disabled]{visibility:hidden}
-  .ex{font-size:12px;color:var(--slate);margin-top:10px}
+  .ex{font-size:15px;color:var(--muted);margin-top:10px}
 
-  @media(max-width:860px){
-    .hero .wrap{grid-template-columns:1fr;gap:28px}
-    .steps,.fees,.cover{grid-template-columns:1fr}
+  @media(max-width:880px){
+    .hero{padding:28px 0 40px}
+    .hero .wrap{grid-template-columns:1fr;gap:26px}
+    .lead{font-size:19px}
     header nav{display:none}
-    .row{grid-template-columns:1fr}
+    .steps,.fees,.cover{grid-template-columns:1fr}
+    .choices.three{grid-template-columns:1fr}
+    .two{grid-template-columns:1fr;gap:0}
+    .card{padding:22px}
   }
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<a class="skip" href="#ask">Skip to the request form</a>
+
 <div class="demobar" id="demobar"><div class="wrap">
-  <span>Preview mode: requests are not sent. Submit the form to walk through what happens behind the scenes.</span>
+  <span>Preview: requests are not sent. Send the form to see what happens behind the scenes.</span>
   <button type="button" id="fillex">Fill in an example</button>
 </div></div>
-<div class="demo" id="demo" role="dialog" aria-modal="true" aria-labelledby="dtitle">
-  <div class="dpanel">
-    <div class="dhead"><small id="dstep"></small><button class="dclose" id="dclose" aria-label="Close walkthrough">×</button></div>
-    <div class="dots" id="ddots"></div>
-    <h3 id="dtitle"></h3>
-    <p class="why" id="dwhy"></p>
-    <div id="dbody"></div>
-    <div class="dnav"><button type="button" id="dback">Back</button><button type="button" class="next" id="dnext">Next</button></div>
-  </div>
-</div>
+
 <header><div class="wrap">
-  <a class="logo" href="#">NO<b>LAG</b></a>
-  <nav><a href="#how">How it works</a><a href="#fees">Fees</a><a href="#cover">What we cover</a><a href="#faq">Questions</a></nav>
+  <a class="logo" href="#top" aria-label="NoLag home">
+    <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
+    NoLag
+  </a>
+  <nav aria-label="Main"><a href="#how">How it works</a><a href="#fees">Fees</a><a href="#faq">Questions</a></nav>
 </div></header>
 
-<main>
+<main id="top">
 <div class="hero"><div class="wrap">
   <div>
-    <p class="clock">It's <time id="now">--:--</time> in London. We can usually have it to you by <time id="eta">--:--</time>.</p>
-    <h1>The exact thing you need. Today. One message.</h1>
-    <p class="lead">A charger, a rice cooker, a birthday present, a part. <strong>Tell us the exact item and your postcode.</strong> We check every same-day source in London, find the fastest, place the order and track it to your door.</p>
-    <div class="proof">
-      <div><b>6+</b>sources checked per order</div>
-      <div><b>£2–10</b>flat fee, nothing hidden</div>
-      <div><b>£0</b>if we're late or wrong</div>
-    </div>
+    <h1>Need something today? We'll find who can get it to you fastest.</h1>
+    <p class="lead">Tell us what you need and your London postcode. We check every same-day option, order it for you and keep an eye on it until it arrives.</p>
+    <ul class="promises">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>A reply within 15 minutes</b> with where it's coming from and when.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>Shop prices, no markup.</b> Our fee is £2, £5 or £10, shown before you send.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg><span><b>No fee if it's late or wrong.</b> You only pay it once it has arrived.</span></li>
+    </ul>
   </div>
 
-  <div class="card" id="ask">
-    <form id="f" novalidate>
+  <div class="card" id="ask" tabindex="-1">
+    <form id="f" novalidate aria-describedby="formhint">
       <h2>What do you need?</h2>
-      <p class="sub">Be exact. Brand, model, size, colour: whatever makes it the right one.</p>
-      <label for="item">The item(s)</label>
-      <textarea id="item" name="item" required placeholder="e.g. 65W USB-C laptop charger, Lenovo-compatible; or a 1.8L rice cooker, any decent brand"></textarea>
-      <div class="row">
-        <div><label for="postcode">Delivery postcode</label><input id="postcode" name="postcode" required placeholder="SE15 4AB" autocomplete="postal-code"></div>
-        <div><label for="by">Needed by</label><input id="by" name="by" required placeholder="7pm tonight"></div>
+      <p class="hint" id="formhint">All questions are needed. It takes about a minute.</p>
+
+      <div class="summary" id="summary" role="alert" tabindex="-1">
+        <h3>Please check these:</h3>
+        <ul id="summaryList"></ul>
       </div>
-      <label for="budget">Roughly what the item costs <small>(sets your fee)</small></label>
-      <select id="budget" name="budget">
-        <option value="2">Under £20</option>
-        <option value="5" selected>£20 – £100</option>
-        <option value="10">Over £100, or hard to find</option>
-      </select>
-      <div class="row">
-        <div><label for="name">Your name</label><input id="name" name="name" required autocomplete="name"></div>
-        <div><label for="contact">Mobile or email <small>(for the quote)</small></label><input id="contact" name="contact" required autocomplete="tel"></div>
+
+      <div class="field" id="f-item">
+        <label for="item">The item</label>
+        <span class="help" id="item-help">Be as exact as you can: brand, model, size or colour.</span>
+        <textarea id="item" name="item" aria-describedby="item-help item-err" placeholder="For example: a 65W USB-C laptop charger for a Lenovo"></textarea>
+        <p class="error-msg" id="item-err">Tell us what you need.</p>
       </div>
-      <div class="tier">Your NoLag fee <b id="fee">£5</b></div>
-      <button class="go" type="submit">Find it for me</button>
-      <p class="fine">We reply within 15 minutes with where it's coming from and when. You pay the item cost up front, and the fee only once it has arrived.</p>
-      <p class="err" id="err">Something didn't send. Try again, or message us directly: <span class="contactline"></span>.</p>
+
+      <div class="field" id="f-postcode">
+        <label for="postcode">Your postcode</label>
+        <span class="help" id="pc-help">Where it should be delivered. London only for now.</span>
+        <input type="text" id="postcode" name="postcode" autocomplete="postal-code" autocapitalize="characters" aria-describedby="pc-help pc-err" placeholder="SE15 4AB" style="max-width:220px">
+        <p class="error-msg" id="pc-err">Enter a UK postcode, like SE15 4AB.</p>
+      </div>
+
+      <fieldset id="f-when" aria-describedby="when-err">
+        <legend>When do you need it?</legend>
+        <div class="choices three">
+          <label class="choice"><input type="radio" name="when" value="As soon as possible"><span><b>As soon as possible</b></span></label>
+          <label class="choice"><input type="radio" name="when" value="By this evening"><span><b>By this evening</b><small>before 9pm</small></span></label>
+          <label class="choice"><input type="radio" name="when" value="specific"><span><b>By a set time</b><small>tell us when</small></span></label>
+        </div>
+        <div id="specificWrap" hidden>
+          <label for="byTime" class="sr">The time you need it by</label>
+          <input type="text" id="byTime" placeholder="For example: 7pm today" style="max-width:260px">
+        </div>
+        <p class="error-msg" id="when-err">Choose when you need it.</p>
+      </fieldset>
+
+      <fieldset id="f-budget" aria-describedby="budget-help budget-err">
+        <legend>Roughly what does it cost?</legend>
+        <span class="help" id="budget-help">This sets our fee. A guess is fine.</span>
+        <div class="choices three">
+          <label class="choice"><input type="radio" name="budget" value="2"><span><b>Under £20</b><span class="fee">£2 fee</span></span></label>
+          <label class="choice"><input type="radio" name="budget" value="5"><span><b>£20 to £100</b><span class="fee">£5 fee</span></span></label>
+          <label class="choice"><input type="radio" name="budget" value="10"><span><b>Over £100</b><span class="fee">£10 fee</span></span></label>
+        </div>
+        <p class="error-msg" id="budget-err">Choose a rough price so we can show your fee.</p>
+      </fieldset>
+
+      <div class="two">
+        <div class="field" id="f-name">
+          <label for="name">Your first name</label>
+          <input type="text" id="name" name="name" autocomplete="given-name" aria-describedby="name-err">
+          <p class="error-msg" id="name-err">Tell us your name.</p>
+        </div>
+        <div class="field" id="f-contact">
+          <label for="contact">Mobile or email</label>
+          <input type="text" id="contact" name="contact" autocomplete="tel" aria-describedby="contact-err">
+          <p class="error-msg" id="contact-err">Enter a mobile number or email so we can reply.</p>
+        </div>
+      </div>
+
+      <div class="sum" aria-live="polite">
+        <div>Your NoLag fee<small>paid only after it arrives</small></div>
+        <b id="fee">–</b>
+      </div>
+      <button class="go" type="submit">Send my request</button>
+      <p class="fine">Nothing to pay now. We'll reply with a quote first.</p>
     </form>
-    <div class="done" id="done">
-      <div class="tick">✓</div>
-      <h3>On it.</h3>
-      <p>We're checking who can get it to <span id="done-pc"></span> fastest. Expect a quote within 15 minutes at the contact you gave.</p>
-      <p class="fine">Nothing to pay yet.</p>
+
+    <div class="done" id="done" tabindex="-1" aria-live="polite">
+      <div class="tick" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg></div>
+      <h2>Request sent</h2>
+      <p>We're checking who can get it to <b id="done-pc"></b> fastest.</p>
+      <ol>
+        <li>Within 15 minutes we'll send a quote to <b id="done-contact"></b>.</li>
+        <li>If you're happy, you pay for the item and we order it.</li>
+        <li>Once it arrives, we send the link for our fee.</li>
+      </ol>
+      <p class="fine" style="text-align:left">Nothing to pay yet.</p>
+    </div>
+    <div class="send-err" id="sendErr" role="alert">
+      <b>Your request didn't send.</b> Check your connection and press "Send my request" again, or email us at <span class="contactline"></span>.
     </div>
   </div>
 </div></div>
 
 <section id="how"><div class="wrap">
   <h2 class="s">How it works</h2>
-  <div class="steps">
-    <div class="step"><span>1</span><h3>You tell us the exact item</h3><p>Model, size, colour, and the time you need it by. The more exact, the faster we are.</p></div>
-    <div class="step"><span>2</span><h3>We search every same-day source</h3><p>Amazon same-day, Argos, Currys, John Lewis, Boots, and the retailers on Deliveroo and Uber Eats. You get one answer: who has it, when it arrives, what it costs.</p></div>
-    <div class="step"><span>3</span><h3>We place it and track it</h3><p>You pay the item price by link. We order, watch the tracking and chase if it slips. The fee is charged only once it has arrived, on time and correct.</p></div>
-  </div>
+  <ol class="steps">
+    <li><h3>Tell us what you need</h3><p>The item, your postcode and when you need it. One short form.</p></li>
+    <li><h3>We find the fastest option</h3><p>We check Amazon same-day, Argos, Currys, John Lewis, Boots and the shops on Deliveroo and Uber Eats, then send you one clear answer.</p></li>
+    <li><h3>We order it and track it</h3><p>You pay the shop price by secure link. We place the order and watch it until it reaches your door.</p></li>
+  </ol>
 </div></section>
 
-<section id="fees"><div class="wrap">
-  <h2 class="s">One flat fee, sized by the item</h2>
+<section id="fees" class="alt"><div class="wrap">
+  <h2 class="s">One small fee, based on the item's price</h2>
   <div class="fees">
-    <div class="fee"><b>£2</b><span>item under £20</span><p>A cable, a card, a cake.</p></div>
-    <div class="fee"><b>£5</b><span>item £20 – £100</span><p>A charger, a kettle, a gift.</p></div>
-    <div class="fee"><b>£10</b><span>over £100, or hard to find</span><p>A console, a monitor, the one specific part.</p></div>
+    <div class="fee-box"><b>£2</b><p>Items under £20, like a cable or a card</p></div>
+    <div class="fee-box"><b>£5</b><p>Items £20 to £100, like a charger or a gift</p></div>
+    <div class="fee-box"><b>£10</b><p>Items over £100, or very hard to find</p></div>
   </div>
-  <div class="note">You pay the retailer's normal price for the item, plus their delivery charge if there is one, plus the NoLag fee. No markup on the item. If we're late or it's wrong, the fee is £0.</div>
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+    <p style="margin:0">You pay the shop's normal price and any delivery charge, plus our fee. If it's late or wrong, the fee is £0.</p>
+  </div>
 </div></section>
 
 <section id="cover"><div class="wrap">
-  <h2 class="s">What we cover right now</h2>
+  <h2 class="s">What we can get for you</h2>
   <div class="cover">
     <div>
-      <h3>Yes, today</h3>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>Yes</h3>
       <ul>
-        <li>Tech: chargers, cables, consoles and games, printer ink, routers, headphones</li>
-        <li>Home and kitchen: small appliances, tools, replacement parts</li>
-        <li>Gifts and occasions: flowers, cakes, balloons, perfume, a named toy or book</li>
-        <li>Anything else specific — ask, and we'll tell you straight if we can't</li>
+        <li>Tech: chargers, cables, games, printer ink, headphones</li>
+        <li>Home: small appliances, tools, replacement parts</li>
+        <li>Gifts: flowers, cakes, balloons, perfume, toys, books</li>
+        <li>Something else? Ask. We'll tell you honestly if we can't.</li>
       </ul>
     </div>
     <div>
-      <h3>Not yet</h3>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Not right now</h3>
       <ul>
-        <li>Alcohol, tobacco, vapes, or medicines that need a pharmacist</li>
+        <li>Alcohol, tobacco, vapes or pharmacy medicines</li>
         <li>Items over £500</li>
-        <li>Anything over 30 kg or needing two people to carry</li>
+        <li>Very heavy items, over 30 kg</li>
         <li>Addresses outside London</li>
       </ul>
     </div>
   </div>
 </div></section>
 
-<section id="faq"><div class="wrap">
+<section id="faq" class="alt"><div class="wrap">
   <h2 class="s">Questions</h2>
   <div class="faq">
-    <details><summary>Why not just order it myself?</summary><p>You can. NoLag is for when you don't know who stocks the exact thing for same-day, and don't have twenty minutes to check six apps and three retailer sites with different cut-offs. We do that in minutes and tell you the fastest answer.</p></details>
-    <details><summary>How do I pay?</summary><p>Once we've found it, we send you the quote: source, arrival time, item price. You pay the item price by secure link; we place the order. The NoLag fee is a second link, sent only after it has arrived.</p></details>
-    <details><summary>What if it's late or wrong?</summary><p>No fee. We'll also chase the retailer or courier for you. The item itself is covered by the retailer's normal returns.</p></details>
-    <details><summary>Where do you deliver?</summary><p>London only for now, starting in <span class="borough">a few boroughs</span>. Give us your postcode and we'll tell you straight away if we can help.</p></details>
-    <details><summary>Who is behind this?</summary><p>A small London team testing whether people want one place that answers "who can get this to me today?". Every order is handled by a person right now, which is why we reply fast and tell you honestly when something isn't possible.</p></details>
+    <details><summary>Why not just order it myself?</summary><p>You can. NoLag helps when you don't know which shop can deliver that exact thing today, and you don't have time to check six apps and websites. We do the searching and tell you the fastest answer.</p></details>
+    <details><summary>How do I pay?</summary><p>We send you a quote first. If you're happy, you pay the item price by a secure link and we order it. Our fee is a second link, sent only after it has arrived.</p></details>
+    <details><summary>What if it's late or wrong?</summary><p>You pay no fee. We'll also chase the shop or courier for you. The item itself is covered by the shop's normal returns.</p></details>
+    <details><summary>Where do you deliver?</summary><p>London, starting in <span class="borough">Southwark and Lambeth</span>. Send your postcode anyway and we'll tell you straight away if we can help.</p></details>
+    <details><summary>Who are you?</summary><p>A small London team. A real person handles every request right now, which is why we can reply quickly and tell you honestly when something isn't possible.</p></details>
   </div>
 </div></section>
+
+<div class="cta"><div class="wrap">
+  <h2 class="s" style="margin:0 auto 10px">Need something today?</h2>
+  <p>It takes about a minute to ask.</p>
+  <a class="btn" href="#ask">Make a request</a>
+</div></div>
 </main>
 
 <footer><div class="wrap">
-  <div>NoLag · London · <span class="contactline"></span></div>
-  <div>Replies 8am–10pm, seven days</div>
+  <div><b style="color:var(--ink)">NoLag</b>, London. <span class="contactline"></span></div>
+  <div>We reply 8am to 10pm, every day.</div>
 </div></footer>
 
+<div class="demo" id="demo" role="dialog" aria-modal="true" aria-labelledby="dtitle">
+  <div class="dpanel">
+    <div class="dhead"><small id="dstep"></small><button class="dclose" id="dclose" aria-label="Close walkthrough">×</button></div>
+    <div class="dots" id="ddots" aria-hidden="true"></div>
+    <h3 id="dtitle"></h3>
+    <p class="why" id="dwhy"></p>
+    <div id="dbody"></div>
+    <div class="dnav"><button type="button" id="dback">Back</button><button type="button" class="next" id="dnext">Next</button></div>
+  </div>
+</div>
+
 <script>
-  // ---- configuration: fill these in before going live ----
   const CONFIG = {
-    // FormSubmit forwards each request to the email below. The very first submission
-    // triggers a one-time activation email to that inbox: click it, then re-send the test.
+    // FormSubmit forwards each request to this inbox. The first live submission sends a one-time
+    // activation email there: click it, then send the test again.
     FORM_ENDPOINT: 'https://formsubmit.co/ajax/enquiries@jpfsystems.co',
     CONTACT_LINE: 'enquiries@jpfsystems.co',
     BOROUGHS: 'Southwark and Lambeth'
   };
+  const $ = id => document.getElementById(id);
   document.querySelectorAll('.contactline').forEach(e=>{const a=document.createElement('a');a.href='mailto:'+CONFIG.CONTACT_LINE;a.textContent=CONFIG.CONTACT_LINE;e.replaceChildren(a);});
   document.querySelectorAll('.borough').forEach(e=>e.textContent=CONFIG.BOROUGHS);
 
-  // live clock + plausible ETA (2h15 from now, rounded to 15 min)
-  function pad(n){return String(n).padStart(2,'0')}
-  function londonNow(){
-    const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
-    const get=t=>+parts.find(p=>p.type===t).value; return {h:get('hour'),m:get('minute')};
-  }
-  function tick(){
-    const {h,m}=londonNow();
-    document.getElementById('now').textContent=pad(h)+':'+pad(m);
-    let mins=h*60+m+135; mins=Math.ceil(mins/15)*15;           // about 2h15 from now, rounded up to 15 min
-    const eh=Math.floor(mins/60);
-    document.getElementById('eta').textContent=(eh>=22||h<7) ? 'tomorrow morning' : pad(eh)+':'+pad(mins%60);
-  }
-  tick(); setInterval(tick,15000);
-
-  // ---- demo mode: on anything other than the live domain ----
+  const form=$('f'), feeEl=$('fee');
   const DEMO = !/(^|\.)jpfsystems\.co$/.test(location.hostname);
   const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const val = n => (form.querySelector(`[name="${n}"]:checked`)||{}).value || '';
+
+  form.addEventListener('change', e=>{
+    if(e.target.name==='budget') feeEl.textContent='£'+e.target.value;
+    if(e.target.name==='when'){ const show=e.target.value==='specific'; $('specificWrap').hidden=!show; if(show) $('byTime').focus(); }
+    const box=e.target.closest('.field,fieldset'); if(box && box.classList.contains('invalid')) check(box.id);
+  });
+  form.addEventListener('input', e=>{ const box=e.target.closest('.field,fieldset'); if(box && box.classList.contains('invalid')) check(box.id); });
+
+  const rules={
+    'f-item':    ()=>$('item').value.trim().length>=3,
+    'f-postcode':()=>/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i.test($('postcode').value.trim()),
+    'f-when':    ()=>!!val('when') && (val('when')!=='specific' || !!$('byTime').value.trim()),
+    'f-budget':  ()=>!!val('budget'),
+    'f-name':    ()=>$('name').value.trim().length>=1,
+    'f-contact': ()=>{const v=$('contact').value.trim(); return /\S+@\S+\.\S+/.test(v) || v.replace(/[^\d]/g,'').length>=10;}
+  };
+  const labels={'f-item':'The item','f-postcode':'Your postcode','f-when':'When you need it','f-budget':'Roughly what it costs','f-name':'Your first name','f-contact':'Mobile or email'};
+  const firstInput={'f-item':'item','f-postcode':'postcode','f-name':'name','f-contact':'contact'};
+  function check(id){
+    const ok=rules[id](), box=$(id); box.classList.toggle('invalid',!ok);
+    box.querySelectorAll('input[type=text],textarea').forEach(i=>i.setAttribute('aria-invalid',String(!ok)));
+    return ok;
+  }
+  const focusTarget = id => firstInput[id] ? $(firstInput[id]) : $(id).querySelector('input');
+
+  form.addEventListener('submit', async ev=>{
+    ev.preventDefault(); $('sendErr').style.display='none';
+    const bad=Object.keys(rules).filter(id=>!check(id)), sum=$('summary');
+    if(bad.length){
+      $('summaryList').innerHTML=bad.map(id=>`<li><a href="#${id}" data-go="${id}">${labels[id]}</a></li>`).join('');
+      sum.style.display='block'; sum.focus();
+      sum.querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault();focusTarget(a.dataset.go).focus();});
+      return;
+    }
+    sum.style.display='none';
+    const when=val('when'), by= when==='specific' ? $('byTime').value.trim() : when;
+    const data={item:$('item').value.trim(), postcode:$('postcode').value.trim().toUpperCase(), by, fee:'£'+val('budget'),
+                name:$('name').value.trim(), contact:$('contact').value.trim(), submitted:new Date().toISOString()};
+    const btn=form.querySelector('button.go'); btn.disabled=true; btn.textContent='Sending…';
+    try{
+      if(!DEMO){
+        const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},
+          body:JSON.stringify({...data,_subject:`NoLag request: ${data.item.slice(0,60)} → ${data.postcode} (${data.by})`,_template:'table',_captcha:'false'})});
+        const j=await r.json().catch(()=>({}));
+        if(!r.ok || String(j.success)==='false') throw new Error('send failed');
+      }
+      $('done-pc').textContent=data.postcode; $('done-contact').textContent=data.contact;
+      form.style.display='none'; const d=$('done'); d.style.display='block'; d.focus();
+      if(DEMO) setTimeout(()=>openDemo(data),900);
+    }catch(e){
+      $('sendErr').style.display='block'; btn.disabled=false; btn.textContent='Send my request';
+    }
+  });
+
+  // ---------- preview-only walkthrough (never shown on jpfsystems.co) ----------
   if(DEMO){
-    document.getElementById('demobar').style.display='block';
-    document.getElementById('fillex').onclick=()=>{
-      document.getElementById('item').value='65W USB-C laptop charger, Lenovo-compatible';
-      document.getElementById('postcode').value='SE15 4AB';
-      document.getElementById('by').value='9pm tonight';
-      document.getElementById('budget').value='5'; document.getElementById('fee').textContent='£5';
-      document.getElementById('name').value='Sam';
-      document.getElementById('contact').value='07700 900123';
-      document.getElementById('ask').scrollIntoView({behavior:'smooth',block:'start'});
+    $('demobar').style.display='block';
+    $('fillex').onclick=()=>{
+      $('item').value='A 65W USB-C laptop charger for a Lenovo';
+      $('postcode').value='SE15 4AB';
+      form.querySelector('[name=when][value="By this evening"]').checked=true;
+      form.querySelector('[name=budget][value="5"]').checked=true; feeEl.textContent='£5';
+      $('name').value='Sam'; $('contact').value='07700 900123';
+      Object.keys(rules).forEach(id=>$(id).classList.remove('invalid')); $('summary').style.display='none';
+      $('ask').scrollIntoView({behavior:'smooth',block:'start'}); form.querySelector('button.go').focus({preventScroll:true});
     };
   }
   const EXAMPLES={
-    '2':{src:[['Boots via Deliveroo','35 min','£0.99 delivery',true],['Amazon Now','not in this postcode','',false],['Tesco via Uber Eats','out of stock','',false],['Argos Fast Track','by 10pm','£3.95',false]],win:'Boots via Deliveroo',eta:'in about 35 minutes',price:12.50,del:0.99},
-    '5':{src:[['Argos Fast Track','by 9:30pm','£3.95',true],['Amazon same-day','by 10pm','free over £20',false],['Currys same-day','2-hour slot, from 8pm','£9.95',false],['John Lewis via Uber Eats','not stocked nearby','',false]],win:'Argos Fast Track',eta:'by 9:30pm tonight',price:34.99,del:3.95},
-    '10':{src:[['Currys same-day','8–10pm slot','£9.95',true],['Amazon same-day','sold out for today','',false],['Argos Fast Track','not at local store','',false],['GameStop via Uber Eats','not stocked','',false]],win:'Currys same-day',eta:'between 8 and 10pm tonight',price:229.00,del:9.95}
+    '2':{src:[['Boots via Deliveroo','35 min','£0.99',true],['Amazon Now','not in this area','',false],['Tesco via Uber Eats','out of stock','',false],['Argos Fast Track','by 10pm','£3.95',false]],win:'Boots via Deliveroo',eta:'in about 35 minutes',price:12.50,del:0.99},
+    '5':{src:[['Argos Fast Track','by 9:30pm','£3.95',true],['Amazon same-day','by 10pm','free over £20',false],['Currys same-day','8 to 10pm slot','£9.95',false],['John Lewis via Uber Eats','not stocked nearby','',false]],win:'Argos Fast Track',eta:'by 9:30pm tonight',price:34.99,del:3.95},
+    '10':{src:[['Currys same-day','8 to 10pm slot','£9.95',true],['Amazon same-day','sold out today','',false],['Argos Fast Track','not at local store','',false],['GameStop via Uber Eats','not stocked','',false]],win:'Currys same-day',eta:'between 8 and 10pm tonight',price:229.00,del:9.95}
   };
   let dstep=0, dsteps=[];
   function openDemo(d){
     const ex=EXAMPLES[d.fee.replace('£','')]||EXAMPLES['5'];
-    const pc=esc(d.postcode.toUpperCase()), item=esc(d.item), by=esc(d.by), name=esc(d.name||'there'), fee=esc(d.fee);
-    const total=(ex.price+ex.del).toFixed(2);
+    const pc=esc(d.postcode), item=esc(d.item), by=esc(d.by), name=esc(d.name), fee=esc(d.fee), total=(ex.price+ex.del).toFixed(2);
     dsteps=[
-      {t:'A new request lands in your inbox', w:'Seconds after the customer presses "Find it for me", this email arrives at enquiries@jpfsystems.co. The customer sees "On it".',
-       b:`<div class="mail"><div class="mh"><div>To: <b>enquiries@jpfsystems.co</b></div><div>Subject: <b>NoLag request: ${item.slice(0,60)} → ${pc} by ${by}</b></div></div>
-          <table><tr><td>Item</td><td>${item}</td></tr><tr><td>Postcode</td><td>${pc}</td></tr><tr><td>Needed by</td><td>${by}</td></tr><tr><td>Fee tier</td><td>${fee}</td></tr><tr><td>Name</td><td>${name}</td></tr><tr><td>Contact</td><td>${esc(d.contact)}</td></tr></table></div>`},
-      {t:'You search every same-day source', w:'You check who can get this exact item to '+pc+' before '+by+'. Start a timer: the target is under 10 minutes.',
-       b:`<div class="src">${ex.src.map(s=>`<div class="${s[3]?'win':'no'}">${s[3]?'✓ ':''}${s[0]}</div><div class="${s[3]?'win':'no'}">${s[1]}</div><div class="no">${s[2]}</div>`).join('')}</div><p class="ex">Example results. In a real run you check these yourself, for that postcode, at that moment.</p>`},
-      {t:'You send the quote', w:'Reply by text or email within 15 minutes. One clear answer, plus a payment link for the item only.',
-       b:`<div class="bubble">Hi ${name}, it's NoLag. Found it.\n\n${item}\nFrom: ${ex.win}\nArrives: ${ex.eta}\nItem £${ex.price.toFixed(2)} + their delivery £${ex.del.toFixed(2)} = £${total}\n\nPay the item here and I'll order straight away. Our ${fee} fee only comes after it arrives, and is £0 if it's late or wrong.</div>
-          <div class="paycard"><div><div class="ex" style="margin:0">Payment link (item only)</div><b>£${total}</b></div><span>Pay NoLag</span></div>`},
-      {t:'They pay, you place the order', w:'Once the item payment comes in, you order on '+esc(ex.win)+' with the customer\'s address, then watch the tracking.',
-       b:`<div class="bubble them">Paid 👍</div><div class="bubble" style="margin-top:10px">Ordered. It's coming ${ex.eta}. I'll keep an eye on it and message you if anything changes.</div>`},
-      {t:'Delivered: now the fee', w:'Only once it has arrived, on time and correct, you send the fee link. Late or wrong means no fee, and you log that too.',
-       b:`<div class="bubble them">Got it, thanks!</div><div class="bubble" style="margin-top:10px">Great. Here's the ${fee} NoLag fee. Next time you need something today, just ask.</div>
-          <div class="paycard"><div><div class="ex" style="margin:0">Payment link (fee)</div><b>${fee}</b></div><span>Pay NoLag</span></div>`},
-      {t:'You log the order', w:'Every row feeds the 9 December check: did a stranger pay, did your search beat the obvious app, and how long did it take you?',
+      {t:'A new request arrives in your inbox', w:'Seconds after the customer presses "Send my request", this email lands at enquiries@jpfsystems.co.',
+       b:`<div class="mail"><div class="mh">Subject: <b>NoLag request: ${item.slice(0,60)} → ${pc} (${by})</b></div>
+          <table><tr><td>Item</td><td>${item}</td></tr><tr><td>Postcode</td><td>${pc}</td></tr><tr><td>When</td><td>${by}</td></tr><tr><td>Fee</td><td>${fee}</td></tr><tr><td>Name</td><td>${name}</td></tr><tr><td>Contact</td><td>${esc(d.contact)}</td></tr></table></div>`},
+      {t:'You check every same-day option', w:`Who can get this exact item to ${pc}? Start a timer: aim for under 10 minutes.`,
+       b:`<div class="src">${ex.src.map(s=>`<div class="${s[3]?'win':'no'}">${s[3]?'✓ ':''}${s[0]}</div><div class="${s[3]?'win':'no'}">${s[1]}</div><div class="no">${s[2]}</div>`).join('')}</div><p class="ex">Example results. In a real run you check these yourself for that postcode.</p>`},
+      {t:'You send the quote', w:'Reply within 15 minutes: one clear answer and a payment link for the item only.',
+       b:`<div class="bubble">Hi ${name}, it's NoLag. Found it.\n\n${item}\nFrom: ${ex.win}\nArrives: ${ex.eta}\nItem £${ex.price.toFixed(2)} + delivery £${ex.del.toFixed(2)} = £${total}\n\nPay here and I'll order it straight away. Our ${fee} fee comes after it arrives, and is £0 if it's late or wrong.</div>
+          <div class="paycard"><div><div class="ex" style="margin:0">Payment link: item only</div><b>£${total}</b></div><span>Pay</span></div>`},
+      {t:'They pay, you order', w:`Once the payment comes in, you order from ${esc(ex.win)} to their address and watch the tracking.`,
+       b:`<div class="bubble them">Paid, thanks!</div><div class="bubble" style="margin-top:10px">Ordered. It's arriving ${ex.eta}. I'll message you if anything changes.</div>`},
+      {t:'It arrives: now the fee', w:'Only once it has arrived, on time and correct, you send the fee link. Late or wrong means no fee.',
+       b:`<div class="bubble them">Got it!</div><div class="bubble" style="margin-top:10px">Great. Here's the ${fee} NoLag fee. Next time you need something today, just ask.</div>
+          <div class="paycard"><div><div class="ex" style="margin:0">Payment link: fee</div><b>${fee}</b></div><span>Pay</span></div>`},
+      {t:'You log the order', w:'Every row counts towards the 9 December check: did a stranger pay, did your search beat the obvious app, how long did it take?',
        b:`<table class="logrow"><tr><th>Item</th><th>Fee</th><th>Stranger</th><th>Paid</th><th>Search won</th><th>Minutes</th></tr>
-          <tr><td>${item.slice(0,40)}</td><td>${fee}</td><td>yes</td><td>yes</td><td>${ex.win.startsWith('Amazon')?'no':'yes'}</td><td>8</td></tr></table>
-          <p class="ex">Then ask them one question: "What would you have done if we didn't exist?" Their answer is the best evidence you'll get.</p>`}
+          <tr><td>${item.slice(0,36)}</td><td>${fee}</td><td>yes</td><td>yes</td><td>yes</td><td>8</td></tr></table>
+          <p class="ex">Then ask: "What would you have done if we didn't exist?" Their answer is your best evidence.</p>`}
     ];
-    dstep=0; renderDemo(); document.getElementById('demo').classList.add('open'); document.getElementById('dnext').focus();
+    dstep=0; renderDemo(); $('demo').classList.add('open'); $('dnext').focus();
   }
   function renderDemo(){
     const s=dsteps[dstep];
-    document.getElementById('dstep').textContent=`Behind the scenes · step ${dstep+1} of ${dsteps.length}`;
-    document.getElementById('ddots').innerHTML=dsteps.map((_,i)=>`<i class="${i<=dstep?'on':''}"></i>`).join('');
-    document.getElementById('dtitle').textContent=s.t; document.getElementById('dwhy').textContent=s.w;
-    document.getElementById('dbody').innerHTML=s.b;
-    document.getElementById('dback').disabled=dstep===0;
-    document.getElementById('dnext').textContent=dstep===dsteps.length-1?'Finish':'Next';
+    $('dstep').textContent=`Behind the scenes: step ${dstep+1} of ${dsteps.length}`;
+    $('ddots').innerHTML=dsteps.map((_,i)=>`<i class="${i<=dstep?'on':''}"></i>`).join('');
+    $('dtitle').textContent=s.t; $('dwhy').textContent=s.w; $('dbody').innerHTML=s.b;
+    $('dback').disabled=dstep===0; $('dnext').textContent=dstep===dsteps.length-1?'Finish':'Next';
   }
   function closeDemo(){
-    document.getElementById('demo').classList.remove('open');
-    form.reset(); fee.textContent='£5'; form.style.display='block'; document.getElementById('done').style.display='none';
-    const b=form.querySelector('button'); b.disabled=false; b.textContent='Find it for me';
+    $('demo').classList.remove('open');
+    form.reset(); feeEl.textContent='–'; $('specificWrap').hidden=true;
+    form.style.display='block'; $('done').style.display='none';
+    const b=form.querySelector('button.go'); b.disabled=false; b.textContent='Send my request';
+    $('item').focus();
   }
-  document.getElementById('dnext').onclick=()=>{ if(dstep<dsteps.length-1){dstep++;renderDemo();} else closeDemo(); };
-  document.getElementById('dback').onclick=()=>{ if(dstep>0){dstep--;renderDemo();} };
-  document.getElementById('dclose').onclick=closeDemo;
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && document.getElementById('demo').classList.contains('open')) closeDemo(); });
-
-  // fee follows the budget select
-  const budget=document.getElementById('budget'), fee=document.getElementById('fee');
-  budget.addEventListener('change',()=>fee.textContent='£'+budget.value);
-
-  // submit
-  const form=document.getElementById('f'), err=document.getElementById('err');
-  form.addEventListener('submit', async (ev)=>{
-    ev.preventDefault(); err.style.display='none';
-    if(!form.reportValidity()) return;
-    const btn=form.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
-    const data=Object.fromEntries(new FormData(form).entries()); data.fee='£'+budget.value; data.submitted=new Date().toISOString();
-    data._subject='NoLag request: '+data.item.slice(0,60)+' → '+data.postcode.toUpperCase()+' by '+data.by;
-    data._template='table'; data._captcha='false';
-    if(DEMO){
-      document.getElementById('done-pc').textContent=data.postcode.toUpperCase();
-      form.style.display='none'; document.getElementById('done').style.display='block';
-      setTimeout(()=>openDemo(data),900);
-      return;
-    }
-    try{
-      if(!CONFIG.FORM_ENDPOINT) throw new Error('no endpoint configured');
-      const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(data)});
-      const j=await r.json().catch(()=>({}));
-      if(!r.ok || String(j.success)==='false') throw new Error('bad response');
-      document.getElementById('done-pc').textContent=data.postcode.toUpperCase();
-      form.style.display='none'; document.getElementById('done').style.display='block';
-    }catch(e){
-      err.style.display='block'; btn.disabled=false; btn.textContent='Find it for me';
+  $('dnext').onclick=()=>{ if(dstep<dsteps.length-1){dstep++;renderDemo();$('dnext').focus();} else closeDemo(); };
+  $('dback').onclick=()=>{ if(dstep>0){dstep--;renderDemo();} };
+  $('dclose').onclick=closeDemo;
+  document.addEventListener('keydown',e=>{
+    if(!$('demo').classList.contains('open')) return;
+    if(e.key==='Escape') closeDemo();
+    if(e.key==='Tab'){
+      const f=[...$('demo').querySelectorAll('button:not([disabled])')], i=f.indexOf(document.activeElement);
+      if(e.shiftKey && i<=0){e.preventDefault();f[f.length-1].focus();} else if(!e.shiftKey && i===f.length-1){e.preventDefault();f[0].focus();}
     }
   });
 </script>
