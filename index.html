@@ -228,6 +228,20 @@
   @media(max-width:1000px){ .bgrid{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:880px){ header .wrap nav{display:flex} header .wrap nav a{display:none} }
   @media(max-width:520px){ .bgrid{grid-template-columns:1fr 1fr;gap:8px} .bcard{padding:12px} .bleft{font-size:19px} }
+  /* live strip under the search */
+  .live{display:flex;align-items:center;gap:10px;margin:12px auto 0;padding:8px 14px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:16px;text-align:left;overflow-x:auto;scrollbar-width:none}
+  .live::-webkit-scrollbar{display:none}
+  .ldot{flex:none;width:10px;height:10px;border-radius:50%;background:#D92D20}
+  .ltag{flex:none;font-size:14px;letter-spacing:.02em}
+  .llist{display:flex;gap:18px;list-style:none;margin:0;padding:0;white-space:nowrap}
+  .llist li{display:flex;align-items:center;gap:6px}
+  .llist .sbadge{width:24px;height:24px;font-size:11px;border-radius:7px}
+  .llist b{font-variant-numeric:tabular-nums}
+  .llist .soon b{color:#8A4B00}
+  .lall{flex:none;margin-left:auto;font-weight:700;white-space:nowrap}
+  @media(prefers-reduced-motion:no-preference){ .ldot{animation:pulse 2s ease-in-out infinite} @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,45,32,.45)}60%{box-shadow:0 0 0 7px rgba(217,45,32,0)}} }
+  .interp{margin:-8px 0 16px;font-size:17px}
+  .interp button{background:none;border:0;padding:0;font:inherit;color:var(--blue);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
   /* Google: centred hero */
   .hero .narrow{text-align:center}
   .hero .narrow .lead{margin-left:auto;margin-right:auto}
@@ -375,6 +389,11 @@
   </div>
   <p class="sr" id="qhint">Suggestions appear as you type. Use the up and down arrows to move through them and Enter to choose.</p>
   <p class="error-msg" id="s-err" role="alert"></p>
+  <div class="live" id="live" role="status" aria-live="off">
+    <span class="ldot" aria-hidden="true"></span><b class="ltag">Live</b>
+    <ul class="llist" id="llist"></ul>
+    <a class="lall" href="#board">See all</a>
+  </div>
   <p class="trust">Free to search. Buy straight from the shop, or let us do it for you from £2.</p>
   <div class="cats" id="cats" role="group" aria-label="Browse by category"></div>
   <div class="quick" id="quick" aria-live="polite"></div>
@@ -384,6 +403,7 @@
   <div class="rhead">
     <h2 id="r-title" tabindex="-1"></h2>
     <p class="rsub" id="r-sub"></p>
+    <p class="interp" id="interp" hidden></p>
     <div class="refine" id="refine" hidden></div>
   </div>
   <div class="sorts" id="sorts" role="group" aria-label="Sort results" hidden></div>
@@ -758,16 +778,84 @@
     let best=0; for(const k of keys){ if(t===k) return 2; if(t.length>=2 && (k.startsWith(t) || t.includes(k) || k.split(' ').some(w=>w.startsWith(t)))) best=1; } return best; };
   function exactFamily(t){ t=norm(t); return FAMILIES.find(f=>f.opts.length>1 && f.k.includes(t)); }
 
+
+  // ---------- smart matching: everyday words, typos and filler words ----------
+  const STOP=new Set('i im need needs a an the some something to for my me get buy want wanting please can you new today tonight now asap urgent urgently it is its of and with that which will in on at this one got have has had looking find any'.split(' '));
+  // everyday phrases -> product (checked against the whole sentence)
+  const SYN=[
+    ['telly','HDMI cable (2m)'],['tv cable','HDMI cable (2m)'],['tv lead','HDMI cable (2m)'],['hdmi lead','HDMI cable (2m)'],['connect laptop to tv','USB-C to HDMI adapter'],['laptop to tv','USB-C to HDMI adapter'],['laptop to monitor','USB-C to HDMI adapter'],
+    ['charge my laptop','USB-C laptop charger (65W)'],['laptop charger','USB-C laptop charger (65W)'],['laptop wont charge','USB-C laptop charger (65W)'],['laptop power','USB-C laptop charger (65W)'],
+    ['macbook','MacBook charger'],['mac charger','MacBook charger'],['charge my mac','MacBook charger'],
+    ['charge my phone','Phone charger (USB-C)'],['phone dead','Phone charger (USB-C)'],['phone battery','Power bank'],['android charger','Phone charger (USB-C)'],['phone charger','Phone charger (USB-C)'],
+    ['lightning','USB-C to Lightning cable'],['iphone cable','USB-C to Lightning cable'],['iphone lead','USB-C to Lightning cable'],
+    ['portable charger','Power bank'],['battery pack','Power bank'],
+    ['earphones','Wireless earbuds'],['earbud','Wireless earbuds'],['buds','Wireless earbuds'],
+    ['ran out of ink','Printer ink cartridges'],['printer ink','Printer ink cartridges'],
+    ['wifi slow','Wi-Fi extender'],['slow wifi','Wi-Fi extender'],['weak wifi','Wi-Fi extender'],['wifi booster','Wi-Fi extender'],['internet slow','Wi-Fi extender'],
+    ['remote','AA batteries'],
+    ['bulb blown','Light bulb, screw fitting (E27)'],['light gone','Light bulb, screw fitting (E27)'],['lamp bulb','Light bulb, screw fitting (E27)'],
+    ['freezing','Fan heater'],['cold flat','Fan heater'],['cold house','Fan heater'],['heating broken','Fan heater'],['boiler broken','Fan heater'],['space heater','Fan heater'],
+    ['make rice','Rice cooker'],['boil water','Kettle'],['kettle broke','Kettle'],
+    ['headache','Paracetamol'],['painkiller','Paracetamol'],['pain relief','Paracetamol'],['fever','Paracetamol'],['temperature','Digital thermometer'],
+    ['sore throat','Throat lozenges'],['cough','Throat lozenges'],['blocked nose','Cold and flu relief'],
+    ['cut my','Plasters'],['graze','Plasters'],['blister','Plasters'],
+    ['baby milk','Baby formula'],
+    ['eu plug','Travel plug adapter'],['european plug','Travel plug adapter'],['travel plug','Travel plug adapter'],
+    ['more sockets','Extension lead (4-way)'],['power strip','Extension lead (4-way)'],['extension cable','Extension lead (4-way)'],
+    ['dualsense','PS5 DualSense controller'],['ps5 pad','PS5 DualSense controller']
+  ];
+  function lev(a,b){ if(Math.abs(a.length-b.length)>2) return 9; const d=[...Array(b.length+1).keys()];
+    for(let i=1;i<=a.length;i++){ let prev=d[0]; d[0]=i; for(let j=1;j<=b.length;j++){ const t=d[j]; d[j]=Math.min(d[j]+1,d[j-1]+1,prev+(a[i-1]===b[j-1]?0:1)); prev=t; } } return d[b.length]; }
+  const toks = t => norm(t).split(' ').filter(w=>w && !STOP.has(w));
+  Object.values(ALLOPTS).forEach(o=>{ o.terms=[...new Set([...o.fam.k.join(' ').split(' '), ...norm(o.l).split(' '), ...norm(o.q).split(' ')].filter(w=>w.length>1 && !STOP.has(w)))]; });
+  function smartRank(text){
+    const qs=toks(text); if(!qs.length) return [];
+    const raw=' '+norm(text)+' ', bare=' '+qs.join(' ')+' ';
+    return Object.values(ALLOPTS).map(o=>{
+      let sc=0;
+      for(const [ph,lab] of SYN) if(lab===o.l && (raw.includes(' '+ph) || bare.includes(' '+ph))) sc=Math.max(sc,10);
+      let sum=0;
+      for(const t of qs){ let b=0;
+        for(const w of o.terms){
+          if(w===t){ b=3; break; }
+          if(t.length>=3 && w.startsWith(t)) b=Math.max(b,2.2);
+          else if(t.length>=4 && lev(t,w)<=(t.length>=7?2:1)) b=Math.max(b,2.5);
+        }
+        sum+=b; }
+      const lw=norm(o.l).split(' ').filter(w=>w.length>1&&!STOP.has(w)), cover=lw.filter(w=>qs.some(t=>t===w||lev(t,w)<=1)).length/lw.length;
+      sc=Math.max(sc,sum/qs.length + 0.4*cover);
+      return {opt:o,score:sc};
+    }).filter(x=>x.score>=1.2).sort((a,b)=>b.score-a.score);
+  }
+  // What should a typed search mean? Returns a spec, or null to search the words as typed.
+  function interpret(text){
+    const r=smartRank(text); if(!r.length) return null;
+    const top=r[0], close=r.filter(x=>top.score-x.score<0.5);
+    if(top.score>=10 || (top.score>=2.5 && close.length===1)) return {...top.opt};
+    if(top.score>=2.2){
+      const byFam=new Map(); close.forEach(x=>byFam.set(x.opt.fam,(byFam.get(x.opt.fam)||[]).concat(x)));
+      const best=[...byFam.values()].sort((a,b)=>b.length-a.length || b[0].score-a[0].score)[0];
+      if(toks(text).length===1){
+        if(byFam.size>=3) return null;                       // one vague word, e.g. "cable": show choices, don't guess
+        const f=best[0].opt.fam; return {...f.opts[0],w:f.opts[0].w||f.w,fam:f}; // e.g. "chargr": main charger + "Which charger?"
+      }
+      if(best.length>=2 || byFam.size===1) return {...best[0].opt};
+    }
+    return null;
+  }
+
   const qIn=$('q'), sugg=$('sugg'); let active=-1, items=[], chosen=null;
   function suggestionsFor(text){
     const t=norm(text);
     if(!t){ const r=getRecent(); return r.length?[{h:'Recent searches',rows:r.map(l=>({l,kind:'recent'}))}]:[]; }
     const groups=[], fams=FAMILIES.map(f=>({f,h:hit(f.k,t)})).filter(x=>x.h).sort((a,b)=>b.h-a.h).slice(0,2);
-    const prod=[]; fams.forEach(({f})=>f.opts.forEach(o=>prod.push({l:o.l,kind:'product'})));
-    const idea=IDEAS.find(i=>hit(i.k,t));
+    const prod=[]; const seen=new Set();
+    smartRank(text).slice(0,6).forEach(x=>{ if(!seen.has(x.opt.l)){ seen.add(x.opt.l); prod.push({l:x.opt.l,kind:'product'}); } });
+    fams.forEach(({f})=>f.opts.forEach(o=>{ if(!seen.has(o.l)){ seen.add(o.l); prod.push({l:o.l,kind:'product'}); } }));
+    const idea=IDEAS.find(i=>hit(i.k,t)) || IDEAS.find(i=>i.k.some(k=>(' '+t+' ').includes(' '+k+' ')));
     groups.push({h:null, rows:[{l:text.trim(),kind:'free'}]});
     if(prod.length) groups.push({h:'Products', rows:prod.slice(0,6)});
-    if(idea) groups.push({h:'Ideas: '+idea.t, rows:idea.items.map(l=>({l,kind:'idea'}))});
+    if(idea){ const rows=idea.items.filter(l=>!seen.has(l)).map(l=>({l,kind:'idea'})); if(rows.length) groups.push({h:'Ideas: '+idea.t, rows}); }
     return groups;
   }
   function mark(label,text){ const t=norm(text); if(!t) return esc(label); const i=label.toLowerCase().indexOf(t); return i<0?esc(label):esc(label.slice(0,i))+'<mark>'+esc(label.slice(i,i+t.length))+'</mark>'+esc(label.slice(i+t.length)); }
@@ -778,7 +866,7 @@
       g.rows.map(r=>{const id='so'+items.length; items.push(r); return `<div class="sopt" role="option" id="${id}" aria-selected="false" data-i="${items.length-1}"><span class="t">${r.kind==='free'?'Search “'+esc(r.l)+'”':mark(r.l,qIn.value)}</span><span class="k">${r.kind==='idea'?'idea':r.kind==='recent'?'recent':r.kind==='product'?'':'Enter'}</span></div>`;}).join('')}</div>`).join('');
     sugg.hidden=false; qIn.setAttribute('aria-expanded','true'); setActive(-1);
   }
-  function closeSugg(){ sugg.hidden=true; qIn.setAttribute('aria-expanded','false'); qIn.removeAttribute('aria-activedescendant'); active=-1; }
+  function closeSugg(){ sugg.hidden=true; sugg.innerHTML=''; items=[]; qIn.setAttribute('aria-expanded','false'); qIn.removeAttribute('aria-activedescendant'); active=-1; }
   function setActive(i){
     active=i; sugg.querySelectorAll('.sopt').forEach(el=>el.setAttribute('aria-selected',String(+el.dataset.i===i)));
     if(i>=0){ const el=$('so'+i); qIn.setAttribute('aria-activedescendant','so'+i); el.scrollIntoView({block:'nearest'}); } else qIn.removeAttribute('aria-activedescendant');
@@ -883,7 +971,11 @@
     // decide what we are really searching for
     let spec = chosen && chosen.l.toLowerCase()===q.toLowerCase() ? chosen : null;
     let fam = null;
-    if(!spec){ fam=exactFamily(q); spec = fam ? {...fam.opts[0],w:fam.opts[0].w||fam.w,fam} : optFor(q); }
+    if(!spec){
+      fam=exactFamily(q);
+      if(fam) spec={...fam.opts[0],w:fam.opts[0].w||fam.w,fam};
+      else { const m=interpret(q); spec = m ? {...m, typed:q} : optFor(q); if(m) fam=m.fam; }
+    }
     renderResults(spec,pc,fam);
   });
 
@@ -900,6 +992,12 @@
     const {spec,pc,ambig}=current, q=spec.q, label=spec.l;
     const now=londonHours(), list=$('rlist');
     const cats=spec.cats || Object.keys(CATS).filter(c=>CATS[c].test(q));
+    const ip=$('interp');
+    if(spec.typed && norm(spec.typed)!==norm(label)){
+      ip.innerHTML=`Showing results for <b>${esc(label)}</b>. <button type="button" id="rawsearch">Search for “${esc(spec.typed)}” instead</button>`;
+      ip.hidden=false;
+      $('rawsearch').onclick=()=>{ qIn.value=spec.typed; chosen={l:spec.typed,q:spec.typed,cats:null}; $('sf').requestSubmit(); };
+    } else ip.hidden=true;
     const fam=spec.fam || ambig, ref=$('refine');
     if(fam && fam.opts.length>1){
       ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Did you mean?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
@@ -989,6 +1087,10 @@
         <div class="bar" aria-hidden="true"><i style="width:${pct.toFixed(1)}%"></i></div>${s.areaNote?`<span class="bnote">${s.areaNote}</span>`:''}</li>`;
     }).join('');
     $('b-updated').textContent='Updated '+clock(Math.floor(now*60)/60)+'.';
+    const soon=rows.filter(r=>r.left>0 && !r.s.area).slice(0,3);
+    $('llist').innerHTML = soon.length
+      ? soon.map(({s,left:l})=>`<li class="${l<1.5?'soon':''}">${badgeFor(s)}<span>${s.name.replace('Shops on ','')}</span><b>${left(l)} left</b></li>`).join('')
+      : '<li>Same-day delivery has closed for today. Most shops open again from 8am.</li>';
   }
   drawBoard(); setInterval(drawBoard,30000);
 
