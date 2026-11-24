@@ -602,6 +602,8 @@
   const CONFIG = {
     // FormSubmit forwards each request to this inbox. The first live submission sends a one-time
     // activation email there: click it, then send the test again.
+    // Search memory (Cloudflare Worker). Leave empty to switch recording off.
+    API_URL: '',
     FORM_ENDPOINT: 'https://formsubmit.co/ajax/enquiries@jpfsystems.co',
     CONTACT_LINE: 'enquiries@jpfsystems.co',
     BOROUGHS: 'Southwark and Lambeth'
@@ -612,6 +614,18 @@
 
   const form=$('f'), feeEl=$('fee');
   const DEMO = !/(^|\.)jpfsystems\.co$/.test(location.hostname);
+  // Anonymous event recording: no names, emails or cookies; postcode trimmed to its area by the server.
+  const SESSION = Math.random().toString(36).slice(2,10);
+  function track(type, data){
+    if(DEMO || !CONFIG.API_URL) return;
+    try{
+      if(data.area){ const m=String(data.area).toUpperCase().replace(/[^A-Z0-9]/g,'').match(/^([A-Z]{1,2}\d[A-Z\d]?)(\d[A-Z]{2})?$/); data.area=m?m[1]:null; } // area only, e.g. SE15
+      const body=JSON.stringify({type, session:SESSION, ...data});
+      const url=CONFIG.API_URL.replace(/\/$/,'')+'/event';
+      if(!(navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body],{type:'text/plain'}))))
+        fetch(url,{method:'POST',body,headers:{'Content-Type':'text/plain'},keepalive:true}).catch(()=>{});
+    }catch(e){}
+  }
   const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const val = n => (form.querySelector(`[name="${n}"]:checked`)||{}).value || '';
 
@@ -662,6 +676,7 @@
       }
       $('done-pc').textContent=data.postcode; $('done-contact').textContent=data.contact;
       form.style.display='none'; const d=$('done'); d.style.display='block'; d.focus();
+      track('doit',{understood:data.item, area:data.postcode});
       if(DEMO) setTimeout(()=>openDemo(data),900);
     }catch(e){
       $('sendErr').style.display='block'; btn.disabled=false; btn.textContent='Send my request';
@@ -1009,7 +1024,7 @@
         const sub = k==='cheap' ? (top.feeVal? '£'+top.feeVal.toFixed(2)+' delivery' : 'Free delivery*') : top.etaBig+', '+top.name.replace('Shops on ','');
         return `<button type="button" class="sort" data-s="${k}" aria-pressed="${k===sortMode}"><b>${v.l}</b><small>${esc(sub)}</small></button>`; }).join('');
       sorts.hidden=false;
-      sorts.onclick=e=>{ const b=e.target.closest('.sort'); if(!b) return; sortMode=b.dataset.s; draw(false); };
+      sorts.onclick=e=>{ const b=e.target.closest('.sort'); if(!b) return; sortMode=b.dataset.s; track('sort',{sort:sortMode, understood:label}); draw(false); };
     } else sorts.hidden=true;
     open.sort((a,b)=>(b.fit-a.fit)||SORTS[sortMode].f(a,b)); // shops that usually stock it always come first
     const safeQ=esc(label), badge={fast:'Fastest',cheap:'Cheapest delivery',best:'Best overall'}[sortMode];
@@ -1046,6 +1061,7 @@
       $('item').value=label; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
     }
     lastSearch={q:label,sent:q,pc,sort:sortMode,shown:open.map(s=>s.id)};
+    if(jump) track('search',{typed:spec.typed||label, understood:label, matched:!!spec.w, area:pc||null, results:banned?0:n});
   }
   // Amazon-style live countdown: refresh every 30 seconds, redraw when a shop closes
   setInterval(()=>{
@@ -1056,7 +1072,8 @@
   },30000);
   let lastSearch=null;
   document.addEventListener('click',e=>{
-    const a=e.target.closest('a.shop'); if(a && lastSearch) console.info('NoLag click',{shop:a.dataset.shop,...lastSearch}); // swap for analytics later
+    const a=e.target.closest('a.shop');
+    if(a && lastSearch){ const li=a.closest('li'), pos=[...$('rlist').children].indexOf(li)+1; track('click',{shop:a.dataset.shop, understood:lastSearch.q, area:lastSearch.pc||null, position:pos, sort:lastSearch.sort}); }
     if(e.target.closest('#toask')){ e.preventDefault(); $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); }
     if(e.target.closest('#backtosearch')){ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>$('q').focus({preventScroll:true}),350); }
   });
