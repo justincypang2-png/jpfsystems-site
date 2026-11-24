@@ -228,18 +228,14 @@
   @media(max-width:1000px){ .bgrid{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:880px){ header .wrap nav{display:flex} header .wrap nav a{display:none} }
   @media(max-width:520px){ .bgrid{grid-template-columns:1fr 1fr;gap:8px} .bcard{padding:12px} .bleft{font-size:19px} }
-  /* live strip under the search */
-  .live{display:flex;align-items:center;gap:10px;margin:12px auto 0;padding:8px 14px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:16px;text-align:left;overflow-x:auto;scrollbar-width:none}
-  .live::-webkit-scrollbar{display:none}
-  .ldot{flex:none;width:10px;height:10px;border-radius:50%;background:#D92D20}
-  .ltag{flex:none;font-size:14px;letter-spacing:.02em}
-  .llist{display:flex;gap:18px;list-style:none;margin:0;padding:0;white-space:nowrap}
-  .llist li{display:flex;align-items:center;gap:6px}
-  .llist .sbadge{width:24px;height:24px;font-size:11px;border-radius:7px}
-  .llist b{font-variant-numeric:tabular-nums}
-  .llist .soon b{color:#8A4B00}
-  .lall{flex:none;margin-left:auto;font-weight:700;white-space:nowrap}
-  @media(prefers-reduced-motion:no-preference){ .ldot{animation:pulse 2s ease-in-out infinite} @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,45,32,.45)}60%{box-shadow:0 0 0 7px rgba(217,45,32,0)}} }
+  /* retail-style delivery bar across the top */
+  .promo{background:var(--blue);color:#fff;font-size:15px;line-height:1.4;padding:9px 0;text-align:center}
+  .promo p{margin:0}
+  .promo a{color:#fff;font-weight:700;margin-left:8px;white-space:nowrap}
+  .promo a:hover{color:#fff;text-decoration-thickness:2px}
+  .promo .t{white-space:nowrap;font-weight:700}
+  .promo .ps{display:none}
+  @media(max-width:640px){ .promo{font-size:14px;padding:8px 0} .promo .pl{display:none} .promo .ps{display:inline} }
   .interp{margin:-8px 0 16px;font-size:17px}
   .interp button{background:none;border:0;padding:0;font:inherit;color:var(--blue);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
   /* Google: centred hero */
@@ -361,6 +357,7 @@
   <button type="button" id="fillex">Fill in an example</button>
 </div></div>
 
+<div class="promo" id="promo"><div class="wrap"><p><span id="promotext">Same-day delivery across London.</span><a href="#board"><span class="pl">See all cut-off times</span><span class="ps">All cut-offs</span></a></p></div></div>
 <header><div class="wrap">
   <a class="logo" href="#top" aria-label="NoLag home">
     <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
@@ -389,11 +386,6 @@
   </div>
   <p class="sr" id="qhint">Suggestions appear as you type. Use the up and down arrows to move through them and Enter to choose.</p>
   <p class="error-msg" id="s-err" role="alert"></p>
-  <div class="live" id="live" role="status" aria-live="off">
-    <span class="ldot" aria-hidden="true"></span><b class="ltag">Live</b>
-    <ul class="llist" id="llist"></ul>
-    <a class="lall" href="#board">See all</a>
-  </div>
   <p class="trust">Free to search. Buy straight from the shop, or let us do it for you from £2.</p>
   <div class="cats" id="cats" role="group" aria-label="Browse by category"></div>
   <div class="quick" id="quick" aria-live="polite"></div>
@@ -1087,10 +1079,19 @@
         <div class="bar" aria-hidden="true"><i style="width:${pct.toFixed(1)}%"></i></div>${s.areaNote?`<span class="bnote">${s.areaNote}</span>`:''}</li>`;
     }).join('');
     $('b-updated').textContent='Updated '+clock(Math.floor(now*60)/60)+'.';
-    const soon=rows.filter(r=>r.left>0 && !r.s.area).slice(0,3);
-    $('llist').innerHTML = soon.length
-      ? soon.map(({s,left:l})=>`<li class="${l<1.5?'soon':''}">${badgeFor(s)}<span>${s.name.replace('Shops on ','')}</span><b>${left(l)} left</b></li>`).join('')
-      : '<li>Same-day delivery has closed for today. Most shops open again from 8am.</li>';
+    // one plain sentence for the top bar: the next shop(s) to stop taking same-day orders
+    const openRows=rows.filter(r=>r.left>0 && !r.s.area);
+    let msg, short;
+    if(!openRows.length){ msg='Same-day orders have closed for today. Most shops take orders again from 8am.'; short='Same-day orders reopen from 8am.'; }
+    else {
+      const first=openRows[0], group=openRows.filter(r=>r.left-first.left<0.1).map(r=>r.s.name.replace('Shops on ','').replace(' same-day',''));
+      const names=group.length>1 ? group.slice(0,-1).join(', ')+' and '+group[group.length-1] : group[0];
+      const T=`<span class="t">${left(first.left)}</span>`, N=esc(names);
+      msg = first.left<4 ? `Need it today? ${N} stop${group.length>1?'':'s'} taking same-day orders in ${T}.`
+                         : `Same-day delivery is open. ${N} take${group.length>1?'':'s'} orders until <span class="t">${clock(first.s.cutoff)}</span>.`;
+      short = `Same-day: ${N} close${group.length>1?'':'s'} in ${T}.`;
+    }
+    $('promotext').innerHTML=`<span class="pl">${msg}</span><span class="ps">${short}</span>`;
   }
   drawBoard(); setInterval(drawBoard,30000);
 
