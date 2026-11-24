@@ -1403,7 +1403,9 @@
     if(HOL.note){ msg=esc(HOL.note); short=esc(HOL.note.split(':')[0])+': check cut-offs.'; }
     $('promotext').innerHTML=`<span class="pl">${msg}</span><span class="ps">${short}</span>`;
   }
-  drawBoard(); setInterval(drawBoard,30000);
+  var RV=null; // scroll-reveal helper, set up further down
+  function watchBoard(){ if(RV) document.querySelectorAll('#bgrid > li').forEach((el,i)=>RV.watch(el,60,i,true)); }
+  drawBoard(); setInterval(()=>{ drawBoard(); watchBoard(); },30000);
 
   // ---------- sticky header: shadow + Search button once the hero is out of view ----------
   const hdr=document.querySelector('header'), hs=$('hsearch');
@@ -1413,12 +1415,14 @@
   hs.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); setTimeout(()=>{ qIn.focus({preventScroll:true}); qIn.select(); },350); });
 
   // ---------- scroll reveal (only when motion is allowed and supported) ----------
+  // Sections fade in every time they come into view, not just the first time:
+  // "show" adds the effect as an element scrolls in; "hide" resets it once it is fully off screen, ready to replay.
   if('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches){
+    const show=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{rootMargin:'0px 0px -8% 0px'});
+    const hide=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) e.target.classList.remove('in'); }),{threshold:0});
+    RV={ watch(el,step,i,instant){ if(el.closest('.hero')||el.closest('#results')) return; el.classList.add('reveal'); el.style.setProperty('--d',(i*step)+'ms'); if(instant) el.classList.add('in'); show.observe(el); hide.observe(el); } };
     const groups=[['#bgrid > li',60],['#how .steps > li',90],['.fees > .fee-box',90],['#cover .cover > div',90],['#doit .doit > *',90],['.faq details',50],['.cta .wrap',0],['h2.s',0]];
-    const els=[];
-    groups.forEach(([sel,step])=>document.querySelectorAll(sel).forEach((el,i)=>{ if(el.closest('.hero')||el.closest('#results')) return; el.classList.add('reveal'); el.style.setProperty('--d',(i*step)+'ms'); els.push(el); }));
-    const ro=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } }),{rootMargin:'0px 0px -8% 0px'});
-    els.forEach(el=>ro.observe(el));
+    groups.forEach(([sel,step])=>document.querySelectorAll(sel).forEach((el,i)=>RV.watch(el,step,i,false)));
   }
 
   // ---------- preview-only walkthrough (never shown on jpfsystems.co) ----------
