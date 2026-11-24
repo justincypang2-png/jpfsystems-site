@@ -14,3 +14,8 @@ CREATE TABLE IF NOT EXISTS events (
 );
 CREATE INDEX IF NOT EXISTS idx_events_ts ON events (ts);
 CREATE INDEX IF NOT EXISTS idx_events_type_ts ON events (type, ts);
+
+-- Product engine: filled every night by engine/import.mjs from the shops' own product feeds.
+CREATE TABLE IF NOT EXISTS products (rid INTEGER PRIMARY KEY, id TEXT UNIQUE NOT NULL, shop TEXT, name TEXT, brand TEXT, cat TEXT, price REAL, was REAL, img TEXT, url TEXT, stock TEXT, speed TEXT, cutoff REAL, arrive TEXT, dfee TEXT, h TEXT, updated TEXT);
+CREATE VIRTUAL TABLE IF NOT EXISTS pfts USING fts5(name, brand, cat, tokenize = 'porter unicode61');
+CREATE TABLE IF NOT EXISTS shops (name TEXT PRIMARY KEY, feed_id TEXT, products INTEGER, speed TEXT, updated TEXT);

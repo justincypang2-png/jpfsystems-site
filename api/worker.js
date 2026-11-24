@@ -2,6 +2,7 @@
 // 1) POST /event        : the website records one anonymous event (search, click, sort, do-it-for-me)
 // 2) GET  /report?key=… : a summary for you (top searches, searches we didn't understand, clicks by shop…)
 // 3) GET  /export.csv?key=… : every event as a spreadsheet file
+// 4) GET  /search?q=…    : real products (photo, price, stock, delivery) from the shops' own feeds, loaded nightly by engine/import.mjs
 // Stores no names, emails, IP addresses or cookies. Postcodes are cut to the area (e.g. "SE15").
 
 const ALLOWED_ORIGINS = ['https://www.jpfsystems.co', 'https://jpfsystems.co'];
@@ -24,6 +25,42 @@ export default {
       'Vary': 'Origin',
     };
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+
+    // ---------- product search: real products from the shops' own feeds ----------
+    if (url.pathname === '/search' && req.method === 'GET') {
+      const out = body => new Response(JSON.stringify(body), { headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=300' } });
+      const q = (url.searchParams.get('q') || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').trim().slice(0, 80);
+      const words = q.split(/\s+/).filter(w => w.length > 1).slice(0, 6);
+      if (!words.length) return out({ products: [] });
+      // Shops write "PlayStation 5" where people type "ps5", so each word also matches what shops call it.
+      const SYN = { ps5: ['playstation 5'], ps4: ['playstation 4'], airpod: ['airpods'], telly: ['tv', 'television'], tv: ['television'], tele: ['tv'], hoover: ['vacuum'], nappies: ['nappy'], nappy: ['nappies'], phone: ['smartphone', 'mobile'], mobile: ['phone'], headphones: ['earphones', 'earbuds'], earbuds: ['earphones', 'headphones'], laptop: ['notebook', 'macbook', 'chromebook'], hairdryer: ['hair dryer'], straighteners: ['straightener'], fridge: ['refrigerator'], specs: ['glasses'] };
+      const term = w => '(' + [`"${w}"*`, ...(SYN[w] || []).map(s => `"${s}"`)].join(' OR ') + ')';
+      const find = match => env.DB.prepare('SELECT p.*, bm25(pfts, 10.0, 4.0, 1.0) AS score FROM pfts JOIN products p ON p.rid = pfts.rowid WHERE pfts MATCH ? ORDER BY score LIMIT 120').bind(match).all().then(r => r.results);
+      let rows;
+      try {
+        rows = await find(words.map(term).join(' AND '));
+        // Wordy searches ("hdmi cable 2m"): if nothing has every word, accept products with most of them.
+        if (!rows.length && words.length > 1) {
+          const need = Math.ceil(words.length / 2);
+          const has = (name, w) => [w, ...(SYN[w] || [])].some(s => name.includes(s));
+          rows = (await find(words.map(term).join(' OR '))).filter(r => words.filter(w => has(r.name.toLowerCase(), w)).length >= need);
+        }
+      } catch { return out({ products: [] }); } // tables not filled yet
+      // Someone searching "ps5" wants the console, not a controller or a case: accessories go below the real thing.
+      const ACC = /\b(case|cases|cover|covers|cable|lead|charger|charging|controller|strap|protector|skin|stand|mount|adapter|replacement|refill|sleeve|holder|bag|grip|dock|tips|decal|sticker|compatible)\b/;
+      const wantsAcc = ACC.test(q);
+      const seen = new Set(), groups = { today: [], tomorrow: [], unknown: [], later: [] };
+      rows.map(r => ({ ...r, acc: !wantsAcc && ACC.test(r.name.toLowerCase()) ? 1 : 0 }))
+        .sort((a, b) => a.acc - b.acc || a.score - b.score || a.price - b.price)
+        .forEach(r => {
+          const key = r.shop + '|' + r.name.toLowerCase();
+          const g = groups[r.speed] || groups.unknown;
+          if (seen.has(key) || g.length >= 8) return;
+          seen.add(key);
+          g.push({ shop: r.shop, name: r.name, brand: r.brand, price: r.price, was: r.was, img: r.img, url: r.url, stock: r.stock, speed: r.speed in groups ? r.speed : 'unknown', cutoff: r.cutoff, arrive: r.arrive, fee: r.dfee, accessory: !!r.acc, updated: r.updated });
+        });
+      return out({ products: [...groups.today, ...groups.tomorrow, ...groups.unknown, ...groups.later] });
+    }
 
     // ---------- record an event ----------
     if (url.pathname === '/event' && req.method === 'POST') {

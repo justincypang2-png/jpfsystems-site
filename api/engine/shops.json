@@ -1,0 +1,11 @@
+{
+  "_about": "Delivery facts per shop, used when a shop's feed doesn't say how fast it delivers. Shops are found automatically from your Awin feed list; you never need to add a shop here for it to appear. Only add a line to correct or confirm its delivery speed. 'match' is a lowercase piece of the shop's name in Awin. speed: today | tomorrow | later. cutoff: last order hour for today (London time). Checked 24 Nov 2026.",
+  "shops": [
+    { "match": "argos", "name": "Argos", "speed": "today", "cutoff": 17, "arrive": "by 10pm", "fee": "£5.95 to £7.95", "note": "Some items must be ordered by 1pm" },
+    { "match": "currys", "name": "Currys", "speed": "tomorrow", "arrive": "next day", "fee": "£5.99 next-day" },
+    { "match": "aliexpress", "name": "AliExpress", "speed": "later", "arrive": "usually 3 to 7 days from UK stock, longer from overseas" },
+    { "match": "temu", "name": "Temu", "speed": "later", "arrive": "usually 5 to 14 working days" },
+    { "match": "etsy", "name": "Etsy", "speed": "later", "arrive": "set by each seller, usually several days" },
+    { "match": "shein", "name": "Shein", "speed": "later", "arrive": "usually several days" }
+  ]
+}

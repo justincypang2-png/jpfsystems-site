@@ -1,0 +1,24 @@
+# Nightly: load every approved shop's products (photos, prices, stock, delivery) into the NoLag database.
+# Free on GitHub. Needs four repository secrets (Settings > Secrets and variables > Actions):
+#   AWIN_FEED_LIST_URL, CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, D1_DATABASE_ID
+name: Product feeds
+on:
+  schedule:
+    - cron: '17 3 * * *'   # every night at about 3am UK time
+  workflow_dispatch: {}    # or run it now from the Actions tab
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Load shop product feeds
+        run: node api/engine/import.mjs
+        env:
+          FEED_LIST_URL: ${{ secrets.AWIN_FEED_LIST_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
