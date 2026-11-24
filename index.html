@@ -317,6 +317,9 @@
   .helpcard a.btn{background:#fff;color:var(--ink);flex:none}
   .helpcard a.btn:hover{background:var(--blue-tint);color:var(--ink)}
   .disclaimer{color:var(--muted);font-size:15px;margin:16px 0 0}
+  .results.unknown .narrow{display:flex;flex-direction:column}
+  .results.unknown .helpcard{order:-1;margin:0 0 18px}
+  .results.unknown .rhead{order:-2}
   .doit{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:start}
   .doit .s{margin-bottom:14px}
   @media(max-width:880px){
@@ -407,7 +410,7 @@
     </div>
     <a class="btn" href="#ask" id="toask">Do it for me</a>
   </div>
-  <p class="disclaimer">Times and delivery charges are typical for each service, not live stock. *Amazon same-day is free on Prime orders over £20; "Cheapest" uses typical charges, and app delivery fees vary. Check on the shop's site before you buy. Last checked: November 2026.</p>
+  <p class="disclaimer">Delivery charges and cut-off times come from each shop's published delivery information and can vary by item and postcode. App delivery fees (Deliveroo, Uber Eats) depend on the shop and distance. These are not live stock checks; check on the shop's site before you buy. Check on the shop's site before you buy. Last checked: 24 November 2026.</p>
 </div></section>
 
 <section id="board" class="board" aria-labelledby="b-title"><div class="wrap">
@@ -706,6 +709,7 @@
       {l:'Nintendo Switch games',q:'Nintendo Switch game',cats:['tech'],w:{argos:2,currys:2,amazon:2,ubereats:2,johnlewis:1}},
       {l:'Nintendo Switch case',q:'Nintendo Switch case',cats:['tech']}]},
     {w:{argos:2,currys:2,johnlewis:2,amazon:2,boots:1,ubereats:1}, k:['iphone','apple phone'], ask:'Which iPhone item?', opts:[
+      {l:'iPhone',q:'Apple iPhone',cats:['tech'],w:{argos:2,currys:2,johnlewis:2,amazon:2}},
       {l:'iPhone charger (20W USB-C)',q:'iPhone 20W USB-C charger',cats:['tech']},
       {l:'USB-C to Lightning cable',q:'USB-C to Lightning cable',cats:['tech']},
       {l:'iPhone case',q:'iPhone case',cats:['tech']},
@@ -724,9 +728,10 @@
       {l:'Wireless earbuds',q:'wireless earbuds',cats:['tech']},
       {l:'Over-ear headphones',q:'over-ear headphones',cats:['tech']},
       {l:'Gaming headset',q:'gaming headset',cats:['tech']}]},
-    {w:{argos:2,currys:2,amazon:2,ubereats:1}, k:['ink','printer','cartridge','toner'], opts:[
+    {w:{argos:2,currys:2,amazon:2,ubereats:1}, k:['ink','printer','cartridge','toner','printer ink'], ask:'Which printer item?', opts:[
       {l:'Printer ink cartridges',q:'printer ink cartridge',cats:['tech']},
-      {l:'Printer paper (A4)',q:'A4 printer paper',cats:['tech','home']}]},
+      {l:'Printer paper (A4)',q:'A4 printer paper',cats:['tech','home']},
+      {l:'Printer',q:'printer',cats:['tech'],w:{argos:2,currys:2,amazon:2,johnlewis:1}}]},
     {w:{currys:2,argos:2,amazon:2,johnlewis:1}, k:['wifi','router','internet','ethernet'], opts:[
       {l:'Wi-Fi extender',q:'wifi extender',cats:['tech']},
       {l:'Ethernet cable',q:'ethernet cable',cats:['tech']}]},
@@ -761,7 +766,26 @@
       {l:'Nappies, size 1–2',q:'nappies size 2',cats:['health']},{l:'Nappies, size 3–4',q:'nappies size 4',cats:['health']},{l:'Nappies, size 5–6',q:'nappies size 6',cats:['health']}]},
     {w:{boots:2,ubereats:2,deliveroo:2,amznow:2,amazon:2}, k:['formula','baby milk'], opts:[{l:'Baby formula',q:'first infant milk',cats:['health']}]},
     {w:{amazon:2,argos:1,currys:1,boots:1}, k:['phone case','case'], opts:[{l:'Phone case',q:'phone case',cats:['tech']}]},
-    {w:{amazon:1,argos:1,ubereats:1,johnlewis:1}, k:['umbrella'], opts:[{l:'Umbrella',q:'umbrella',cats:['home']}]}
+    {w:{amazon:1,argos:1,ubereats:1,johnlewis:1}, k:['umbrella'], opts:[{l:'Umbrella',q:'umbrella',cats:['home']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['tv','television','telly','smart tv'], ask:'Which size?', opts:[
+      {l:'TV, 32 inch',q:'32 inch smart TV',cats:['tech']},{l:'TV, 43 inch',q:'43 inch smart TV',cats:['tech']},{l:'TV, 55 inch',q:'55 inch smart TV',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['monitor','computer monitor','computer screen'], ask:'Which size?', opts:[
+      {l:'Monitor, 24 inch',q:'24 inch monitor',cats:['tech']},{l:'Monitor, 27 inch',q:'27 inch monitor',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['laptop','notebook','chromebook','macbook','macbook air'], ask:'Which laptop?', opts:[
+      {l:'Laptop',q:'laptop',cats:['tech']},{l:'Chromebook',q:'chromebook',cats:['tech']},{l:'MacBook Air',q:'MacBook Air',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['ipad','tablet'], ask:'Which tablet?', opts:[
+      {l:'iPad',q:'Apple iPad',cats:['tech']},{l:'Android tablet',q:'android tablet',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['phone','smartphone','mobile phone','android phone','new phone'], ask:'Which phone?', opts:[
+      {l:'Android phone',q:'android smartphone',cats:['tech']},{l:'iPhone',q:'Apple iPhone',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2,deliveroo:1}, k:['vacuum','hoover','vacuum cleaner'], ask:'Which vacuum?', opts:[
+      {l:'Cordless vacuum',q:'cordless vacuum cleaner',cats:['home']},{l:'Vacuum cleaner',q:'vacuum cleaner',cats:['home']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['microwave'], opts:[{l:'Microwave',q:'microwave',cats:['home']}]},
+    {w:{boots:2,argos:2,currys:2,johnlewis:2,amazon:2}, k:['hair dryer','hairdryer','straighteners','hair straighteners'], ask:'Which one?', opts:[
+      {l:'Hair dryer',q:'hair dryer',cats:['beauty','home']},{l:'Hair straighteners',q:'hair straighteners',cats:['beauty','home']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2,ubereats:1}, k:['speaker','bluetooth speaker','smart speaker','alexa','echo'], ask:'Which speaker?', opts:[
+      {l:'Bluetooth speaker',q:'bluetooth speaker',cats:['tech']},{l:'Smart speaker',q:'smart speaker',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:1,amazon:2}, k:['mouse','keyboard','computer mouse'], ask:'Which one?', opts:[
+      {l:'Wireless mouse',q:'wireless mouse',cats:['tech']},{l:'Keyboard',q:'wireless keyboard',cats:['tech']}]}
   ];
   // Ideas: situations rather than products.
   const IDEAS=[
@@ -790,9 +814,9 @@
   const STOP=new Set('i im need needs a an the some something to for my me get buy want wanting please can you new today tonight now asap urgent urgently it is its of and with that which will in on at this one got have has had looking find any'.split(' '));
   // everyday phrases -> product (checked against the whole sentence)
   const SYN=[
-    ['telly','HDMI cable (2m)'],['tv cable','HDMI cable (2m)'],['tv lead','HDMI cable (2m)'],['hdmi lead','HDMI cable (2m)'],['connect laptop to tv','USB-C to HDMI adapter'],['laptop to tv','USB-C to HDMI adapter'],['laptop to monitor','USB-C to HDMI adapter'],
+    ['telly cable','HDMI cable (2m)'],['telly lead','HDMI cable (2m)'],['tv cable','HDMI cable (2m)'],['tv lead','HDMI cable (2m)'],['hdmi lead','HDMI cable (2m)'],['connect laptop to tv','USB-C to HDMI adapter'],['laptop to tv','USB-C to HDMI adapter'],['laptop to monitor','USB-C to HDMI adapter'],
     ['charge my laptop','USB-C laptop charger (65W)'],['laptop charger','USB-C laptop charger (65W)'],['laptop wont charge','USB-C laptop charger (65W)'],['laptop power','USB-C laptop charger (65W)'],
-    ['macbook','MacBook charger'],['mac charger','MacBook charger'],['charge my mac','MacBook charger'],
+    ['macbook charger','MacBook charger'],['mac charger','MacBook charger'],['charge my mac','MacBook charger'],
     ['charge my phone','Phone charger (USB-C)'],['phone dead','Phone charger (USB-C)'],['phone battery','Power bank'],['android charger','Phone charger (USB-C)'],['phone charger','Phone charger (USB-C)'],
     ['lightning','USB-C to Lightning cable'],['iphone cable','USB-C to Lightning cable'],['iphone lead','USB-C to Lightning cable'],
     ['portable charger','Power bank'],['battery pack','Power bank'],
@@ -814,19 +838,20 @@
   function lev(a,b){ if(Math.abs(a.length-b.length)>2) return 9; const d=[...Array(b.length+1).keys()];
     for(let i=1;i<=a.length;i++){ let prev=d[0]; d[0]=i; for(let j=1;j<=b.length;j++){ const t=d[j]; d[j]=Math.min(d[j]+1,d[j-1]+1,prev+(a[i-1]===b[j-1]?0:1)); prev=t; } } return d[b.length]; }
   const toks = t => norm(t).split(' ').filter(w=>w && !STOP.has(w));
-  Object.values(ALLOPTS).forEach(o=>{ o.terms=[...new Set([...o.fam.k.join(' ').split(' '), ...norm(o.l).split(' '), ...norm(o.q).split(' ')].filter(w=>w.length>1 && !STOP.has(w)))]; });
+  Object.values(ALLOPTS).forEach(o=>{ o.terms=[...new Set([...o.fam.k.filter(k=>!k.includes(' ')), ...norm(o.l).split(' '), ...norm(o.q).split(' ')].filter(w=>w.length>1 && !STOP.has(w)))]; o.phrases=o.fam.k.filter(k=>k.includes(' ')); });
   function smartRank(text){
     const qs=toks(text); if(!qs.length) return [];
     const raw=' '+norm(text)+' ', bare=' '+qs.join(' ')+' ';
     return Object.values(ALLOPTS).map(o=>{
       let sc=0;
       for(const [ph,lab] of SYN) if(lab===o.l && (raw.includes(' '+ph) || bare.includes(' '+ph))) sc=Math.max(sc,10);
+      for(const ph of o.phrases) if(raw.includes(' '+ph+' ') || bare.includes(' '+ph+' ')) sc=Math.max(sc,3.2);
       let sum=0;
       for(const t of qs){ let b=0;
         for(const w of o.terms){
           if(w===t){ b=3; break; }
           if(t.length>=3 && w.startsWith(t)) b=Math.max(b,2.2);
-          else if(t.length>=4 && lev(t,w)<=(t.length>=7?2:1)) b=Math.max(b,2.5);
+          else if(t.length>=5 && t[0]===w[0] && lev(t,w)<=(t.length>=8?2:1)) b=Math.max(b,2.5);
         }
         sum+=b; }
       const lw=norm(o.l).split(' ').filter(w=>w.length>1&&!STOP.has(w)), cover=lw.filter(w=>qs.some(t=>t===w||lev(t,w)<=1)).length/lw.length;
@@ -844,9 +869,9 @@
       const best=[...byFam.values()].sort((a,b)=>b.length-a.length || b[0].score-a[0].score)[0];
       if(toks(text).length===1){
         if(byFam.size>=3) return null;                       // one vague word, e.g. "cable": show choices, don't guess
-        const f=best[0].opt.fam; return {...f.opts[0],w:f.opts[0].w||f.w,fam:f}; // e.g. "chargr": main charger + "Which charger?"
+        const f=best[0].opt.fam; return {...f.opts[0],w:f.opts[0].w||f.w,fam:f,ambig:true}; // e.g. "chargr": main charger + "Which charger?"
       }
-      if(best.length>=2 || byFam.size===1) return {...best[0].opt};
+      if(byFam.size===1) return {...top.opt};
     }
     return null;
   }
@@ -934,23 +959,23 @@
   // Typical service facts (not live stock). Review these every couple of weeks and update "Last checked".
   // cutoff = latest London time (24h, decimal hours) you can usually still order for delivery today.
   const SOURCES=[
-    {id:'amznow', etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes',feeVal:1.99, name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
-     eta:'about 30 minutes', fee:'£1.99 with Prime, £3.99 without', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
+    {id:'amznow', etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes', name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
+     eta:'about 30 minutes', fee:'Prime: £1.99, without Prime: £3.99, free over £20', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
      url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
-    {id:'boots', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes',feeVal:2.99, name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
-     eta:'about 20 to 45 minutes', fee:'app delivery fee', url:q=>`https://www.boots.com/sitesearch?searchTerm=${encodeURIComponent(q)}`},
-    {id:'ubereats', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes',feeVal:2.99, name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
-     eta:'about 20 to 45 minutes', fee:'app delivery fee', url:q=>`https://www.ubereats.com/gb/search?q=${encodeURIComponent(q)}`},
-    {id:'deliveroo', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes',feeVal:2.99, name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
-     eta:'about 20 to 45 minutes', fee:'app delivery fee', note:'Search in the Deliveroo app or site', url:q=>`https://deliveroo.co.uk/`},
-    {id:'johnlewis', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour',feeVal:2.99, name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
-     eta:'about 30 to 60 minutes', fee:'app delivery fee', url:q=>`https://www.johnlewis.com/search?search-term=${encodeURIComponent(q)}`},
-    {id:'currys', etaBig:'2-hour slot',etaSmall:'this evening',promise:'in a 2-hour slot this evening',feeVal:9.95, name:'Currys', via:'same-day delivery from local stores', cats:['tech','home'], cutoff:18, speed:180,
-     eta:'a 2-hour slot this evening', fee:'about £9.95', url:q=>`https://www.currys.co.uk/search?q=${encodeURIComponent(q)}`},
-    {id:'argos', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight',feeVal:3.95, name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:18, speed:240,
-     eta:'by 10pm tonight', fee:'about £3.95', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
-    {id:'amazon', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight',feeVal:0, name:'Amazon same-day', via:'Amazon, Prime same-day delivery', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
-     eta:'by 10pm tonight', fee:'free on Prime orders over £20', url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`}
+    {id:'boots', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
+     eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.boots.com/sitesearch?searchTerm=${encodeURIComponent(q)}`},
+    {id:'ubereats', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
+     eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.ubereats.com/gb/search?q=${encodeURIComponent(q)}`},
+    {id:'deliveroo', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
+     eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', note:'Search in the Deliveroo app or site', url:q=>`https://deliveroo.co.uk/`},
+    {id:'johnlewis', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour', name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
+     eta:'about 30 to 60 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.johnlewis.com/search?search-term=${encodeURIComponent(q)}`},
+    {id:'argos', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:17, speed:240,
+     eta:'by 10pm tonight', fee:'from £5.95 to £7.95', note:'Some items must be ordered by 1pm', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
+    {id:'amazon', etaBig:'Today',etaSmall:'same-day',promise:'today', name:'Amazon same-day', via:'Amazon same-day delivery, in eligible postcodes', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
+     eta:'later today', fee:'Prime: free over £20, £1.99 under. Without Prime: £5.99', note:'Cut-off varies by item', url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
+    {id:'currys', today:false, etaBig:'Tomorrow',etaSmall:'next-day delivery',promise:'tomorrow', name:'Currys', via:'Next-day delivery, or collect from a store', cats:['tech','home'], cutoff:21, speed:1440,
+     eta:'tomorrow', fee:'£5.99 next-day', url:q=>`https://www.currys.co.uk/search?q=${encodeURIComponent(q)}`}
   ];
   const CATS={
     tech:/charg|cable|usb|hdmi|headphone|earbud|airpod|laptop|phone|ipad|tablet|ink|printer|router|mouse|keyboard|console|ps5|playstation|xbox|switch|nintendo|game|batter|adapter|monitor|\btv\b|speaker|camera|sd card|memory/i,
@@ -979,18 +1004,28 @@
     let spec = chosen && chosen.l.toLowerCase()===q.toLowerCase() ? chosen : null;
     let fam = null;
     if(!spec){
+      // 1. what was typed names exactly one product ("paracetamol", "laptop charger", "macbook") -> go straight to it
+      const qt=toks(q), hits=qt.length ? Object.values(ALLOPTS).filter(o=>{ const lw=norm(o.l).split(' '); return qt.every(t=>lw.includes(t)); }) : [];
+      if(hits.length===1) spec={...hits[0], typed: norm(hits[0].l)===norm(q)?undefined:q};
+      else if(hits.length>1 && hits.every(h=>h.fam===hits[0].fam) && !exactFamily(q)) spec={...hits[0],fam:hits[0].fam,ambig:true};
+    }
+    if(!spec){
       fam=exactFamily(q);
-      if(fam) spec={...fam.opts[0],w:fam.opts[0].w||fam.w,fam};
+      if(fam){ const inFam=Object.values(ALLOPTS).filter(o=>o.fam===fam && toks(q).every(t=>norm(o.l).split(' ').includes(t)));
+               const pick=inFam.length===1 ? inFam[0] : fam.opts[0];   // "macbook" -> MacBook Air, still offering the other laptops
+               spec={...pick,w:pick.w||fam.w,fam,ambig:true}; }
       else { const m=interpret(q); spec = m ? {...m, typed:q} : optFor(q); if(m) fam=m.fam; }
     }
     renderResults(spec,pc,fam);
   });
 
-  // Skyscanner-style sorting. "Best" trades waiting time against delivery cost (30 minutes of waiting ≈ £1).
+  // Sorting. Same-day options always come before next-day ones. "Best overall" = fastest, but avoids shops about to close.
+  const todayFirst=(a,b)=>(a.today===false)-(b.today===false);
+  const risk=s=> (s.cutoff-londonHours()<0.75 ? 90 : 0); // under 45 minutes left to order: treat as slower
   const SORTS={
-    fast:{l:'Fastest',f:(a,b)=>a.speed-b.speed},
-    cheap:{l:'Cheapest delivery',f:(a,b)=>a.feeVal-b.feeVal||a.speed-b.speed},
-    best:{l:'Best overall',f:(a,b)=>(a.speed/30+a.feeVal)-(b.speed/30+b.feeVal)}
+    fast:{l:'Fastest',f:(a,b)=>todayFirst(a,b)||a.speed-b.speed},
+    late:{l:'Order latest',f:(a,b)=>todayFirst(a,b)||b.cutoff-a.cutoff||a.speed-b.speed},
+    best:{l:'Best overall',f:(a,b)=>todayFirst(a,b)||(a.speed+risk(a))-(b.speed+risk(b))}
   };
   const GENERAL=['argos','amazon','johnlewis','deliveroo','ubereats']; // shops that sell a bit of everything
   let current=null, sortMode='best';
@@ -1005,11 +1040,11 @@
       ip.hidden=false;
       $('rawsearch').onclick=()=>{ qIn.value=spec.typed; chosen={l:spec.typed,q:spec.typed,cats:null}; $('sf').requestSubmit(); };
     } else ip.hidden=true;
-    const fam=spec.fam || ambig, ref=$('refine');
+    const fam=spec.ambig ? (spec.fam || ambig) : null, ref=$('refine');
     if(fam && fam.opts.length>1){
-      ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Did you mean?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
+      ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Which one?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
       ref.hidden=false;
-      ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); };
+      ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen={...optFor(b.dataset.l),ambig:true}; $('sf').requestSubmit(); };
     } else ref.hidden=true;
     // Which shops sell this? Known products use their where-to-buy list; anything else falls back to category, marked "might have it".
     let opts = spec.w ? SOURCES.filter(s=>spec.w[s.id]).map(s=>({...s,fit:spec.w[s.id]}))
@@ -1021,13 +1056,13 @@
     const sorts=$('sorts');
     if(open.length>1 && !banned){
       sorts.innerHTML=Object.entries(SORTS).map(([k,v])=>{ const top=[...open].sort((a,b)=>(b.fit-a.fit)||v.f(a,b))[0];
-        const sub = k==='cheap' ? (top.feeVal? '£'+top.feeVal.toFixed(2)+' delivery' : 'Free delivery*') : top.etaBig+', '+top.name.replace('Shops on ','');
+        const sub = k==='late' ? 'until '+clock(top.cutoff)+', '+top.name.replace('Shops on ','') : top.etaBig+', '+top.name.replace('Shops on ','');
         return `<button type="button" class="sort" data-s="${k}" aria-pressed="${k===sortMode}"><b>${v.l}</b><small>${esc(sub)}</small></button>`; }).join('');
       sorts.hidden=false;
       sorts.onclick=e=>{ const b=e.target.closest('.sort'); if(!b) return; sortMode=b.dataset.s; track('sort',{sort:sortMode, understood:label}); draw(false); };
     } else sorts.hidden=true;
     open.sort((a,b)=>(b.fit-a.fit)||SORTS[sortMode].f(a,b)); // shops that usually stock it always come first
-    const safeQ=esc(label), badge={fast:'Fastest',cheap:'Cheapest delivery',best:'Best overall'}[sortMode];
+    const safeQ=esc(label), badge={fast:'Fastest',late:'Order latest',best:'Best overall'}[sortMode];
     if(banned){
       list.innerHTML=`<li class="opt closed" style="grid-template-columns:1fr"><div><h3>We can't help with alcohol or tobacco</h3><p class="via">You'll need to order these directly from a shop that checks ID on delivery.</p></div></li>`;
     } else {
@@ -1050,10 +1085,14 @@
           <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search for tomorrow<span class="sr"> on ${s.name} (opens in a new tab)</span></a>
         </li>`).join('');
     }
-    const n=open.length, likely=open.filter(s=>s.fit===2).length;
-    $('r-title').textContent = banned ? 'Not something we can help with' :
+    const n=open.filter(s=>s.today!==false).length, likely=open.filter(s=>s.fit===2 && s.today!==false).length;
+    $('r-title').textContent = banned ? 'Not something we can help with' : (!spec.w && !cats.length) ? `No match for “${label}” yet` :
       n ? `${n} way${n>1?'s':''} to get “${label}” today` : `Nothing can still deliver “${label}” today`;
-    $('r-sub').textContent = (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.');
+    const unknown = !spec.w && !cats.length && !banned;
+    $('r-sub').textContent = unknown
+      ? `We don't recognise “${label}” yet, so these are general shops that might have it. Try the exact product name, or let us find it for you.`
+      : (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.');
+    $('results').classList.toggle('unknown', unknown);
     $('results').hidden=false;
     if(jump){
       $('r-title').focus();
@@ -1087,7 +1126,7 @@
   const OPEN_FROM=8; // bars drain from 8am to each cut-off
   function drawBoard(){
     const now=londonHours();
-    const rows=SOURCES.map(s=>({s,left:s.cutoff-now})).sort((a,b)=>(a.left<=0)-(b.left<=0) || a.left-b.left);
+    const rows=SOURCES.filter(s=>s.today!==false).map(s=>({s,left:s.cutoff-now})).sort((a,b)=>(a.left<=0)-(b.left<=0) || a.left-b.left);
     $('bgrid').innerHTML=rows.map(({s,left:l})=>{
       if(l<=0) return `<li class="bcard shut"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><div class="bleft">Closed today<small>orders closed at ${clock(s.cutoff)}</small></div></li>`;
       const pct=Math.max(3,Math.min(100,100*l/(s.cutoff-OPEN_FROM)));
