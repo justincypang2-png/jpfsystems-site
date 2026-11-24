@@ -35,7 +35,7 @@
 
   header{border-bottom:1px solid var(--line)}
   header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:72px;gap:16px}
-  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+  .logo{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:800;font-size:22px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
   .mark{width:34px;height:34px;border-radius:10px;background:var(--blue);display:grid;place-items:center}
   .mark svg{width:20px;height:20px}
   header nav{display:flex;gap:6px}
@@ -192,6 +192,12 @@
   .chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint);font-weight:700}
   .refine{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
   .refine .qlabel{color:var(--ink);font-weight:700}
+  @media(max-width:640px){
+    .refine{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px 14px;padding:2px 16px 6px;scroll-padding:0 16px}
+    .refine::-webkit-scrollbar{display:none}
+    .refine .chip,.refine .qlabel{flex:none;white-space:nowrap}
+    .prods{margin-top:0}
+  }
 
   /* sticky header */
   header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(6px);transition:box-shadow .2s}
@@ -207,8 +213,8 @@
   /* live board */
   .board{padding:56px 0}
   .bsub{color:var(--muted);margin:-18px 0 22px}
-  .bgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .bcard{border:2px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px}
+  .bgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .bcard{border:2px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0;overflow-wrap:anywhere}
   .bcard .shopline h3{font-size:17px;margin:0;line-height:1.2}
   .bleft{font-size:22px;font-weight:800;letter-spacing:-.01em}
   .bleft small{display:block;font-size:15px;font-weight:400;color:var(--muted)}
@@ -225,9 +231,9 @@
     .rlist .opt{animation:rise .4s ease both;animation-delay:var(--d,0ms)}
     @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   }
-  @media(max-width:1000px){ .bgrid{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:1000px){ .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
   @media(max-width:880px){ header .wrap nav{display:flex} header .wrap nav a{display:none} }
-  @media(max-width:520px){ .bgrid{grid-template-columns:1fr 1fr;gap:8px} .bcard{padding:12px} .bleft{font-size:19px} }
+  @media(max-width:520px){ .bgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px} .bcard{padding:12px} .bleft{font-size:19px} }
   /* retail-style delivery bar across the top */
   .promo{background:var(--blue);color:#fff;font-size:15px;line-height:1.4;padding:9px 0;text-align:center}
   .promo p{margin:0}
@@ -312,7 +318,7 @@
   .opt.closed{background:var(--soft);border-style:dashed}
   .opt.closed h3,.opt.closed .facts{color:var(--muted)}
   /* Product cards: real products from the shops' own feeds */
-  .prods{margin:4px 0 30px}
+  section.prods{margin:4px 0 30px;padding:0}
   .pbanner{background:#FFF6DB;border:2px solid #E8C35A;border-radius:12px;padding:12px 16px;margin:0 0 18px;font-size:16px}
   .pgroup{margin:0 0 22px}
   .pgroup>h3,.pgroup>details>summary{font-size:20px;margin:0 0 12px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
@@ -330,6 +336,7 @@
   .ptag{position:absolute;top:10px;left:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:700;border-radius:6px;padding:2px 8px}
   .pbody{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;flex:1}
   .pshop{margin:0;font-size:15px;font-weight:700;color:var(--muted)}
+  .pseller{font-weight:400}
   .pname{margin:0;font-size:17px;line-height:1.3;font-weight:400;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .pprice{margin:2px 0 0;font-size:26px;font-weight:700;line-height:1.1}
   .pprice s{font-size:16px;font-weight:400;color:var(--muted);margin-left:6px}
@@ -346,6 +353,16 @@
   .pnote{color:var(--muted);font-size:15px;margin:0}
   .shopshead{font-size:20px;margin:0 0 12px}
   @media(max-width:520px){ .pgrid{grid-template-columns:1fr 1fr;gap:10px} .pbody{padding:10px 12px 12px} .pname{font-size:15px} .pprice{font-size:21px} .parr{font-size:14px} .pbuy{min-height:44px;font-size:15px} }
+  /* Phones: actions in thumb reach at the bottom of the screen while reading results */
+  .mbar{display:none}
+  @media(max-width:640px){
+    .mbar:not([hidden]){display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:2px solid var(--line);box-shadow:0 -4px 14px rgba(16,24,40,.08)}
+    .mbar button{flex:1;min-height:48px;border-radius:12px;font:inherit;font-weight:700;font-size:17px;border:2px solid var(--blue);background:#fff;color:var(--blue)}
+    .mbar #mb-search{background:var(--blue);color:#fff}
+    body.has-mbar{padding-bottom:84px}
+  }
+  .kindnote{color:var(--muted);font-size:16px;margin:4px 0 0}
+  .holinote{background:#FFF6DB;border:2px solid #E8C35A;border-radius:12px;padding:10px 14px;margin:10px 0 0;font-size:16px}
   .helpcard{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:22px;padding:22px;border-radius:16px;background:var(--ink);color:#fff}
   .helpcard h3{margin:0 0 4px;font-size:22px}
   .helpcard p{margin:0;color:#D3D8E2}
@@ -390,12 +407,12 @@
 <body>
 <a class="skip" href="#q">Skip to search</a>
 
-<div class="demobar" id="demobar"><div class="wrap">
+<aside class="demobar" id="demobar" aria-label="Preview notice"><div class="wrap">
   <span>Preview: requests are not sent. Send the form to see what happens behind the scenes.</span>
   <button type="button" id="fillex">Fill in an example</button>
-</div></div>
+</div></aside>
 
-<div class="promo" id="promo"><div class="wrap"><p><span id="promotext">Same-day delivery across London.</span><a href="#board"><span class="pl">See all cut-off times</span><span class="ps">All cut-offs</span></a></p></div></div>
+<aside class="promo" id="promo" aria-label="Same-day cut-offs"><div class="wrap"><p><span id="promotext">Same-day delivery across London.</span><a href="#board"><span class="pl">See all cut-off times</span><span class="ps">All cut-offs</span></a></p></div></aside>
 <header><div class="wrap">
   <a class="logo" href="#top" aria-label="NoLag home">
     <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
@@ -404,6 +421,7 @@
   <nav aria-label="Main"><a href="#board">Open now</a><a href="#how">How it works</a><a href="#doit">Do it for me</a><button type="button" class="hsearch" id="hsearch" hidden>Search</button></nav>
 </div></header>
 
+<div class="mbar" id="mbar" hidden><button type="button" id="mb-search">New search</button><button type="button" id="mb-doit">Do it for me</button></div>
 <main id="top">
 <div class="hero"><div class="wrap narrow">
   <h1>What do you need today?</h1>
@@ -439,7 +457,7 @@
   <section class="prods" id="prods" hidden aria-label="Products from the shops">
     <p class="pbanner" id="pbanner" hidden></p>
     <div id="pgroups"></div>
-    <p class="pnote">Photos, prices and stock come from each shop's own product list, updated every night. The shop's site shows the final price before you pay.</p>
+    <p class="pnote">Photos, prices and stock come from each shop's own product list, updated every night. eBay listings are live, and their delivery dates are the seller's estimate. The shop's site shows the final price before you pay.</p>
   </section>
   <h3 class="shopshead" id="shopshead" hidden>Or search the shops yourself</h3>
   <div class="sorts" id="sorts" role="group" aria-label="Sort results" hidden></div>
@@ -766,6 +784,7 @@
       {l:'USB-C to HDMI adapter',q:'USB-C to HDMI adapter',cats:['tech']}]},
     {w:{argos:2,currys:2,johnlewis:2,amazon:2,boots:1}, k:['headphones','earbuds','airpods','headset'], ask:'Which kind?', opts:[
       {l:'Apple AirPods',q:'Apple AirPods',cats:['tech']},
+      {l:'Apple AirPods Pro',q:'Apple AirPods Pro',cats:['tech']},
       {l:'Wireless earbuds',q:'wireless earbuds',cats:['tech']},
       {l:'Over-ear headphones',q:'over-ear headphones',cats:['tech']},
       {l:'Gaming headset',q:'gaming headset',cats:['tech']}]},
@@ -812,7 +831,7 @@
       {l:'TV, 32 inch',q:'32 inch smart TV',cats:['tech']},{l:'TV, 43 inch',q:'43 inch smart TV',cats:['tech']},{l:'TV, 55 inch',q:'55 inch smart TV',cats:['tech']}]},
     {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['monitor','computer monitor','computer screen'], ask:'Which size?', opts:[
       {l:'Monitor, 24 inch',q:'24 inch monitor',cats:['tech']},{l:'Monitor, 27 inch',q:'27 inch monitor',cats:['tech']}]},
-    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['laptop','notebook','chromebook','macbook','macbook air'], ask:'Which laptop?', opts:[
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['laptop','chromebook','macbook','macbook air'], ask:'Which laptop?', opts:[
       {l:'Laptop',q:'laptop',cats:['tech']},{l:'Chromebook',q:'chromebook',cats:['tech']},{l:'MacBook Air',q:'MacBook Air',cats:['tech']}]},
     {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['ipad','tablet'], ask:'Which tablet?', opts:[
       {l:'iPad',q:'Apple iPad',cats:['tech']},{l:'Android tablet',q:'android tablet',cats:['tech']}]},
@@ -825,6 +844,16 @@
       {l:'Hair dryer',q:'hair dryer',cats:['beauty','home']},{l:'Hair straighteners',q:'hair straighteners',cats:['beauty','home']}]},
     {w:{argos:2,currys:2,johnlewis:2,amazon:2,ubereats:1}, k:['speaker','bluetooth speaker','smart speaker','alexa','echo'], ask:'Which speaker?', opts:[
       {l:'Bluetooth speaker',q:'bluetooth speaker',cats:['tech']},{l:'Smart speaker',q:'smart speaker',cats:['tech']}]},
+    {w:{argos:2,currys:2,amazon:2,johnlewis:1,boots:1,ubereats:1}, k:['cable','cables','usb c','usb c cable','usb cable','type c','charging cable'], ask:'Which cable?', opts:[
+      {l:'USB-C cable',q:'USB-C to USB-C cable',cats:['tech']},{l:'USB-C to Lightning cable',q:'USB-C to Lightning cable',cats:['tech']},{l:'HDMI cable (2m)',q:'HDMI cable 2m',cats:['tech']},{l:'Micro-USB cable',q:'micro USB cable',cats:['tech']},{l:'Ethernet cable',q:'ethernet cable',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['fan','fans','desk fan','tower fan','electric fan'], ask:'Which fan?', opts:[
+      {l:'Desk fan',q:'desk fan',cats:['home']},{l:'Tower fan',q:'tower fan',cats:['home']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['coffee machine','coffee maker','espresso machine','nespresso','pod machine'], ask:'Which coffee machine?', opts:[
+      {l:'Coffee machine',q:'coffee machine',cats:['home']},{l:'Pod coffee machine',q:'pod coffee machine',cats:['home']},{l:'Bean-to-cup coffee machine',q:'bean to cup coffee machine',cats:['home']}]},
+    {w:{boots:2,argos:2,currys:2,johnlewis:2,amazon:2}, k:['electric toothbrush','oral b','sonicare'], opts:[{l:'Electric toothbrush',q:'electric toothbrush',cats:['beauty','health']},{l:'Electric toothbrush heads',q:'electric toothbrush replacement heads',cats:['beauty','health']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['smartwatch','smart watch','apple watch','fitbit','garmin'], ask:'Which watch?', opts:[{l:'Apple Watch',q:'Apple Watch',cats:['tech']},{l:'Fitness tracker',q:'fitness tracker',cats:['tech']},{l:'Smartwatch',q:'smartwatch',cats:['tech']}]},
+    {w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:['kindle','e reader','ereader','e-reader'], opts:[{l:'Kindle e-reader',q:'Kindle',cats:['tech']}]},
+    {w:{argos:2,johnlewis:2,amazon:2,deliveroo:1,ubereats:1}, k:['christmas tree','xmas tree','fairy lights','christmas lights','xmas lights'], ask:'Which one?', opts:[{l:'Artificial Christmas tree',q:'artificial Christmas tree',cats:['home','gift']},{l:'Fairy lights',q:'fairy lights',cats:['home','gift']},{l:'Christmas decorations',q:'Christmas decorations',cats:['home','gift']}]},
     {w:{argos:2,currys:2,johnlewis:1,amazon:2}, k:['mouse','keyboard','computer mouse'], ask:'Which one?', opts:[
       {l:'Wireless mouse',q:'wireless mouse',cats:['tech']},{l:'Keyboard',q:'wireless keyboard',cats:['tech']}]}
   ];
@@ -843,7 +872,7 @@
     {k:['gaming','game night'], t:'Game night', items:['PS5 DualSense controller','Xbox wireless controller','Gaming headset','PS5 games']}
   ];
   const POPULAR=['Phone charger (USB-C)','PS5 DualSense controller','HDMI cable (2m)','Flower bouquet','Paracetamol','Helium balloons'];
-  const ALLOPTS={}; FAMILIES.forEach(f=>f.opts.forEach(o=>{ALLOPTS[o.l.toLowerCase()]={...o,w:o.w||f.w,fam:f};}));
+  const ALLOPTS={}; FAMILIES.forEach(f=>f.opts.forEach(o=>{ const k=o.l.toLowerCase(); if(!ALLOPTS[k]) ALLOPTS[k]={...o,w:o.w||f.w,fam:f};}));
   const optFor = label => ALLOPTS[label.toLowerCase()] || {l:label,q:label,cats:null};
   const norm = t => t.toLowerCase().replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
   const hit = (keys,t) => { // 2 = exact, 1 = prefix/contains, 0 = none
@@ -852,7 +881,7 @@
 
 
   // ---------- smart matching: everyday words, typos and filler words ----------
-  const STOP=new Set('i im need needs a an the some something to for my me get buy want wanting please can you new today tonight now asap urgent urgently it is its of and with that which will in on at this one got have has had looking find any'.split(' '));
+  const STOP=new Set('i im need needs a an the some something to for my me get buy want wanting please can you new today tonight now asap urgent urgently it is its of and with that which will in on at this one got have has had looking find any cheap cheapest cheaper budget best good decent affordable quality nice under below less than around about max pounds quid'.split(' '));
   // everyday phrases -> product (checked against the whole sentence)
   const SYN=[
     ['telly cable','HDMI cable (2m)'],['telly lead','HDMI cable (2m)'],['tv cable','HDMI cable (2m)'],['tv lead','HDMI cable (2m)'],['hdmi lead','HDMI cable (2m)'],['connect laptop to tv','USB-C to HDMI adapter'],['laptop to tv','USB-C to HDMI adapter'],['laptop to monitor','USB-C to HDMI adapter'],
@@ -874,7 +903,8 @@
     ['baby milk','Baby formula'],
     ['eu plug','Travel plug adapter'],['european plug','Travel plug adapter'],['travel plug','Travel plug adapter'],
     ['more sockets','Extension lead (4-way)'],['power strip','Extension lead (4-way)'],['extension cable','Extension lead (4-way)'],
-    ['dualsense','PS5 DualSense controller'],['ps5 pad','PS5 DualSense controller']
+    ['dualsense','PS5 DualSense controller'],['ps5 pad','PS5 DualSense controller'],
+    ['usb c charger','Phone charger (USB-C)'],['samsung charger','Phone charger (USB-C)'],['type c charger','Phone charger (USB-C)'],['plug charger','Phone charger (USB-C)'],['airpods pro','Apple AirPods Pro'],['usb c to usb c','USB-C cable'],['micro usb','Micro-USB cable'],['desk fan','Desk fan'],['tower fan','Tower fan'],['dyson hoover','Cordless vacuum'],['dyson vacuum','Cordless vacuum'],['dyson hair','Hair dryer']
   ];
   function lev(a,b){ if(Math.abs(a.length-b.length)>2) return 9; const d=[...Array(b.length+1).keys()];
     for(let i=1;i<=a.length;i++){ let prev=d[0]; d[0]=i; for(let j=1;j<=b.length;j++){ const t=d[j]; d[j]=Math.min(d[j]+1,d[j-1]+1,prev+(a[i-1]===b[j-1]?0:1)); prev=t; } } return d[b.length]; }
@@ -917,13 +947,57 @@
     return null;
   }
 
-  const qIn=$('q'), sugg=$('sugg'); let active=-1, items=[], chosen=null;
+  // ---------- item types: everyday things that aren't a specific product above ----------
+  // Each type lists the shops that really sell it (2 = usually stocks it, 1 = might have it).
+  const KINDS=[
+    {n:'kitchen appliances', w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:'blender, juicer, slow cooker, pressure cooker, food processor, stand mixer, hand mixer, mixer, sandwich maker, toastie maker, waffle maker, soup maker, bread maker, ice cream maker, milk frother, hob, oven, fridge, freezer, dishwasher, washing machine, tumble dryer, dryer'},
+    {n:'kitchenware', w:{argos:2,johnlewis:2,amazon:2,deliveroo:1}, k:'frying pan, saucepan, pan, pans, pot, wok, knife, knives, knife set, chopping board, kitchen scales, scales, baking tray, cake tin, flask, thermos, water bottle, lunch box, cutlery, plates, bowls, mugs, mug, glasses, wine glasses, tupperware, food containers'},
+    {n:'home appliances', w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:'iron, steam iron, clothes steamer, steamer, dehumidifier, humidifier, air purifier, dyson, lamp, desk lamp, floor lamp, radiator'},
+    {n:'bedding and towels', w:{johnlewis:2,argos:2,amazon:2,deliveroo:1}, k:'duvet, duvets, pillow, pillows, bed sheet, bed sheets, sheets, fitted sheet, duvet cover, bedding, mattress topper, mattress protector, towel, towels, bath towel, cushion, cushions, throw, curtains, rug, hot water bottle'},
+    {n:'toiletries', w:{boots:2,ubereats:2,deliveroo:2,amznow:2,amazon:2}, k:'toothbrush, toothpaste, floss, mouthwash, razor, razors, shaving foam, shaving gel, shampoo, conditioner, shower gel, body wash, soap, deodorant, sun cream, suncream, sunscreen, moisturiser, moisturizer, face wash, cleanser, makeup, make up, mascara, lipstick, foundation, concealer, nail polish, nail varnish, hair gel, hair ties, hairspray, cotton pads, cotton buds, tampons, sanitary pads, pads, period pants, condoms, contact lens solution, hand sanitiser, hand sanitizer, tissues, wet wipes, lip balm'},
+    {n:'electrical grooming', w:{boots:2,argos:2,currys:2,johnlewis:2,amazon:2}, k:'shaver, electric shaver, beard trimmer, trimmer, epilator, hair clippers, clippers, curling wand, curling tongs, hair curler'},
+    {n:'baby things', w:{boots:2,ubereats:2,deliveroo:2,amznow:2,amazon:2,argos:1}, k:'baby wipes, wipes, dummy, dummies, baby bottle, baby bottles, steriliser, teething gel, muslin, muslins, baby monitor, baby food, calpol'},
+    {n:'medicines and first aid', w:{boots:2,ubereats:2,deliveroo:2,amznow:2,amazon:1}, k:'vitamins, vitamin, vitamin d, antihistamine, antihistamines, hay fever, allergy tablets, rennie, gaviscon, lemsip, strepsils, eye drops, sudocrem, savlon, cough syrup, cough medicine, nurofen, pregnancy test, ovulation test, covid test, lateral flow test, bandage, bandages, ice pack, heat pack, plasters'},
+    {n:'tech accessories', w:{argos:2,currys:2,amazon:2,johnlewis:1}, k:'sd card, micro sd, memory card, usb stick, usb drive, flash drive, pen drive, hard drive, external hard drive, ssd, webcam, ring light, tripod, selfie stick, camera, phone holder, car charger, smart plug, doorbell, ring doorbell, video doorbell, chromecast, fire stick, firestick, roku, apple tv, sound bar, soundbar, projector, graphics card'},
+    {n:'Christmas things', w:{argos:2,johnlewis:2,amazon:2,deliveroo:1,ubereats:1}, k:'tinsel, baubles, decorations, christmas decorations, advent calendar, stocking, christmas stocking, christmas jumper, wreath, crackers, christmas crackers, nativity'},
+    {n:'cards and wrapping', w:{boots:2,argos:2,ubereats:2,amazon:2,deliveroo:1,johnlewis:1}, k:'wrapping paper, gift wrap, gift bag, gift bags, sellotape, tape, birthday card, card, cards, greeting card, christmas cards, envelope, envelopes, gift tags, ribbon'},
+    {n:'gifts', w:{johnlewis:2,argos:2,boots:2,amazon:2,ubereats:1,deliveroo:1}, k:'gift set, gift card, hamper, chocolates, chocolate, teddy, teddy bear, photo frame, candle, candles, scented candle, jewellery, necklace, bracelet, earrings, watch, wallet, purse, book, books, diary'},
+    {n:'toys and games', w:{argos:2,johnlewis:2,amazon:2,ubereats:1}, k:'board game, board games, puzzle, jigsaw, doll, barbie, nerf, playmobil, hot wheels, soft toy, card game, uno, monopoly, scalextric, remote control car, drone, action figure, play doh'},
+    {n:'DIY and cleaning', w:{deliveroo:2,argos:2,amazon:2,ubereats:1,amznow:1}, k:'bin bags, bin liners, fuse, fuses, superglue, glue, tape measure, duct tape, gaffer tape, hooks, command strips, smoke alarm, carbon monoxide alarm, padlock, lock, plunger, mop, bucket, broom, bleach, washing up liquid, laundry detergent, washing powder, washing liquid, fabric softener, dishwasher tablets, kitchen roll, toilet roll, toilet paper, sponges, rubber gloves, paint, paintbrush, sandpaper, screws, nails, wall plugs, ladder, step ladder, sealant, silicone, wd40, hammer, spanner, allen key'},
+    {n:'food and groceries', w:{ubereats:2,deliveroo:2,amznow:2}, k:'milk, bread, eggs, snacks, crisps, water, sparkling water, coffee, coffee beans, tea, teabags, sugar, pasta, rice, cereal, butter, cheese, ice, ice cubes, energy drink, juice, fizzy drinks, coke, biscuits, sweets, fruit'},
+    {n:'pet supplies', w:{ubereats:2,deliveroo:2,amznow:2,amazon:2,argos:1}, k:'cat food, dog food, cat litter, litter, pet food, dog treats, cat treats, flea treatment, poo bags, dog bed'},
+    {n:'clothes and accessories', w:{johnlewis:2,amazon:2,ubereats:1,deliveroo:1,argos:1}, k:'socks, tights, gloves, scarf, hat, beanie, slippers, pyjamas, pajamas, dressing gown, underwear, t shirt, hoodie, jumper, coat, trainers, shoes, sunglasses, reading glasses, backpack, rucksack, suitcase, luggage, tie'},
+    {n:'sports and fitness', w:{argos:2,amazon:2,johnlewis:1,ubereats:1}, k:'dumbbells, weights, kettlebell, yoga mat, resistance bands, football, basketball, tennis racket, bike, bike lock, bike light, helmet, scooter, skipping rope, foam roller, protein powder'},
+    {n:'car accessories', w:{argos:2,amazon:2,currys:1,deliveroo:1}, k:'jump starter, jump leads, de icer, deicer, screenwash, ice scraper, tyre inflator, car phone holder, dash cam, dashcam'}
+  ];
+  // Each item is a whole name ("frying pan", "baby wipes"); a search matches the longest item it contains.
+  const KIND_INDEX=[]; KINDS.forEach(kd=>kd.k.split(', ').forEach(it=>KIND_INDEX.push([it,kd])));
+  KIND_INDEX.sort((a,b)=>b[0].length-a[0].length);
+  function kindFor(text){
+    const words=norm(text).split(' '), t=' '+words.join(' ')+' ', single=' '+words.map(w=>w.length>3&&w.endsWith('s')&&!w.endsWith('ss')?w.slice(0,-1):w).join(' ')+' ';
+    for(const [it,kd] of KIND_INDEX) if(t.includes(' '+it+' ') || single.includes(' '+it+' ')) return kd;
+    return null;
+  }
+  // Tidy what was typed: pull out a postcode and price words, keep the item.
+  const LONDON_AREAS=/^(E|EC|N|NW|SE|SW|W|WC|BR|CR|DA|EN|HA|IG|KT|RM|SM|TW|UB|WD)$/;
+  function tidy(raw){
+    let text=raw.trim(), pc='', budget='';
+    const full=text.match(/(?:^|\s)([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})$/i);
+    if(full){ pc=full[1].toUpperCase(); text=text.slice(0,full.index).trim(); }
+    else { const out=text.match(/\s([A-Z]{1,2})(\d[A-Z\d]?)$/i); if(out && LONDON_AREAS.test(out[1].toUpperCase())){ pc=(out[1]+out[2]).toUpperCase(); text=text.slice(0,out.index).trim(); } }
+    const b=text.match(/\b(?:under|below|less than|max|up to|around|about)?\s*£\s*(\d+)\b|\b(?:under|below|less than|max|up to)\s+(\d+)\b/i);
+    if(b){ budget=b[1]||b[2]; text=(text.slice(0,b.index)+text.slice(b.index+b[0].length)).trim(); }
+    text=text.replace(/\b(cheap|cheapest|cheaper|budget|best|good|decent|affordable|quality)\b/ig,'').replace(/\s+/g,' ').trim();
+    return {text, pc, budget};
+  }
+  const qIn=$('q'), sugg=$('sugg'); let active=-1, items=[], chosen=null, typedText='';
   function suggestionsFor(text){
     const t=norm(text);
     if(!t){ const r=getRecent(); return r.length?[{h:'Recent searches',rows:r.map(l=>({l,kind:'recent'}))}]:[]; }
     const groups=[], fams=FAMILIES.map(f=>({f,h:hit(f.k,t)})).filter(x=>x.h).sort((a,b)=>b.h-a.h).slice(0,2);
     const prod=[]; const seen=new Set();
-    smartRank(text).slice(0,6).forEach(x=>{ if(!seen.has(x.opt.l)){ seen.add(x.opt.l); prod.push({l:x.opt.l,kind:'product'}); } });
+    const famSet=new Set(fams.map(x=>x.f));
+    smartRank(text).map(x=>({...x,score:x.score+(famSet.has(x.opt.fam)?0.5:0)})).sort((a,b)=>b.score-a.score).slice(0,6).forEach(x=>{ if(!seen.has(x.opt.l)){ seen.add(x.opt.l); prod.push({l:x.opt.l,kind:'product'}); } });
     fams.forEach(({f})=>f.opts.forEach(o=>{ if(!seen.has(o.l)){ seen.add(o.l); prod.push({l:o.l,kind:'product'}); } }));
     const idea=IDEAS.find(i=>hit(i.k,t)) || IDEAS.find(i=>i.k.some(k=>(' '+t+' ').includes(' '+k+' ')));
     groups.push({h:null, rows:[{l:text.trim(),kind:'free'}]});
@@ -937,12 +1011,13 @@
     if(!groups.length || (groups.length===1 && groups[0].rows[0].kind==='free')){ closeSugg(); return; }
     sugg.innerHTML=groups.map((g,gi)=>`<div class="sgroup" role="group"${g.h?` aria-label="${esc(g.h)}"`:''}>${g.h?`<div class="shead" role="presentation">${esc(g.h)}</div>`:''}${
       g.rows.map(r=>{const id='so'+items.length; items.push(r); return `<div class="sopt" role="option" id="${id}" aria-selected="false" data-i="${items.length-1}"><span class="t">${r.kind==='free'?'Search “'+esc(r.l)+'”':mark(r.l,qIn.value)}</span><span class="k">${r.kind==='idea'?'idea':r.kind==='recent'?'recent':r.kind==='product'?'':'Enter'}</span></div>`;}).join('')}</div>`).join('');
-    sugg.hidden=false; qIn.setAttribute('aria-expanded','true'); setActive(-1);
+    sugg.hidden=false; qIn.setAttribute('aria-expanded','true'); typedText=qIn.value; setActive(-1);
   }
   function closeSugg(){ sugg.hidden=true; sugg.innerHTML=''; items=[]; qIn.setAttribute('aria-expanded','false'); qIn.removeAttribute('aria-activedescendant'); active=-1; }
   function setActive(i){
     active=i; sugg.querySelectorAll('.sopt').forEach(el=>el.setAttribute('aria-selected',String(+el.dataset.i===i)));
-    if(i>=0){ const el=$('so'+i); qIn.setAttribute('aria-activedescendant','so'+i); el.scrollIntoView({block:'nearest'}); } else qIn.removeAttribute('aria-activedescendant');
+    if(i>=0){ const el=$('so'+i); qIn.setAttribute('aria-activedescendant','so'+i); el.scrollIntoView({block:'nearest'}); qIn.value = items[i].kind==='free' ? typedText : items[i].l; }
+    else { qIn.removeAttribute('aria-activedescendant'); if(typedText) qIn.value=typedText; }
   }
   function choose(i){
     const r=items[i]; closeSugg();
@@ -957,7 +1032,7 @@
     if(e.key==='ArrowDown'){ e.preventDefault(); setActive(Math.min(items.length-1,active+1)); }
     else if(e.key==='ArrowUp'){ e.preventDefault(); setActive(Math.max(-1,active-1)); }
     else if(e.key==='Enter' && active>=0){ e.preventDefault(); choose(active); }
-    else if(e.key==='Escape'){ closeSugg(); }
+    else if(e.key==='Escape'){ if(active>=0) qIn.value=typedText; closeSugg(); }
   });
   sugg.addEventListener('mousedown',e=>{ const el=e.target.closest('.sopt'); if(el){ e.preventDefault(); choose(+el.dataset.i); } });
   document.addEventListener('click',e=>{ if(!e.target.closest('.searchwrap')) closeSugg(); });
@@ -1026,7 +1101,7 @@
     beauty:/shampoo|makeup|make-up|lipstick|mascara|skincare|moisturis|razor|toothpaste|deodorant|hair|nail|serum/i,
     grocery:/milk|bread|eggs|snack|water|coffee|tea\b|ice|crisps|fruit/i
   };
-  const BANNED=/\b(beer|wine|prosecco|champagne|vodka|gin|whisky|rum|spirits|alcohol|cigarette|tobacco|vape)\b/i;
+  const BANNED=/\b(beers?|wines?|prosecco|champagne|vodkas?|gin|whiske?y|rum|spirits?|alcohol|lager|cider|tequila|bourbon|brandy|liqueur|baileys|ales?|cigarettes?|cigars?|ciggies|tobacco|rolling papers?|rizla|nicotine|vapes?|vaping|e-?cigs?|e-?liquids?|juul|iqos|elf ?bars?|lost mary)\b/i;
   function londonHours(){
     const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
     const g=t=>+parts.find(p=>p.type===t).value; return g('hour')+g('minute')/60;
@@ -1036,14 +1111,22 @@
 
   $('sf').addEventListener('submit', e=>{
     e.preventDefault();
-    const q=$('q').value.trim(), pc=$('qpc').value.trim().toUpperCase(), err=$('s-err');
+    const raw=$('q').value.trim(), td=tidy(raw), err=$('s-err');
+    let q=td.text, pc=$('qpc').value.trim().toUpperCase();
     err.classList.remove('show');
+    if(td.pc && !q){ $('qpc').value=td.pc; $('q').value=''; err.textContent='That looks like a postcode, so we put it in the postcode box. Now type what you need.'; err.classList.add('show'); $('q').focus(); return; }
+    if(td.pc && !pc){ pc=td.pc; $('qpc').value=pc; }
+    if(q!==raw && q.length>=2) $('q').value=q;   // "kettle SE5" -> item "kettle", postcode SE5
     if(q.length<2){ err.textContent='Type what you need, for example "USB-C laptop charger".'; err.classList.add('show'); $('q').focus(); return; }
     if(pc && !/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i.test(pc) && !/^[A-Z]{1,2}\d[A-Z\d]?$/i.test(pc)){ err.textContent='That postcode doesn\'t look right. Try one like SE15 4AB, or leave it blank.'; err.classList.add('show'); $('qpc').focus(); return; }
     closeSugg();
     // decide what we are really searching for
     let spec = chosen && chosen.l.toLowerCase()===q.toLowerCase() ? chosen : null;
     let fam = null;
+    if(!spec){
+      const nq=norm(q), ek=KIND_INDEX.find(([it])=>it===nq || it===nq.replace(/s$/,''));
+      if(ek && !ALLOPTS[nq] && !FAMILIES.some(f=>f.k.includes(nq))) spec={l:q, q, w:ek[1].w, kind:ek[1].n, cats:[]};
+    }
     if(!spec){
       // 1. what was typed names exactly one product ("paracetamol", "laptop charger", "macbook") -> go straight to it
       const qt=toks(q), hits=qt.length ? Object.values(ALLOPTS).filter(o=>{ const lw=norm(o.l).split(' '); return qt.every(t=>lw.includes(t)); }) : [];
@@ -1055,8 +1138,18 @@
       if(fam){ const inFam=Object.values(ALLOPTS).filter(o=>o.fam===fam && toks(q).every(t=>norm(o.l).split(' ').includes(t)));
                const pick=inFam.length===1 ? inFam[0] : fam.opts[0];   // "macbook" -> MacBook Air, still offering the other laptops
                spec={...pick,w:pick.w||fam.w,fam,ambig:true}; }
-      else { const m=interpret(q); spec = m ? {...m, typed:q} : optFor(q); if(m) fam=m.fam; }
+      else {
+        const m=interpret(q);
+        if(m){ spec={...m, typed:q}; fam=m.fam; }
+        else {
+          const kd=kindFor(q), idea=IDEAS.find(i=>i.k.some(k=>(' '+norm(q)+' ').includes(' '+k+' ')));
+          if(kd) spec={l:q, q, w:kd.w, kind:kd.n, cats:[]};
+          else if(idea){ const w={}; idea.items.forEach(l=>{ const o=ALLOPTS[l.toLowerCase()]; if(o&&o.w) Object.entries(o.w).forEach(([k,v])=>w[k]=Math.max(w[k]||0,v)); }); const short=q.replace(/^(i need |i want |need |want |looking for )?(something |anything |stuff )?(for |to )?(a |an |the |my )?/i,'').trim()||q; spec={l:short, q:short, w, idea, cats:[], typed: short!==q?q:undefined}; }
+          else spec=optFor(q);
+        }
+      }
     }
+    if(td.budget) spec={...spec, budget:td.budget};
     renderResults(spec,pc,fam);
   });
 
@@ -1082,7 +1175,11 @@
       $('rawsearch').onclick=()=>{ qIn.value=spec.typed; chosen={l:spec.typed,q:spec.typed,cats:null}; $('sf').requestSubmit(); };
     } else ip.hidden=true;
     const fam=spec.ambig ? (spec.fam || ambig) : null, ref=$('refine');
-    if(fam && fam.opts.length>1){
+    if(spec.idea){
+      ref.innerHTML=`<span class="qlabel">Ideas: ${esc(spec.idea.t)}</span>`+spec.idea.items.map(l=>`<button type="button" class="chip" aria-pressed="false" data-l="${esc(l)}">${esc(l)}</button>`).join('');
+      ref.hidden=false;
+      ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); };
+    } else if(fam && fam.opts.length>1){
       ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Which one?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
       ref.hidden=false;
       ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen={...optFor(b.dataset.l),ambig:true}; $('sf').requestSubmit(); };
@@ -1091,7 +1188,7 @@
     let opts = spec.w ? SOURCES.filter(s=>spec.w[s.id]).map(s=>({...s,fit:spec.w[s.id]}))
                       : SOURCES.filter(s=> cats.length ? s.cats.some(c=>cats.includes(c)) : GENERAL.includes(s.id)).map(s=>({...s,fit:1}));
     opts=opts.filter(s=>!s.area || (pc ? s.area.test(pc) : false));
-    const open=opts.filter(s=>now<s.cutoff), shut=opts.filter(s=>now>=s.cutoff).sort((a,b)=>b.fit-a.fit);
+    const open=opts.filter(s=>!shutToday(s,now)), shut=opts.filter(s=>shutToday(s,now)).sort((a,b)=>b.fit-a.fit);
     const banned=BANNED.test(q);
     // sort tabs: each shows the winner's headline figure
     const sorts=$('sorts');
@@ -1109,7 +1206,7 @@
     } else {
       list.innerHTML=open.map((s,i)=>{ const soon=s.cutoff-now<1.5; return `
         <li class="opt${i===0?' best':''}" style="--d:${i*70}ms">
-          <div class="eta"><b>${s.etaBig}</b><small>${s.etaSmall}</small></div>
+          <div class="eta"><b>${s.etaBig}</b><small>${arriveBy(s,now)}</small></div>
           <div>
             ${i===0?`<span class="badge">${badge}</span>`:''}
             <div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div>
@@ -1122,7 +1219,7 @@
         </li>`; }).join('') + shut.map(s=>`
         <li class="opt closed">
           <div class="eta"><b>Tomorrow</b><small>closed today</small></div>
-          <div><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><p class="via">Too late for today: orders close at ${clock(s.cutoff)}.</p></div>
+          <div><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><p class="via">${HOL.closed&&HOL.closed.includes(s.id)?esc(HOL.closedWhy):`Too late for today: orders close at ${clock(s.cutoff)}.`}</p></div>
           <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search for tomorrow<span class="sr"> on ${s.name} (opens in a new tab)</span></a>
         </li>`).join('');
     }
@@ -1130,9 +1227,10 @@
     $('r-title').textContent = banned ? 'Not something we can help with' : (!spec.w && !cats.length) ? `No match for “${label}” yet` :
       n ? `${n} way${n>1?'s':''} to get “${label}” today` : `Nothing can still deliver “${label}” today`;
     const unknown = !spec.w && !cats.length && !banned;
-    $('r-sub').textContent = unknown
+    const extra=(spec.kind?`Showing shops that sell ${spec.kind}. `:'')+(spec.budget?`Prices vary; filter by up to £${spec.budget} on the shop's site. `:'')+(HOL.note?HOL.note+' ':'');
+    $('r-sub').textContent = extra + (unknown
       ? `We don't recognise “${label}” yet, so these are general shops that might have it. Try the exact product name, or let us find it for you.`
-      : (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.');
+      : (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.'));
     $('results').classList.toggle('unknown', unknown);
     $('results').hidden=false;
     if(jump){
@@ -1141,7 +1239,9 @@
       $('item').value=label; if(pc && /\d[A-Z]{2}$/i.test(pc.replace(/\s/g,''))) $('postcode').value=pc;
     }
     lastSearch={q:label,sent:q,pc,sort:sortMode,shown:open.map(s=>s.id)};
-    if(jump) track('search',{typed:spec.typed||label, understood:label, matched:!!spec.w, area:pc||null, results:banned?0:n});
+    if(jump && !fromHistory) track('search',{typed:spec.typed||label, understood:label, matched:!!spec.w, area:pc||null, results:banned?0:n});
+    if(jump && !fromHistory){ try{ const u=location.pathname+'?q='+encodeURIComponent(label)+location.hash.replace(/^#.*/,''); if(location.search!=='?q='+encodeURIComponent(label)) history.pushState({q:label},'',u); }catch(e){} }
+    $('mbar').hidden=false; document.body.classList.add('has-mbar');
     if(jump) loadProducts(spec);
   }
   // Amazon-style live countdown: refresh every 30 seconds, redraw when a shop closes
@@ -1162,19 +1262,20 @@
       {shop:'Argos',name:label,price:r(b),was:r(b*1.15),stock:'in',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Argos',name:label+', larger size',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Currys',name:label,price:r(b*0.95),stock:'in',speed:'tomorrow',arrive:'next day',fee:'£5.99 next-day delivery'},
+      {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.9),stock:'in',speed:'tomorrow',arrive:'seller’s estimate',fee:'Free delivery'},
       {shop:'AliExpress',name:label+' (similar item)',price:r(b*0.35),stock:null,speed:'later',arrive:'usually 3 to 7 days from UK stock'},
       {shop:'Temu',name:label+' (similar item)',price:r(b*0.3),stock:null,speed:'later',arrive:'usually 5 to 14 working days'}
     ].map(p=>({...p,img,url:'#',sample:true}));
   }
   async function loadProducts(spec){
-    const seq=++pSeq, label=spec.l, key=norm(label);
+    const seq=++pSeq, label=spec.l, area=(((current&&current.pc)||'').toUpperCase().replace(/\s/g,'').match(/^[A-Z]{1,2}\d[A-Z\d]?/)||[''])[0], key=norm(label)+'|'+area;
     prodList=null; $('prods').hidden=true; $('shopshead').hidden=true; $('pgroups').innerHTML='';
     if(BANNED.test(spec.q)) return;
     let list=PCACHE[key];
     if(!list){
-      if(DEMO) list=sampleProducts(label);
+      if(DEMO) list=spec.w && !spec.idea ? sampleProducts(label) : [];
       else if(CONFIG.API_URL){ try{ const ac=new AbortController(), t=setTimeout(()=>ac.abort(),3500);
-          const r=await fetch(CONFIG.API_URL.replace(/\/$/,'')+'/search?q='+encodeURIComponent(label),{signal:ac.signal}); clearTimeout(t);
+          const r=await fetch(CONFIG.API_URL.replace(/\/$/,'')+'/search?q='+encodeURIComponent(label)+(area?'&area='+area:''),{signal:ac.signal}); clearTimeout(t);
           list=r.ok ? ((await r.json()).products||[]) : []; }catch(e){ list=[]; } }
       else list=[];
       PCACHE[key]=list;
@@ -1191,10 +1292,11 @@
       G[g].push(p); });
     let pos=0;
     const arrival=(p,g)=>{
+      if(g==='today' && p.live) return `<b>Today</b><br>seller’s estimate`;
       if(g==='today') return p.cutoff!=null
         ? `<b>Today ${esc(p.arrive||'')}</b><br>if you order within <span class="pcd" data-cut="${p.cutoff}">${left(p.cutoff-now)}</span>`
         : `<b>${esc(p.arrive && /today|same/i.test(p.arrive) ? p.arrive : 'Same day available')}</b>`;
-      if(g==='tomorrow') return p.missed ? `<b>Tomorrow or later</b><br>today's orders closed at ${clock(p.cutoff)}` : `<b>Tomorrow</b>${p.arrive && !/next|tomorrow/i.test(p.arrive) ? '<br>'+esc(p.arrive) : ''}`;
+      if(g==='tomorrow') return p.missed ? `<b>Tomorrow or later</b><br>today's orders closed at ${clock(p.cutoff)}` : `<b>Tomorrow, ${tomorrowStr()}</b>${p.arrive && !/next|tomorrow/i.test(p.arrive) ? '<br>'+esc(p.arrive) : ''}`;
       if(g==='later') return `<b>${esc((p.arrive||'takes a few days').replace(/^./,c=>c.toUpperCase()))}</b>`;
       return `<b>Delivery time not listed</b><br>check on the shop's site`;
     };
@@ -1203,18 +1305,18 @@
       return `<li class="pcard ${g}${first?' first':''}">
         <div class="pimg">${p.sample?'<span class="ptag">Sample</span>':''}<img src="${esc(p.img||phImg('No photo'))}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="pbody">
-          <p class="pshop">${shop}</p>
+          <p class="pshop">${shop}${p.seller?`<span class="pseller">, sold by ${esc(p.seller)}</span>`:''}</p>
           <h4 class="pname">${esc(p.name)}</h4>
           <p class="pprice">${GBP(p.price)}${p.was?`<s><span class="sr">was </span>${GBP(p.was)}</s>`:''}</p>
           ${stock}
           <p class="parr">${arrival(p,g)}</p>
           ${p.fee?`<p class="pfee">${esc(p.fee)}</p>`:''}
-          <a class="pbuy${p.sample?' sample':''}" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-shop="${esc(p.shop.toLowerCase().slice(0,20))}" data-pos="${pos}">Buy at ${shop}<span class="sr">: ${esc(p.name)}, ${GBP(p.price)} (opens in a new tab)</span></a>
+          <a class="pbuy${p.sample?' sample':''}" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-shop="${esc(p.shop.toLowerCase().slice(0,20))}" data-pos="${pos}">${p.live?'Buy on':'Buy at'} ${shop}<span class="sr">: ${esc(p.name)}, ${GBP(p.price)} (opens in a new tab)</span></a>
         </div></li>`; };
     const count=n=>`<small>${n} product${n>1?'s':''}</small>`;
     const block=(g,title)=>G[g].length ? `<div class="pgroup"><h3>${title} ${count(G[g].length)}</h3><ul class="pgrid">${G[g].map(p=>card(p,g)).join('')}</ul></div>` : '';
     const shopsLater=[...new Set(G.later.map(p=>p.shop))].slice(0,3).join(', ');
-    $('pgroups').innerHTML = block('today','Arrives today') + block('tomorrow','Tomorrow') + block('unknown','Delivery time not listed')
+    $('pgroups').innerHTML = block('today','Arrives today') + block('tomorrow','Arrives tomorrow') + block('unknown','Delivery time not listed')
       + (G.later.length ? `<div class="pgroup"><details><summary>Takes longer, often cheaper <small>${G.later.length} from ${esc(shopsLater)}</small></summary><ul class="pgrid">${G.later.map(p=>card(p,'later')).join('')}</ul></details></div>` : '');
     $('pgroups').querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{ i.src=phImg('No photo'); },{once:true}));
     const sample=prodList.some(p=>p.sample);
@@ -1226,6 +1328,38 @@
   setInterval(()=>{ if(!prodList || $('prods').hidden) return; const now=londonHours(); let closed=false;
     document.querySelectorAll('.pcd').forEach(el=>{ const d=+el.dataset.cut-now; if(d<=0) closed=true; else el.textContent=left(d); });
     if(closed) drawProducts(); },30000);
+  // ---------- holidays: big shops don't deliver on Christmas Day; other dates get a warning ----------
+  const londonDay=(offset=0)=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',month:'2-digit',day:'2-digit'}).format(new Date(Date.now()+offset*864e5)).split('/').reverse().join('-'); // "12-25"
+  const HOLIDAYS={
+    '12-24':{note:'Christmas Eve: shops may stop taking orders earlier than usual, so check the cut-off on the shop’s site.'},
+    '12-25':{closed:['argos','amazon','currys','johnlewis','amznow','boots'], closedWhy:'Closed on Christmas Day.', note:'Christmas Day: big shops are closed. Some small shops on the delivery apps may be open.'},
+    '12-26':{note:'Boxing Day: hours are different, so check the shop before you order.'},
+    '12-31':{note:'New Year’s Eve: cut-offs may be earlier than usual.'},
+    '01-01':{note:'New Year’s Day: many shops are closed or on holiday hours.'}
+  };
+  let HOL=HOLIDAYS[londonDay()]||{};
+  setInterval(()=>{ HOL=HOLIDAYS[londonDay()]||{}; },60000);
+  const shutToday=(s,now)=> now>=s.cutoff || !!(HOL.closed && HOL.closed.includes(s.id));
+  // Arrival as a clock time, not a speed ("by about 2:35pm"): people care when it arrives.
+  function arriveBy(s,now){
+    const m=(s.etaBig.match(/\d+/g)||[]).map(Number);
+    if(!/min/.test(s.etaBig) || !m.length) return s.etaSmall;
+    const at=Math.ceil((now*60+Math.max(...m))/5)*5/60;
+    return 'by about '+clock(at);
+  }
+  const tomorrowStr=()=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',day:'numeric',month:'short'}).format(new Date(Date.now()+864e5));
+  // Shareable searches: jpfsystems.co/?q=ps5 opens the results; Back returns to the previous search.
+  let fromHistory=false;
+  function runFromUrl(){
+    const q=new URLSearchParams(location.search).get('q');
+    if(q){ fromHistory=true; qIn.value=q; chosen=ALLOPTS[q.toLowerCase()] ? optFor(q) : null; $('sf').requestSubmit(); fromHistory=false; }
+    else { $('results').hidden=true; $('mbar').hidden=true; document.body.classList.remove('has-mbar'); }
+  }
+  addEventListener('popstate', runFromUrl);
+  if(new URLSearchParams(location.search).get('q')) setTimeout(runFromUrl,0);
+  // Phone action bar
+  $('mb-search').addEventListener('click',()=>{ window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); setTimeout(()=>{ qIn.focus({preventScroll:true}); qIn.select(); },350); });
+  $('mb-doit').addEventListener('click',()=>{ $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); });
   let lastSearch=null;
   document.addEventListener('click',e=>{
     const pb=e.target.closest('a.pbuy');
@@ -1245,9 +1379,9 @@
   const OPEN_FROM=8; // bars drain from 8am to each cut-off
   function drawBoard(){
     const now=londonHours();
-    const rows=SOURCES.filter(s=>s.today!==false).map(s=>({s,left:s.cutoff-now})).sort((a,b)=>(a.left<=0)-(b.left<=0) || a.left-b.left);
+    const rows=SOURCES.filter(s=>s.today!==false).map(s=>({s,left:shutToday(s,now)?0:s.cutoff-now})).sort((a,b)=>(a.left<=0)-(b.left<=0) || a.left-b.left);
     $('bgrid').innerHTML=rows.map(({s,left:l})=>{
-      if(l<=0) return `<li class="bcard shut"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><div class="bleft">Closed today<small>orders closed at ${clock(s.cutoff)}</small></div></li>`;
+      if(l<=0) return `<li class="bcard shut"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><div class="bleft">Closed today<small>${HOL.closed&&HOL.closed.includes(s.id)?esc(HOL.closedWhy):'orders closed at '+clock(s.cutoff)}</small></div></li>`;
       const pct=Math.max(3,Math.min(100,100*l/(s.cutoff-OPEN_FROM)));
       return `<li class="bcard${l<1.5?' soon':''}"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div>
         <div class="bleft">${left(l)} left<small>order by ${clock(s.cutoff)}, arrives ${s.promise.replace(/^in /,'in ')}</small></div>
@@ -1266,6 +1400,7 @@
                          : `Same-day delivery is open. ${N} take${group.length>1?'':'s'} orders until <span class="t">${clock(first.s.cutoff)}</span>.`;
       short = `Same-day: ${N} close${group.length>1?'':'s'} in ${T}.`;
     }
+    if(HOL.note){ msg=esc(HOL.note); short=esc(HOL.note.split(':')[0])+': check cut-offs.'; }
     $('promotext').innerHTML=`<span class="pl">${msg}</span><span class="ps">${short}</span>`;
   }
   drawBoard(); setInterval(drawBoard,30000);

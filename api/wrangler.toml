@@ -1,0 +1,10 @@
+# NoLag API on Cloudflare Workers. Deployed automatically by .github/workflows/deploy-api.yml.
+name = "nolag-api"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nolag"
+database_id = "41be4cd8-59f5-4518-9196-1639c5fcd78c"
