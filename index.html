@@ -336,7 +336,10 @@
   .opt.closed h3,.opt.closed .facts{color:var(--muted)}
   /* Product cards: real products from the shops' own feeds */
   section.prods{margin:4px 0 30px;padding:0}
-  .pbanner{background:#FFF6DB;border:2px solid #E8C35A;border-radius:12px;padding:12px 16px;margin:0 0 18px;font-size:16px}
+  .pbanner{color:var(--muted);font-size:15px;margin:0 0 14px}
+  .refine.also{display:block;margin:-8px 0 18px;font-size:16px;color:var(--muted);overflow:visible;padding:0}
+  .alsob{background:none;border:0;padding:6px 0;min-height:32px;font:inherit;color:var(--blue);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  #r-title:focus{outline:none}
   .sfield.grow{position:relative}
   .sfield.grow input{padding-right:44px}
   .qclear{position:absolute;right:0;bottom:2px;width:44px;height:44px;border:0;border-radius:10px;background:none;color:var(--muted);font-size:26px;line-height:1;cursor:pointer}
@@ -534,7 +537,6 @@
   <div class="rhead">
     <h2 id="r-title" tabindex="-1"></h2>
     <p class="rsub" id="r-sub"></p>
-    <button type="button" class="sharelink" id="sharelink">Copy link to this search</button>
     <p class="interp" id="interp" hidden></p>
     <div class="refine" id="refine" hidden></div>
   </div>
@@ -556,7 +558,7 @@
       <h3 class="pcalh">Cheapest by delivery day</h3>
       <div class="pcal" id="pcal" role="group" aria-label="Cheapest price by delivery day"></div>
       <p class="pcalon" id="pcalon" hidden><span id="pcalontext"></span> <button type="button" id="pcalall">Show all</button></p>
-      <p class="pcalnote" id="pcalnote">Item plus delivery where the shop lists it; “+” means delivery is extra. Choose a day to see what arrives by then.</p>
+      <p class="pcalnote" id="pcalnote">Includes delivery (“+” means delivery is extra). Tap a day to see what arrives by then.</p>
     </div>
     <div id="pgroups"></div>
     <p class="pnote">Photos, prices and stock come from each shop's own product list, updated every night. eBay listings are live, and their delivery dates are the seller's estimate. The shop's site shows the final price before you pay.</p>
@@ -571,6 +573,7 @@
     </div>
     <a class="btn" href="#ask" id="toask">Do it for me</a>
   </div>
+  <button type="button" class="sharelink" id="sharelink">Copy link to this search</button>
   <p class="disclaimer">Delivery charges and cut-off times come from each shop's published delivery information and can vary by item and postcode. App delivery fees (Deliveroo, Uber Eats) depend on the shop and distance. The shop list is not a live stock check, so check on the shop's site before you buy. Same-day coverage is thinner in the Scottish Highlands and islands, Northern Ireland, the Isles of Scilly, the Isle of Man and the Channel Islands. Last checked: 25 November 2026.</p>
 </div></section>
 
@@ -880,8 +883,8 @@
       {l:'iPhone case',q:'iPhone case',cats:['tech']},
       {l:'iPhone screen protector',q:'iPhone screen protector',cats:['tech']}]},
     {w:{argos:2,currys:2,amazon:2,johnlewis:1,boots:1,ubereats:1}, k:['charger','charging','laptop charger','phone charger'], ask:'Which charger?', opts:[
-      {l:'USB-C laptop charger (65W)',q:'65W USB-C laptop charger',cats:['tech']},
       {l:'Phone charger (USB-C)',q:'USB-C phone charger',cats:['tech']},
+      {l:'USB-C laptop charger (65W)',q:'65W USB-C laptop charger',cats:['tech']},
       {l:'MacBook charger',q:'MacBook USB-C power adapter',cats:['tech']},
       {l:'Wireless charger',q:'wireless charger',cats:['tech']},
       {l:'Power bank',q:'power bank',cats:['tech'],w:{argos:2,currys:2,amazon:2,boots:2,ubereats:1,johnlewis:1}}]},
@@ -1296,7 +1299,8 @@
     if(!spec){
       // 1. what was typed names exactly one product ("paracetamol", "laptop charger", "macbook") -> go straight to it
       const qt=toks(q), hits=qt.length ? Object.values(ALLOPTS).filter(o=>{ const lw=norm(o.l).split(' '); return qt.every(t=>lw.includes(t)); }) : [];
-      if(hits.length===1) spec={...hits[0], typed: norm(hits[0].l)===norm(q)?undefined:q};
+      const ef=exactFamily(q);
+      if(hits.length===1 && !(ef && ef!==hits[0].fam)) spec={...hits[0], typed: norm(hits[0].l)===norm(q)?undefined:q};   // a family word ("charging") beats one stray label match
       else if(hits.length>1 && hits.every(h=>h.fam===hits[0].fam) && !exactFamily(q)) spec={...hits[0],fam:hits[0].fam,ambig:true};
     }
     if(!spec){
@@ -1344,14 +1348,17 @@
       $('rawsearch').onclick=()=>{ qIn.value=spec.typed; chosen={l:spec.typed,q:spec.typed,cats:null}; $('sf').requestSubmit(); };
     } else ip.hidden=true;
     const fam=spec.ambig ? (spec.fam || ambig) : null, ref=$('refine');
+    ref.className='refine';
     if(spec.idea){
       ref.innerHTML=`<span class="qlabel">Ideas: ${esc(spec.idea.t)}</span>`+spec.idea.items.map(l=>`<button type="button" class="chip" aria-pressed="false" data-l="${esc(l)}">${esc(l)}</button>`).join('');
       ref.hidden=false;
       ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); };
     } else if(fam && fam.opts.length>1){
-      ref.innerHTML=`<span class="qlabel">${esc(fam.ask||'Which one?')}</span>`+fam.opts.map(o=>`<button type="button" class="chip" aria-pressed="${o.l===label}" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('');
-      ref.hidden=false;
-      ref.onclick=e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen={...optFor(b.dataset.l),ambig:true}; $('sf').requestSubmit(); };
+      // Show the likeliest item straight away; the other versions sit in one quiet line, not a question.
+      const others=fam.opts.filter(o=>o.l!==label).slice(0,3);
+      ref.innerHTML=`<span class="alsol">Also:</span> `+others.map(o=>`<button type="button" class="alsob" data-l="${esc(o.l)}">${esc(o.l)}</button>`).join('<span class="alsosep" aria-hidden="true">, </span>');
+      ref.className='refine also'; ref.hidden=!others.length;
+      ref.onclick=e=>{ const b=e.target.closest('.alsob'); if(!b) return; qIn.value=b.dataset.l; chosen={...optFor(b.dataset.l),ambig:true}; $('sf').requestSubmit(); };
     } else ref.hidden=true;
     // Which shops sell this? Known products use their where-to-buy list; anything else falls back to category, marked "might have it".
     let opts = spec.w ? SOURCES.filter(s=>spec.w[s.id]).map(s=>({...s,fit:spec.w[s.id]}))
@@ -1392,7 +1399,7 @@
     const extra=(spec.kind?`Showing shops that sell ${spec.kind}. `:'')+(spec.budget?`Prices vary; filter by up to £${spec.budget} on the shop's site. `:'')+(HOL.note?HOL.note+' ':'');
     $('r-sub').textContent = extra + (unknown
       ? `We don't recognise “${label}” yet, so these are general shops that might have it. Try the exact product name, or let us find it for you.`
-      : (pc?`Delivering to ${pc}. `+(remote?'Fewer same-day services reach this area, so we only show the ones that do. ':''):'Add your postcode to see only shops that reach you. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.'));
+      : (pc?`Delivering to ${pc}. `+(remote?'Fewer same-day services reach this area, so we only show the ones that do. ':''):'Add your postcode to see only shops that reach you. ') + (n ? (likely?'':'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.'));
     $('results').classList.toggle('unknown', unknown);
     document.title = banned ? 'Not available | NoLag' : unknown ? `${label} | NoLag` : `${label}: ${n} way${n===1?'':'s'} today | NoLag`;
     $('qclear').hidden=!qIn.value;
@@ -1455,7 +1462,7 @@
     const b=band[0]+h%(band[1]-band[0]+1), r=x=>Math.round(x)+0.99, img=artFor(label);
     return [
       {shop:'Argos',name:label,price:r(b),was:r(b*1.15),stock:'in',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
-      {shop:'Argos',name:label+', larger size',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
+      {shop:'Argos',name:label+', bundle',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Currys',name:label,price:r(b*0.95),stock:'in',speed:'tomorrow',arrive:'next day',fee:'£5.99 next-day delivery'},
       {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.9),stock:'in',speed:'tomorrow',arrive:'seller’s estimate',fee:'Free delivery'},
       {shop:'eBay',seller:'another-seller',live:true,name:label+', new',price:r(b*0.7),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+2*864e5)),arrive:'seller’s estimate',fee:'£3.49 delivery'},
@@ -1634,7 +1641,7 @@
     $('pgroups').querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{ i.src=phImg('No photo'); },{once:true}));
     const sample=prodList.some(p=>p.sample);
     $('pbanner').hidden=!sample;
-    if(sample) $('pbanner').textContent= DEMO ? 'Preview with made-up sample products, to show the layout. On the live site these are the shops’ real photos, prices and stock, once their product lists are connected.' : 'Sample products while NoLag is being set up. Real photos, prices and stock from the shops appear here soon.';
+    if(sample) $('pbanner').textContent= DEMO ? 'Sample products, to show the layout. Real ones appear once the shops are connected.' : 'Sample products for now. Real photos, prices and stock from the shops appear here soon.';
     $('prods').hidden=false;
     $('shopshead').hidden=!$('rlist').children.length;
   }
