@@ -1385,13 +1385,39 @@
   const PCACHE={}; let pSeq=0, prodList=null;
   const GBP=n=>'£'+(Number.isInteger(n)?n:Number(n).toFixed(2));
   const phImg=t=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#F2F5FA"/><rect x="62" y="66" width="76" height="66" rx="8" fill="none" stroke="#9AA3B2" stroke-width="5"/><path d="M80 66v-8a20 20 0 0 1 40 0v8" fill="none" stroke="#9AA3B2" stroke-width="5"/><text x="100" y="164" font-family="sans-serif" font-size="15" fill="#4A5363" text-anchor="middle">${t}</text></svg>`);
+  // Sample product pictures: simple drawings per product type (our own artwork, not shop photos)
+  const ART=[
+    [/iphone|android phone|smartphone|\bphone\b(?!.*(charger|case|cable|holder))|galaxy|pixel/i,'#EAF1FF','<rect x="70" y="38" width="60" height="124" rx="12"/><path d="M92 146h16"/>'],
+    [/laptop|macbook|chromebook|computer/i,'#EAF1FF','<rect x="50" y="56" width="100" height="68" rx="6"/><path d="M36 138h128l-8 10H44z"/>'],
+    [/\btv\b|telly|television|monitor|projector/i,'#EAF1FF','<rect x="38" y="50" width="124" height="80" rx="6"/><path d="M100 130v16M80 148h40"/>'],
+    [/airpods|earbuds|headphones|headset|speaker/i,'#F3EEFF','<path d="M58 124v-22a42 42 0 0 1 84 0v22"/><rect x="48" y="112" width="20" height="38" rx="7"/><rect x="132" y="112" width="20" height="38" rx="7"/>'],
+    [/ps5|playstation|xbox|switch|nintendo|controller|gaming|console|game/i,'#F3EEFF','<path d="M64 82h72a24 24 0 0 1 23 31l-8 27a12 12 0 0 1-21 4l-14-17H84l-14 17a12 12 0 0 1-21-4l-8-27a24 24 0 0 1 23-31z"/><path d="M72 104v14M65 111h14"/><circle cx="128" cy="106" r="4"/><circle cx="140" cy="116" r="4"/>'],
+    [/watch|fitness tracker/i,'#F3EEFF','<circle cx="100" cy="100" r="30"/><path d="M88 70V50h24v20M88 130v20h24v-20M100 88v12l8 6"/>'],
+    [/charger|cable|lead|adapter|plug|power bank|batter|extension|hdmi|usb/i,'#EAF7EF','<rect x="76" y="48" width="48" height="54" rx="9"/><path d="M90 48V34M110 48V34M100 102c0 28-32 30-32 60"/>'],
+    [/kettle|coffee|toaster|microwave|air fryer|blender|rice cooker|frying pan|vacuum|hoover|dyson|iron|heater|radiator|fan/i,'#FFF2E5','<path d="M60 152h80l-7-72a10 10 0 0 0-10-9H77a10 10 0 0 0-10 9z"/><path d="M64 94 44 80v24M136 92c20 0 20 42 0 42M84 60h32"/>'],
+    [/duvet|pillow|sheet|towel|bedding|blanket|cushion/i,'#EAF7EF','<path d="M44 72q56-22 112 0v58q-56 22-112 0z"/><path d="M60 90q40-12 80 0"/>'],
+    [/shampoo|toothpaste|toothbrush|deodorant|razor|shaver|perfume|aftershave|sun cream|tissues|plasters|paracetamol|ibuprofen|medicine|calpol|lozenges|thermometer|first aid|hair/i,'#FFEFF3','<rect x="78" y="72" width="44" height="84" rx="11"/><rect x="88" y="50" width="24" height="22" rx="3"/><path d="M90 104h20"/>'],
+    [/balloon/i,'#FFEFF3','<ellipse cx="82" cy="70" rx="22" ry="26"/><ellipse cx="120" cy="62" rx="22" ry="26"/><path d="M82 96c0 20 14 30 16 58M120 88c0 26-14 40-22 66"/>'],
+    [/socks|tights/i,'#EAF1FF','<path d="M84 40h32v70l18 18a17 17 0 0 1-24 24l-30-30a20 20 0 0 1-6-14V40z"/><path d="M84 58h32"/>'],
+    [/flower|roses|bouquet/i,'#FFEFF3','<circle cx="100" cy="70" r="16"/><circle cx="74" cy="82" r="13"/><circle cx="126" cy="82" r="13"/><path d="M100 86v66M80 94l18 40M120 94l-18 40M82 152h36"/>'],
+    [/gift|present|balloon|card|wrapping|candle|chocolate|christmas|tree|fairy lights|decoration|cake/i,'#FFEFF3','<rect x="52" y="88" width="96" height="64" rx="4"/><rect x="46" y="72" width="108" height="18" rx="3"/><path d="M100 72v80M100 72c-14 0-26-6-26-15s14-10 26 15c12-25 26-24 26-15s-12 15-26 15"/>'],
+    [/lego|toy|puzzle|board game|nerf|doll|pokemon/i,'#FFF2E5','<rect x="48" y="92" width="104" height="54" rx="5"/><rect x="60" y="76" width="20" height="16" rx="3"/><rect x="90" y="76" width="20" height="16" rx="3"/><rect x="120" y="76" width="20" height="16" rx="3"/>'],
+    [/trainers|shoes|boots|uggs|slippers/i,'#EAF1FF','<path d="M38 132l12-44q24 12 46 0l58 32q12 7 6 18H40z"/><path d="M40 138h120"/>'],
+    [/socks|scarf|hat|gloves|pyjamas|hoodie|jumper|coat|clothes|tights/i,'#EAF1FF','<path d="M76 46l-28 20 14 26 12-6v68h52V86l12 6 14-26-28-20c-4 10-14 16-24 16s-20-6-24-16z"/>'],
+    [/nappies|nappy|baby|formula|dummy|wipes/i,'#EAF7EF','<rect x="80" y="70" width="40" height="84" rx="12"/><path d="M86 70v-10h28v10M92 60c0-12 16-12 16 0M86 104h28"/>'],
+    [/milk|bread|eggs|coffee|tea|snacks|sweets|biscuits|juice|drinks|water|ice\b/i,'#FFF2E5','<path d="M62 76h76l-8 76H70z"/><path d="M138 92c18 0 18 30-4 32M80 58c0-8 8-8 8-16M104 58c0-8 8-8 8-16"/>']
+  ];
+  function artFor(label){
+    const a=ART.find(([re])=>re.test(label)) || [null,'#F2F5FA','<rect x="62" y="66" width="76" height="66" rx="8"/><path d="M80 66v-8a20 20 0 0 1 40 0v8"/>'];
+    return 'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="${a[1]}"/><g fill="none" stroke="#3B4556" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">${a[2]}</g></svg>`);
+  }
   function sampleProducts(label){
     let h=0; for(const c of label) h=(h*31+c.charCodeAt(0))%997;
     const PRICE=[[/iphone|galaxy|pixel|macbook|laptop|tv\b|telly|monitor|ipad|tablet|ps5|playstation|xbox|switch|console|apple watch|smartwatch|dyson|coffee machine|vacuum|hoover/i,[250,650]],
       [/airpods|headphones|earbuds|speaker|kindle|air fryer|microwave|hair dryer|straighteners|electric toothbrush|printer\b|drill|heater|radiator|lego|trainers|perfume|aftershave/i,[40,160]],
       [/charger|cable|adapter|case|protector|mouse|keyboard|bulb|batter|torch|lead|kettle|toaster|game|controller/i,[8,35]]];
     const band=(PRICE.find(([re])=>re.test(label))||[0,[6,30]])[1];
-    const b=band[0]+h%(band[1]-band[0]+1), r=x=>Math.round(x)+0.99, img=phImg("Shop's photo");
+    const b=band[0]+h%(band[1]-band[0]+1), r=x=>Math.round(x)+0.99, img=artFor(label);
     return [
       {shop:'Argos',name:label,price:r(b),was:r(b*1.15),stock:'in',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Argos',name:label+', larger size',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
