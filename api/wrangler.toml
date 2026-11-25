@@ -8,3 +8,7 @@ workers_dev = true
 binding = "DB"
 database_name = "nolag"
 database_id = "41be4cd8-59f5-4518-9196-1639c5fcd78c"
+
+# Cloudflare Workers AI, used by the search assistant (/ask). Free daily allowance.
+[ai]
+binding = "AI"

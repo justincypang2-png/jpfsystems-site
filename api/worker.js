@@ -4,6 +4,8 @@
 // 3) GET  /export.csv?key=… : every event as a spreadsheet file
 // 4) GET  /search?q=…&area=SE15 : real products (photo, price, stock, delivery) from the shops' own feeds (loaded nightly by
 //    engine/import.mjs) plus live eBay listings you can pay for now, grouped by when they arrive
+// 5) POST /ask          : the search assistant. Reads a vague search ("tv", "present for dad") and asks one short
+//    question with tap-able answers, or returns precise search words. Uses Cloudflare Workers AI (free daily allowance).
 // Stores no names, emails, IP addresses or cookies. Postcodes are cut to the area (e.g. "SE15").
 
 const ALLOWED_ORIGINS = ['https://www.jpfsystems.co', 'https://jpfsystems.co'];
@@ -26,6 +28,35 @@ export default {
       'Vary': 'Origin',
     };
     if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+
+    // ---------- search assistant: one clarifying question at a time ----------
+    if (url.pathname === '/ask' && req.method === 'POST') {
+      const reply = b => new Response(JSON.stringify(b), { headers: { ...cors, 'Content-Type': 'application/json' } });
+      if (!env.AI || !ALLOWED_ORIGINS.includes(origin)) return reply({ ai: false });
+      if (!askAllowed(req.headers.get('CF-Connecting-IP') || '')) return reply({ ai: false, reason: 'busy' });
+      let body; try { body = JSON.parse(await req.text()); } catch { return reply({ ai: false }); }
+      const q = String(body.q || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+      const history = (Array.isArray(body.history) ? body.history : []).slice(-3)
+        .map(h => ({ q: String(h.q || '').slice(0, 140), a: String(h.a || '').slice(0, 140) })).filter(h => h.q && h.a);
+      if (!q) return reply({ ai: false });
+      if (BLOCKED.test(q) || history.some(h => BLOCKED.test(h.a))) return reply({ ai: true, done: true, question: '', options: [], search: '' });
+      const user = `They searched: "${q}"` + (history.length ? '\nTheir answers so far:\n' + history.map(h => `- ${h.q} ${h.a}`).join('\n') : '') +
+        `\nQuestions asked so far: ${history.length} of 2.`;
+      try {
+        const out = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fast', {
+          messages: [{ role: 'system', content: ASK_PROMPT }, { role: 'user', content: user }],
+          response_format: { type: 'json_schema', json_schema: ASK_SCHEMA }, max_tokens: 220, temperature: 0.2,
+        });
+        let r = out && out.response;
+        if (typeof r === 'string') { try { r = JSON.parse(r); } catch { r = null; } }
+        if (!r || typeof r !== 'object') return reply({ ai: false });
+        const clean = t => String(t || '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim();
+        const search = clean(r.search).slice(0, 70);
+        const done = !!r.done || history.length >= 2 || !clean(r.question);
+        const options = done ? [] : (Array.isArray(r.options) ? r.options : []).map(o => clean(o).slice(0, 30)).filter(Boolean).slice(0, 5);
+        return reply({ ai: true, done, question: done ? '' : clean(r.question).slice(0, 120), options, search: search || q });
+      } catch { return reply({ ai: false }); }
+    }
 
     // ---------- product search: real products from the shops' own feeds ----------
     if (url.pathname === '/search' && req.method === 'GET') {
@@ -208,4 +239,32 @@ async function ebayLive(env, q, area) {
   if (LIVE_CACHE.size > 500) LIVE_CACHE.clear();
   LIVE_CACHE.set(key, { t: Date.now(), v });
   return v;
+}
+
+// ---------- search assistant settings ----------
+const BLOCKED = /\b(beers?|wines?|vodka|gin|whiske?y|rum|spirits?|alcohol|lager|cider|cigarettes?|cigars?|tobacco|nicotine|vapes?|vaping|e-?cigs?|knife|knives|weapon|gun|drugs?)\b/i;
+const ASK_PROMPT = `You help people in London find an item they need delivered today. They typed a search into a shopping site.
+Decide whether it is specific enough to search shops for. Specific enough means a shopper could pick the right product: for example "PS5 DualSense controller", "43 inch smart TV", "65W USB-C laptop charger", "red roses bouquet".
+If it is not specific enough, ask ONE short, friendly question (under 12 words) about the most important missing detail: what type, what size, what it must fit or work with, or who it is for. Give 2 to 5 short answer options (each under 25 characters) that a person can tap. Do not ask about price, colour or brand unless it truly decides the product.
+Ask at most 2 questions in total. When the item is clear, or 2 questions have been answered, set done to true, leave question empty and options empty.
+Always set "search" to the best plain search words so far, under 60 characters, for example "43 inch smart TV". Keep any brand or model the person gave.
+Never mention prices, stock, shops or delivery times. Write in British English.`;
+const ASK_SCHEMA = {
+  type: 'object',
+  properties: {
+    done: { type: 'boolean' },
+    question: { type: 'string' },
+    options: { type: 'array', items: { type: 'string' }, maxItems: 5 },
+    search: { type: 'string' },
+  },
+  required: ['done', 'question', 'options', 'search'],
+};
+// A light per-visitor limit so one person can't use up the free daily AI allowance: 20 questions a minute.
+const ASK_HITS = new Map();
+function askAllowed(ip) {
+  const now = Date.now(), k = ip || 'unknown', h = (ASK_HITS.get(k) || []).filter(t => now - t < 60000);
+  if (h.length >= 20) return false;
+  h.push(now); ASK_HITS.set(k, h);
+  if (ASK_HITS.size > 5000) ASK_HITS.clear();
+  return true;
 }

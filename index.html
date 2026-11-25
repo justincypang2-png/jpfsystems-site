@@ -324,6 +324,30 @@
   /* Product cards: real products from the shops' own feeds */
   section.prods{margin:4px 0 30px;padding:0}
   .pbanner{background:#FFF6DB;border:2px solid #E8C35A;border-radius:12px;padding:12px 16px;margin:0 0 18px;font-size:16px}
+  [hidden]{display:none !important} /* hidden always means hidden, even for rows with their own layout */
+  section.assist{margin:0 0 24px;padding:0}
+  .aform[hidden]{display:none}
+  .alog{display:flex;flex-direction:column;gap:6px;margin:0 0 8px}
+  .alog .you{align-self:flex-end;background:var(--blue);color:#fff;border-radius:16px 16px 4px 16px;padding:8px 14px;font-size:16px;max-width:80%}
+  .alog .was{align-self:flex-start;color:var(--muted);font-size:15px;margin:0 0 0 46px}
+  .abubble{position:relative;display:flex;gap:12px;align-items:flex-start;background:#fff;border:2px solid var(--line);border-radius:4px 18px 18px 18px;padding:14px 44px 14px 14px;box-shadow:0 2px 10px rgba(16,24,40,.05)}
+  .amark{flex:none;width:34px;height:34px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center}
+  .amark svg{width:20px;height:20px}
+  .abody{flex:1;min-width:0}
+  .aq{margin:4px 0 10px;font-size:18px;font-weight:700;line-height:1.35}
+  .aq .dots{display:inline-flex;gap:4px;vertical-align:middle}
+  .aq .dots i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite both}
+  .aq .dots i:nth-child(2){animation-delay:.2s}.aq .dots i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+  .aopts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+  .aopts:empty{display:none}
+  .aform{display:flex;gap:8px}
+  .aform input{flex:1;min-width:0;min-height:48px;border:2px solid #8A93A3;border-radius:12px;padding:0 14px;font:inherit;font-size:17px}
+  .aform input:focus{outline:3px solid var(--focus);outline-offset:1px;border-color:var(--ink)}
+  .aform button{min-height:48px;padding:0 18px;border:0;border-radius:12px;background:var(--blue);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+  .aclose{position:absolute;top:6px;right:6px;width:44px;height:44px;border:0;background:none;font-size:26px;line-height:1;color:var(--muted);cursor:pointer;border-radius:10px}
+  .aclose:hover{background:var(--soft);color:var(--ink)}
+  .afinal{margin:2px 0 0;font-size:16px}
   .pgroup{margin:0 0 22px}
   .pcalwrap{margin:0 0 22px}
   .pcalh{font-size:20px;margin:0 0 10px}
@@ -484,6 +508,18 @@
     <p class="interp" id="interp" hidden></p>
     <div class="refine" id="refine" hidden></div>
   </div>
+  <section class="assist" id="assist" hidden aria-label="Search assistant">
+    <div class="alog" id="alog"></div>
+    <div class="abubble">
+      <span class="amark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
+      <div class="abody">
+        <p class="aq" id="aq" aria-live="polite"></p>
+        <div class="aopts" id="aopts"></div>
+        <form class="aform" id="aform" autocomplete="off"><label for="ain" class="sr">Your answer</label><input id="ain" type="text" placeholder="Or type your answer"><button type="submit">Send</button></form>
+      </div>
+      <button type="button" class="aclose" id="aclose" aria-label="Close the assistant">×</button>
+    </div>
+  </section>
   <section class="prods" id="prods" hidden aria-label="Products from the shops">
     <p class="pbanner" id="pbanner" hidden></p>
     <div class="pcalwrap" id="pcalwrap" hidden>
@@ -1335,6 +1371,7 @@
     if(jump && !fromHistory){ try{ const qs='?'+(PREVIEW_FLAG?'preview=1&':'')+'q='+encodeURIComponent(label); if(location.search!==qs) history.pushState({q:label},'',location.pathname+qs); }catch(e){} }
     $('mbar').hidden=false; document.body.classList.add('has-mbar');
     if(jump) loadProducts(spec);
+    if(jump && !fromAssist && !fromHistory){ if(!banned && isVague(spec,unknown)) startAssist(spec,unknown); else if(AS || !$('assist').hidden){ asSeq++; AS=null; $('assist').hidden=true; } }
   }
   // Amazon-style live countdown: refresh every 30 seconds, redraw when a shop closes
   setInterval(()=>{
@@ -1382,6 +1419,69 @@
     prodList=list; drawProducts();
     if($('results').classList.contains('unknown')){ $('results').classList.remove('unknown'); $('r-title').textContent=`Products for “${label}”`; }
   }
+  // ---------- search assistant: asks one short question when a search is vague ----------
+  // With the live API it uses AI (Cloudflare Workers AI) to understand any wording and ask up to 2 questions;
+  // otherwise (preview, or AI unavailable) it asks a built-in question from our product lists.
+  let AS=null, fromAssist=false, asSeq=0;
+  const isVague=(spec,unknown)=> !!(spec.ambig || spec.idea || unknown || (spec.kind && toks(spec.q).length<=1));
+  function ruleQuestion(spec){
+    const fam=spec.fam;
+    if(spec.ambig && fam && fam.opts.length>1) return {question:fam.ask && fam.ask!=='Which one?' ? fam.ask : 'Which one do you need?', options:fam.opts.map(o=>o.l).slice(0,5)};
+    if(spec.idea) return {question:'Which of these would help?', options:spec.idea.items.slice(0,5)};
+    if(spec.kind) return {question:`What kind of ${spec.l.toLowerCase()} are you after?`, options:[]};
+    return {question:'Can you tell me a bit more? A brand, model or what it’s for helps.', options:[]};
+  }
+  async function aiAsk(q,history){
+    if(DEMO || !CONFIG.API_URL) return null;
+    try{ const ac=new AbortController(), t=setTimeout(()=>ac.abort(),6000);
+      const r=await fetch(CONFIG.API_URL.replace(/\/$/,'')+'/ask',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({q,history}),signal:ac.signal}); clearTimeout(t);
+      const j=r.ok?await r.json():null; return j&&j.ai?j:null; }catch(e){ return null; }
+  }
+  function showAssist(st){
+    const a=$('assist'); a.hidden=false;
+    $('alog').innerHTML=(AS?AS.history:[]).map(h=>`<p class="was">${esc(h.q)}</p><p class="you">${esc(h.a)}</p>`).join('');
+    const showForm=!!st.question;
+    $('aform').hidden=!showForm;
+    if(st.thinking){ $('aq').innerHTML='<span class="sr">Thinking</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>'; $('aopts').innerHTML=''; return; }
+    if(st.final){ $('aq').innerHTML=''; $('aopts').innerHTML=`<p class="afinal">Showing results for <b>${esc(st.final)}</b>.</p>`; return; }
+    $('aq').textContent=st.question;
+    $('aopts').innerHTML=(st.options||[]).map(o=>`<button type="button" class="chip" data-a="${esc(o)}">${esc(o)}</button>`).join('');
+    $('ain').placeholder = st.options&&st.options.length ? 'Or type your answer' : 'For example: Samsung, 55 inch, for a laptop…';
+    $('refine').hidden=true; // the question replaces the "Which one?" row
+  }
+  async function startAssist(spec,unknown){
+    const my=++asSeq; AS={base:spec.typed||spec.l, spec, history:[], q:null};
+    showAssist({thinking:true});
+    const ai=await aiAsk(AS.base,[]);
+    if(!AS || my!==asSeq) return;
+    if(ai && !ai.done && ai.question){ AS.mode='ai'; AS.q={question:ai.question, options:ai.options||[]}; }
+    else if(ai && ai.done){ closeAssist(); return; } // the AI thinks the search is already specific
+    else { AS.mode='rules'; AS.q=ruleQuestion(spec); }
+    showAssist(AS.q);
+  }
+  async function answerAssist(ans){
+    ans=String(ans||'').trim(); if(!AS || !AS.q || !ans) return;
+    AS.history.push({q:AS.q.question, a:ans}); const my=asSeq;
+    if(AS.mode==='ai'){
+      showAssist({thinking:true});
+      const ai=await aiAsk(AS.base,AS.history);
+      if(!AS || my!==asSeq) return;
+      if(ai && !ai.done && ai.question && AS.history.length<2){ AS.q={question:ai.question, options:ai.options||[]}; showAssist(AS.q); return; }
+      return runAssistSearch(ai && ai.search ? ai.search : ans+' '+AS.base);
+    }
+    // built-in: a tapped product goes straight to it; typed words are added to the original search
+    runAssistSearch(ALLOPTS[ans.toLowerCase()] || (AS.q.options||[]).includes(ans) ? ans : ans+' '+AS.base);
+  }
+  function runAssistSearch(text){
+    AS.q=null; showAssist({final:text});
+    qIn.value=text; chosen=ALLOPTS[text.toLowerCase()] ? optFor(text) : null;
+    fromAssist=true; $('sf').requestSubmit(); fromAssist=false;
+    showAssist({final:text}); $('refine').hidden=true;
+  }
+  function closeAssist(){ asSeq++; AS=null; $('assist').hidden=true; $('refine').hidden=!$('refine').innerHTML.trim(); }
+  $('aopts').addEventListener('click',e=>{ const b=e.target.closest('[data-a]'); if(b) answerAssist(b.dataset.a); });
+  $('aform').addEventListener('submit',e=>{ e.preventDefault(); const v=$('ain').value; $('ain').value=''; answerAssist(v); });
+  $('aclose').addEventListener('click',closeAssist);
   // ---------- price calendar (Skyscanner-style): cheapest total for each delivery day ----------
   let calSel=null; // chosen day index, or null for everything
   const dayLabel=i=>i===0?'Today':i===1?'Tomorrow':i===7?'Later':new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',day:'numeric'}).format(new Date(Date.now()+i*864e5));
