@@ -338,6 +338,14 @@
   .pday[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint);box-shadow:inset 0 0 0 1px var(--blue)}
   .pday:not(.none):hover{border-color:var(--ink)}
   .pcalnote{color:var(--muted);font-size:15px;margin:8px 0 0}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:16px;max-width:min(92vw,480px);text-align:center;z-index:60;transition:opacity .2s,transform .2s}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  body.has-mbar .toast{bottom:96px}
+  .donebtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .donebtns .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:12px;font:inherit;font-weight:700;font-size:17px;text-decoration:none;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+  .pcalon{margin:10px 0 0;font-size:16px;font-weight:600}
+  #pcalall{font:inherit;font-weight:700;color:var(--blue);background:none;border:0;text-decoration:underline;cursor:pointer;min-height:44px;padding:0 6px}
   @media(max-width:640px){ .pcal{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 4px} .pcal::-webkit-scrollbar{display:none} .pday{flex:none;width:84px} }
   .pgroup>h3,.pgroup>details>summary{font-size:20px;margin:0 0 12px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
   .pgroup>h3 small,.pgroup summary small{font-size:15px;color:var(--muted);font-weight:400}
@@ -481,6 +489,7 @@
     <div class="pcalwrap" id="pcalwrap" hidden>
       <h3 class="pcalh">Cheapest by delivery day</h3>
       <div class="pcal" id="pcal" role="group" aria-label="Cheapest price by delivery day"></div>
+      <p class="pcalon" id="pcalon" hidden><span id="pcalontext"></span> <button type="button" id="pcalall">Show all</button></p>
       <p class="pcalnote" id="pcalnote">Item plus delivery where the shop lists it; “+” means delivery is extra. Choose a day to see what arrives by then.</p>
     </div>
     <div id="pgroups"></div>
@@ -600,6 +609,7 @@
         <li>Once it arrives, we send the link for our fee.</li>
       </ol>
       <p class="fine" style="text-align:left">Nothing to pay yet.</p>
+      <div class="donebtns"><button type="button" class="btn ghost" id="another">Send another request</button><a class="btn" href="#top" id="backtosearch2">Back to search</a></div>
     </div>
     <div class="send-err" id="sendErr" role="alert">
       <b>Your request didn't send.</b> Check your connection and press "Send my request" again, or email us at <span class="contactline"></span>.
@@ -1150,16 +1160,16 @@
   // Typical service facts (not live stock). Review these every couple of weeks and update "Last checked".
   // cutoff = latest London time (24h, decimal hours) you can usually still order for delivery today.
   const SOURCES=[
-    {id:'amznow', etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes', name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
+    {id:'amznow', etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes', opens:8, name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
      eta:'about 30 minutes', fee:'Prime: £1.99, without Prime: £3.99, free over £20', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
      url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
-    {id:'boots', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
+    {id:'boots', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', opens:8, name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
      eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.boots.com/sitesearch?searchTerm=${encodeURIComponent(q)}`},
-    {id:'ubereats', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
+    {id:'ubereats', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', opens:8, name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
      eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.ubereats.com/gb/search?q=${encodeURIComponent(q)}`},
-    {id:'deliveroo', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
+    {id:'deliveroo', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', opens:8, name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
      eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', note:'Search in the Deliveroo app or site', url:q=>`https://deliveroo.co.uk/`},
-    {id:'johnlewis', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour', name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
+    {id:'johnlewis', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour', opens:9, name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
      eta:'about 30 to 60 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.johnlewis.com/search?search-term=${encodeURIComponent(q)}`},
     {id:'argos', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:17, speed:240,
      eta:'by 10pm tonight', fee:'from £5.95 to £7.95', note:'Some items must be ordered by 1pm', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
@@ -1237,9 +1247,9 @@
   const todayFirst=(a,b)=>(a.today===false)-(b.today===false);
   const risk=s=> (s.cutoff-londonHours()<0.75 ? 90 : 0); // under 45 minutes left to order: treat as slower
   const SORTS={
-    fast:{l:'Fastest',f:(a,b)=>todayFirst(a,b)||a.speed-b.speed},
+    fast:{l:'Fastest',f:(a,b)=>{ const n=londonHours(); return todayFirst(a,b)||arrivalH(a,n)-arrivalH(b,n); }},
     late:{l:'Order latest',f:(a,b)=>todayFirst(a,b)||b.cutoff-a.cutoff||a.speed-b.speed},
-    best:{l:'Best overall',f:(a,b)=>todayFirst(a,b)||(a.speed+risk(a))-(b.speed+risk(b))}
+    best:{l:'Best overall',f:(a,b)=>{ const n=londonHours(); return todayFirst(a,b)||(arrivalH(a,n)*60+risk(a))-(arrivalH(b,n)*60+risk(b)); }}
   };
   const GENERAL=['argos','amazon','johnlewis','deliveroo','ubereats']; // shops that sell a bit of everything
   let current=null, sortMode='best';
@@ -1274,7 +1284,7 @@
     const sorts=$('sorts');
     if(open.length>1 && !banned){
       sorts.innerHTML=Object.entries(SORTS).map(([k,v])=>{ const top=[...open].sort((a,b)=>(b.fit-a.fit)||v.f(a,b))[0];
-        const sub = k==='late' ? 'until '+clock(top.cutoff)+', '+top.name.replace('Shops on ','') : top.etaBig+', '+top.name.replace('Shops on ','');
+        const sub = k==='late' ? 'until '+clock(top.cutoff)+', '+top.name.replace('Shops on ','') : (notOpenYet(top,londonHours())?'from '+clock(top.opens):top.etaBig)+', '+top.name.replace('Shops on ','');
         return `<button type="button" class="sort" data-s="${k}" aria-pressed="${k===sortMode}"><b>${v.l}</b><small>${esc(sub)}</small></button>`; }).join('');
       sorts.hidden=false;
       sorts.onclick=e=>{ const b=e.target.closest('.sort'); if(!b) return; sortMode=b.dataset.s; track('sort',{sort:sortMode, understood:label}); draw(false); };
@@ -1292,7 +1302,7 @@
             <div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div>
             <p class="via">${s.via}${s.areaNote?'. '+s.areaNote:''}</p>
             <p class="fit fit${s.fit}">${s.fit===2?'Usually stocks this':'Might have it, worth checking'}</p>
-            <p class="promise${soon?' soon':''}">Order within <b class="cd" data-cut="${s.cutoff}">${left(s.cutoff-now)}</b> to get it ${s.promise}.</p>
+            ${notOpenYet(s,now)?`<p class="promise">Opens at <b>${clock(s.opens)}</b>. Order then to get it ${s.promise}.</p>`:`<p class="promise${soon?' soon':''}">Order within <b class="cd" data-cut="${s.cutoff}">${left(s.cutoff-now)}</b> to get it ${s.promise}.</p>`}
             <div class="facts"><span>Delivery <b>${s.fee}</b></span>${s.note?`<span>${s.note}</span>`:''}</div>
           </div>
           <a class="shop" href="${s.url(q)}" target="_blank" rel="noopener" data-shop="${s.id}">Search ${s.name.replace('Shops on ','')}<span class="sr"> for ${safeQ} (opens in a new tab)</span></a>
@@ -1337,7 +1347,11 @@
   const phImg=t=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#F2F5FA"/><rect x="62" y="66" width="76" height="66" rx="8" fill="none" stroke="#9AA3B2" stroke-width="5"/><path d="M80 66v-8a20 20 0 0 1 40 0v8" fill="none" stroke="#9AA3B2" stroke-width="5"/><text x="100" y="164" font-family="sans-serif" font-size="15" fill="#4A5363" text-anchor="middle">${t}</text></svg>`);
   function sampleProducts(label){
     let h=0; for(const c of label) h=(h*31+c.charCodeAt(0))%997;
-    const b=12+h%70, r=x=>Math.round(x)+0.99, img=phImg("Shop's photo");
+    const PRICE=[[/iphone|galaxy|pixel|macbook|laptop|tv\b|telly|monitor|ipad|tablet|ps5|playstation|xbox|switch|console|apple watch|smartwatch|dyson|coffee machine|vacuum|hoover/i,[250,650]],
+      [/airpods|headphones|earbuds|speaker|kindle|air fryer|microwave|hair dryer|straighteners|electric toothbrush|printer\b|drill|heater|radiator|lego|trainers|perfume|aftershave/i,[40,160]],
+      [/charger|cable|adapter|case|protector|mouse|keyboard|bulb|batter|torch|lead|kettle|toaster|game|controller/i,[8,35]]];
+    const band=(PRICE.find(([re])=>re.test(label))||[0,[6,30]])[1];
+    const b=band[0]+h%(band[1]-band[0]+1), r=x=>Math.round(x)+0.99, img=phImg("Shop's photo");
     return [
       {shop:'Argos',name:label,price:r(b),was:r(b*1.15),stock:'in',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Argos',name:label+', larger size',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
@@ -1396,7 +1410,10 @@
       return `<button type="button" class="pday${i===cheapDay?' cheap':''}${i===firstDay&&i!==cheapDay?' fast':''}" data-day="${i}" aria-pressed="${calSel===i}"><span class="d">${dayLabel(i)}</span><span class="p">${price}</span>${tag?`<span class="t">${tag}</span>`:''}<span class="sr">, ${i===7?'any day':'arrives by '+dayLong(i)}${c.t.known?'':', plus delivery'}</span></button>`;
     }).join('');
     wrap.hidden=false;
+    $('pcalon').hidden = calSel==null;
+    if(calSel!=null) $('pcalontext').textContent = calSel===7 ? 'Showing everything, including slower options.' : `Showing what arrives by ${dayLong(calSel)}.`;
   }
+  $('pcalall').addEventListener('click',()=>{ calSel=null; drawProducts(); $('pcal').querySelector('.pday:not(.none)')?.focus(); });
   $('pcal').addEventListener('click',e=>{ const b=e.target.closest('.pday'); if(!b||b.disabled) return; const d=+b.dataset.day; calSel = calSel===d ? null : d; drawProducts(); });
   function drawProducts(){
     if(!prodList) return;
@@ -1414,6 +1431,7 @@
         ? `<b>Today ${esc(p.arrive||'')}</b><br>if you order within <span class="pcd" data-cut="${p.cutoff}">${left(p.cutoff-now)}</span>`
         : `<b>${esc(p.arrive && /today|same/i.test(p.arrive) ? p.arrive : 'Same day available')}</b>`;
       if(g==='tomorrow') return p.missed ? `<b>Tomorrow or later</b><br>today's orders closed at ${clock(p.cutoff)}` : `<b>Tomorrow, ${tomorrowStr()}</b>${p.arrive && !/next|tomorrow/i.test(p.arrive) ? '<br>'+esc(p.arrive) : ''}`;
+      if(g==='later' && p.arriveDate) return `<b>Arrives by ${new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(p.arriveDate+'T12:00:00Z'))}</b>${p.live?'<br>seller’s estimate':''}`;
       if(g==='later') return `<b>${esc((p.arrive||'takes a few days').replace(/^./,c=>c.toUpperCase()))}</b>`;
       return `<b>Delivery time not listed</b><br>check on the shop's site`;
     };
@@ -1458,12 +1476,15 @@
   setInterval(()=>{ HOL=HOLIDAYS[londonDay()]||{}; },60000);
   const shutToday=(s,now)=> now>=s.cutoff || !!(HOL.closed && HOL.closed.includes(s.id));
   // Arrival as a clock time, not a speed ("by about 2:35pm"): people care when it arrives.
+  const notOpenYet=(s,now)=> s.opens!=null && now<s.opens;
   function arriveBy(s,now){
     const m=(s.etaBig.match(/\d+/g)||[]).map(Number);
     if(!/min/.test(s.etaBig) || !m.length) return s.etaSmall;
-    const at=Math.ceil((now*60+Math.max(...m))/5)*5/60;
-    return 'by about '+clock(at);
+    const start=notOpenYet(s,now)?s.opens:now, at=Math.ceil((start*60+Math.max(...m))/5)*5/60;
+    return (notOpenYet(s,now)?'from ':'by about ')+clock(at);
   }
+  // when it would actually arrive, in hours from midnight (used for "Fastest")
+  const arrivalH=(s,now)=> (notOpenYet(s,now)?s.opens:now) + s.speed/60;
   const tomorrowStr=()=>new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',day:'numeric',month:'short'}).format(new Date(Date.now()+864e5));
   // Shareable searches: jpfsystems.co/?q=ps5 opens the results; Back returns to the previous search.
   let fromHistory=false;
@@ -1477,10 +1498,11 @@
   // Phone action bar
   $('mb-search').addEventListener('click',()=>{ window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); setTimeout(()=>{ qIn.focus({preventScroll:true}); qIn.select(); },350); });
   $('mb-doit').addEventListener('click',()=>{ $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); });
+  function toast(msg){ let t=$('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; t.className='toast'; t.setAttribute('role','status'); document.body.appendChild(t); } t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3200); }
   let lastSearch=null;
   document.addEventListener('click',e=>{
     const pb=e.target.closest('a.pbuy');
-    if(pb){ if(pb.classList.contains('sample')){ e.preventDefault(); return; } track('click',{shop:pb.dataset.shop, understood:lastSearch&&lastSearch.q, area:lastSearch&&lastSearch.pc||null, position:+pb.dataset.pos, sort:'product'}); }
+    if(pb){ if(pb.classList.contains('sample')){ e.preventDefault(); toast('This is a sample product. On the live site this button opens the shop to pay.'); return; } track('click',{shop:pb.dataset.shop, understood:lastSearch&&lastSearch.q, area:lastSearch&&lastSearch.pc||null, position:+pb.dataset.pos, sort:'product'}); }
     const a=e.target.closest('a.shop');
     if(a && lastSearch){ const li=a.closest('li'), pos=[...$('rlist').children].indexOf(li)+1; track('click',{shop:a.dataset.shop, understood:lastSearch.q, area:lastSearch.pc||null, position:pos, sort:lastSearch.sort}); }
     if(e.target.closest('#toask')){ e.preventDefault(); $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); }
@@ -1499,6 +1521,7 @@
     const rows=SOURCES.filter(s=>s.today!==false).map(s=>({s,left:shutToday(s,now)?0:s.cutoff-now})).sort((a,b)=>(a.left<=0)-(b.left<=0) || a.left-b.left);
     $('bgrid').innerHTML=rows.map(({s,left:l})=>{
       if(l<=0) return `<li class="bcard shut"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><div class="bleft">Closed today<small>${HOL.closed&&HOL.closed.includes(s.id)?esc(HOL.closedWhy):'orders closed at '+clock(s.cutoff)}</small></div></li>`;
+      if(notOpenYet(s,now)) return `<li class="bcard"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div><div class="bleft">Opens at ${clock(s.opens)}<small>then order by ${clock(s.cutoff)}, arrives ${s.promise}</small></div>${s.areaNote?`<span class="bnote">${s.areaNote}</span>`:''}</li>`;
       const pct=Math.max(3,Math.min(100,100*l/(s.cutoff-OPEN_FROM)));
       return `<li class="bcard${l<1.5?' soon':''}"><div class="shopline">${badgeFor(s)}<h3>${s.name}</h3></div>
         <div class="bleft">${left(l)} left<small>order by ${clock(s.cutoff)}, arrives ${s.promise.replace(/^in /,'in ')}</small></div>
@@ -1506,9 +1529,9 @@
     }).join('');
     $('b-updated').textContent='Updated '+clock(Math.floor(now*60)/60)+'.';
     // one plain sentence for the top bar: the next shop(s) to stop taking same-day orders
-    const openRows=rows.filter(r=>r.left>0 && !r.s.area);
+    const openRows=rows.filter(r=>r.left>0 && !r.s.area && !notOpenYet(r.s,now));
     let msg, short;
-    if(!openRows.length){ msg='Same-day orders have closed for today. Most shops take orders again from 8am.'; short='Same-day orders reopen from 8am.'; }
+    if(!openRows.length){ const early=rows.some(r=>r.left>0); msg= early ? 'Shops on the delivery apps open from 8am. Same-day orders are open until this evening.' : 'Same-day orders have closed for today. Most shops take orders again from 8am.'; short= early ? 'Delivery apps open from 8am.' : 'Same-day orders reopen from 8am.'; }
     else {
       const first=openRows[0], group=openRows.filter(r=>r.left-first.left<0.1).map(r=>r.s.name.replace('Shops on ','').replace(' same-day',''));
       const names=group.length>1 ? group.slice(0,-1).join(', ')+' and '+group[group.length-1] : group[0];
@@ -1605,6 +1628,8 @@
   $('dnext').onclick=()=>{ if(dstep<dsteps.length-1){dstep++;renderDemo();$('dnext').focus();} else closeDemo(); };
   $('dback').onclick=()=>{ if(dstep>0){dstep--;renderDemo();} };
   $('dclose').onclick=closeDemo;
+  $('another').onclick=()=>{ form.reset(); feeEl.textContent='–'; $('specificWrap').hidden=true; form.style.display='block'; $('done').style.display='none'; const b=form.querySelector('button.go'); b.disabled=false; b.textContent='Send my request'; $('item').focus(); };
+  $('backtosearch2').onclick=e=>{ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>$('q').focus({preventScroll:true}),350); };
   document.addEventListener('keydown',e=>{
     if(!$('demo').classList.contains('open')) return;
     if(e.key==='Escape') closeDemo();
