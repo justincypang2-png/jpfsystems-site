@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NoLag: search every same-day shop in London at once</title>
 <meta name="description" content="Type what you need and your postcode. See every shop that can deliver it to you in London today, fastest first. Or let us order it for you.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231556D6'/%3E%3Cpath d='M17.5 5 8 18h8l-1.5 9L24 14h-8z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -336,6 +337,19 @@
   /* Product cards: real products from the shops' own feeds */
   section.prods{margin:4px 0 30px;padding:0}
   .pbanner{background:#FFF6DB;border:2px solid #E8C35A;border-radius:12px;padding:12px 16px;margin:0 0 18px;font-size:16px}
+  .sfield.grow{position:relative}
+  .sfield.grow input{padding-right:44px}
+  .qclear{position:absolute;right:0;bottom:2px;width:44px;height:44px;border:0;border-radius:10px;background:none;color:var(--muted);font-size:26px;line-height:1;cursor:pointer}
+  .qclear:hover{background:var(--soft);color:var(--ink)}
+  .sharelink{margin:6px 0 0;min-height:44px;padding:0 2px;border:0;background:none;color:var(--blue);font:inherit;font-size:16px;font-weight:600;text-decoration:underline;cursor:pointer}
+  .totop{position:fixed;right:24px;bottom:24px;z-index:45;min-height:48px;padding:0 18px;border:2px solid var(--blue);border-radius:999px;background:#fff;color:var(--blue);font:inherit;font-weight:700;box-shadow:0 4px 14px rgba(16,24,40,.12);cursor:pointer}
+  .totop:hover{background:var(--blue-tint)}
+  @media(max-width:640px){ .totop{display:none} }
+  .pskel{border:2px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+  .pskel i{display:block;background:linear-gradient(90deg,#EEF1F5 25%,#F7F9FB 50%,#EEF1F5 75%);background-size:200% 100%;border-radius:8px;margin:12px 16px}
+  .pskel i.img{aspect-ratio:4/3;margin:0;border-radius:0}
+  @media(prefers-reduced-motion:no-preference){ .pskel i{animation:shimmer 1.2s linear infinite} }
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
   [hidden]{display:none !important} /* hidden always means hidden, even for rows with their own layout */
   section.assist{margin:0 0 24px;padding:0}
   .aform[hidden]{display:none}
@@ -488,6 +502,7 @@
 </div></header>
 
 <div class="mbar" id="mbar" hidden><button type="button" id="mb-search">New search</button><button type="button" id="mb-doit">Do it for me</button></div>
+<button type="button" class="totop" id="totop" hidden>Back to top</button>
 <main id="top">
 <div class="hero"><div class="wrap narrow">
   <h1>What do you need today?</h1>
@@ -497,6 +512,7 @@
     <div class="sfield grow">
       <label for="q">Item</label>
       <input type="text" id="q" name="q" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugg" aria-describedby="qhint" placeholder="A product, or what it's for: 'ps5', 'birthday', 'power cut'">
+      <button type="button" class="qclear" id="qclear" aria-label="Clear the search box" hidden>×</button>
     </div>
     <div class="sfield pc">
       <label for="qpc">Postcode</label>
@@ -518,6 +534,7 @@
   <div class="rhead">
     <h2 id="r-title" tabindex="-1"></h2>
     <p class="rsub" id="r-sub"></p>
+    <button type="button" class="sharelink" id="sharelink">Copy link to this search</button>
     <p class="interp" id="interp" hidden></p>
     <div class="refine" id="refine" hidden></div>
   </div>
@@ -1365,6 +1382,8 @@
       ? `We don't recognise “${label}” yet, so these are general shops that might have it. Try the exact product name, or let us find it for you.`
       : (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.'));
     $('results').classList.toggle('unknown', unknown);
+    document.title = banned ? 'Not available | NoLag' : unknown ? `${label} | NoLag` : `${label}: ${n} way${n===1?'':'s'} today | NoLag`;
+    $('qclear').hidden=!qIn.value;
     $('results').hidden=false;
     if(jump){
       $('r-title').focus();
@@ -1433,6 +1452,11 @@
       {shop:'Temu',name:label+' (similar item)',price:r(b*0.3),stock:null,speed:'later',arrive:'usually 5 to 14 working days'}
     ].map(p=>({...p,img,url:'#',sample:true}));
   }
+  function showSkeleton(){
+    $('pbanner').hidden=true; $('pcalwrap').hidden=true;
+    $('pgroups').innerHTML='<div class="pgroup"><h3>Finding products…</h3><ul class="pgrid" aria-hidden="true">'+'<li class="pskel"><i class="img"></i><i style="height:14px;width:40%"></i><i style="height:18px;width:85%"></i><i style="height:26px;width:35%"></i><i style="height:44px"></i></li>'.repeat(3)+'</ul></div>';
+    $('prods').hidden=false;
+  }
   async function loadProducts(spec){
     const seq=++pSeq, label=spec.l, area=(((current&&current.pc)||'').toUpperCase().replace(/\s/g,'').match(/^[A-Z]{1,2}\d[A-Z\d]?/)||[''])[0], key=norm(label)+'|'+area;
     prodList=null; calSel=null; $('prods').hidden=true; $('shopshead').hidden=true; $('pgroups').innerHTML=''; $('pcalwrap').hidden=true;
@@ -1440,14 +1464,15 @@
     let list=PCACHE[key];
     if(!list){
       if(DEMO) list=spec.w ? sampleProducts(label) : [];
-      else if(CONFIG.API_URL){ try{ const ac=new AbortController(), t=setTimeout(()=>ac.abort(),3500);
+      else if(CONFIG.API_URL){ showSkeleton(); try{ const ac=new AbortController(), t=setTimeout(()=>ac.abort(),3500);
           const r=await fetch(CONFIG.API_URL.replace(/\/$/,'')+'/search?q='+encodeURIComponent(label)+(area?'&area='+area:''),{signal:ac.signal}); clearTimeout(t);
           list=r.ok ? ((await r.json()).products||[]) : []; }catch(e){ list=[]; } }
       else list=[];
       if(!list.length && !DEMO && CONFIG.SAMPLE_PRODUCTS && spec.w) list=sampleProducts(label);
       PCACHE[key]=list;
     }
-    if(seq!==pSeq || !list.length) return;
+    if(seq!==pSeq) return;
+    if(!list.length){ $('prods').hidden=true; return; }
     prodList=list; drawProducts();
     if($('results').classList.contains('unknown')){ $('results').classList.remove('unknown'); $('r-title').textContent=`Products for “${label}”`; }
   }
@@ -1632,7 +1657,7 @@
   function runFromUrl(){
     const q=new URLSearchParams(location.search).get('q');
     if(q){ fromHistory=true; qIn.value=q; chosen=ALLOPTS[q.toLowerCase()] ? optFor(q) : null; $('sf').requestSubmit(); fromHistory=false; }
-    else { $('results').hidden=true; $('mbar').hidden=true; document.body.classList.remove('has-mbar'); }
+    else goHome(false);
   }
   addEventListener('popstate', runFromUrl);
   if(new URLSearchParams(location.search).get('q')) setTimeout(runFromUrl,0);
@@ -1641,6 +1666,41 @@
   $('mb-doit').addEventListener('click',()=>{ $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); });
   function toast(msg){ let t=$('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; t.className='toast'; t.setAttribute('role','status'); document.body.appendChild(t); } t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3200); }
   let lastSearch=null;
+
+  // ---------- small details that make the site feel finished ----------
+  // 1. The logo takes you back to a clean start
+  function goHome(push=true){
+    closeSugg(); qIn.value=''; chosen=null; $('qclear').hidden=true; $('s-err').classList.remove('show');
+    asSeq++; AS=null; $('assist').hidden=true; prodList=null; pSeq++;
+    $('results').hidden=true; $('mbar').hidden=true; document.body.classList.remove('has-mbar');
+    document.title=HOME_TITLE; showGroup('popular');
+    if(push){ try{ const u=location.pathname+(PREVIEW_FLAG?'?preview=1':''); if(location.search!==(PREVIEW_FLAG?'?preview=1':'')||location.hash) history.pushState({},'',u); }catch(e){} }
+    window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    setTimeout(()=>qIn.focus({preventScroll:true}),350);
+  }
+  const HOME_TITLE=document.title;
+  document.querySelector('a.logo').addEventListener('click',e=>{ e.preventDefault(); goHome(); });
+  // 2. Clear button inside the search box
+  const syncClear=()=>{ $('qclear').hidden=!qIn.value; };
+  qIn.addEventListener('input',syncClear);
+  $('qclear').addEventListener('click',()=>{ qIn.value=''; chosen=null; syncClear(); qIn.focus(); openSugg(); });
+  // 3. Remember the postcode on this device only
+  const PKEY='nolag-postcode';
+  try{ const saved=localStorage.getItem(PKEY); if(saved && !$('qpc').value) $('qpc').value=saved; }catch(e){}
+  $('sf').addEventListener('submit',()=>{ const pc=$('qpc').value.trim().toUpperCase(); if(/^[A-Z]{1,2}\d[A-Z\d]?(\s*\d[A-Z]{2})?$/i.test(pc)){ try{ localStorage.setItem(PKEY,pc); }catch(e){} } });
+  // 5. Copy a link to this search
+  $('sharelink').addEventListener('click',async()=>{
+    const label=current&&current.spec?current.spec.l:qIn.value.trim(); if(!label) return;
+    const link='https://www.jpfsystems.co/?q='+encodeURIComponent(label);
+    try{ await navigator.clipboard.writeText(link); toast('Link copied. Paste it anywhere to share this search.'); }
+    catch(e){ toast('Copy this link: '+link); }
+  });
+  // 6. Back to top on long pages (desktop; phones have the bottom bar)
+  addEventListener('scroll',()=>{ $('totop').hidden = scrollY < 1400; },{passive:true});
+  $('totop').addEventListener('click',()=>{ window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); setTimeout(()=>qIn.focus({preventScroll:true}),350); });
+  // 8. Tell people when the connection drops
+  addEventListener('offline',()=>toast('You’re offline. Results may be out of date until you reconnect.'));
+  addEventListener('online',()=>toast('Back online.'));
   document.addEventListener('click',e=>{
     const pb=e.target.closest('a.pbuy');
     if(pb){ if(pb.classList.contains('sample')){ e.preventDefault(); toast('This is a sample product. Real products open the shop so you can pay.'); return; } track('click',{shop:pb.dataset.shop, understood:lastSearch&&lastSearch.q, area:lastSearch&&lastSearch.pc||null, position:+pb.dataset.pos, sort:'product'}); }
