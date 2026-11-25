@@ -1952,10 +1952,10 @@
   // Sections fade in every time they come into view, not just the first time:
   // "show" adds the effect as an element scrolls in; "hide" resets it once it is fully off screen, ready to replay.
   if('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches){
-    const show=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{rootMargin:'0px 0px -8% 0px'});
+    const show=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{rootMargin:'0px 0px -24px 0px'});
     const hide=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) e.target.classList.remove('in'); }),{threshold:0});
     RV={ watch(el,step,i,instant){ if(el.closest('.hero')||el.closest('#results')) return; el.classList.add('reveal'); el.style.setProperty('--d',(i*step)+'ms'); if(instant) el.classList.add('in'); show.observe(el); hide.observe(el); } };
-    const groups=[['#bgrid > li',60],['#how .steps > li',90],['.fees > .fee-box',90],['#cover .cover > div',90],['#doit .doit > *',90],['.faq details',50],['.cta .wrap',0],['h2.s',0],['h1.s',0]];
+    const groups=[['.doorlist > li',120],['#bgrid > li',60],['#how .steps > li',90],['.fees > .fee-box',90],['#cover .cover > div',90],['#doit .doit > *',90],['.faq details',50],['.cta .wrap',0],['h2.s',0],['h1.s',0]];
     groups.forEach(([sel,step])=>document.querySelectorAll(sel).forEach((el,i)=>RV.watch(el,step,i,false)));
   }
 
