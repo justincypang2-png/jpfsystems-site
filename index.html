@@ -397,6 +397,7 @@
   .parr b{color:var(--ok)}
   .pcard.later .parr b,.pcard.unknown .parr b{color:var(--ink)}
   .pfee{margin:0;font-size:14px;color:var(--muted)}
+  .ptotal{margin:0;font-size:16px;font-weight:700}
   .pbuy{margin-top:auto;display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:12px;font-weight:700;text-decoration:none;background:#fff;color:var(--blue);border:2px solid var(--blue)}
   .pcard.first .pbuy{background:var(--blue);color:#fff}
   .pbuy:hover{background:var(--blue-tint)} .pcard.first .pbuy:hover{background:var(--blue-dark)}
@@ -1396,7 +1397,8 @@
       {shop:'Argos',name:label+', larger size',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Currys',name:label,price:r(b*0.95),stock:'in',speed:'tomorrow',arrive:'next day',fee:'£5.99 next-day delivery'},
       {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.9),stock:'in',speed:'tomorrow',arrive:'seller’s estimate',fee:'Free delivery'},
-      {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.75),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+3*864e5)),arrive:'seller’s estimate',fee:'£2.99 delivery'},
+      {shop:'eBay',seller:'another-seller',live:true,name:label+', new',price:r(b*0.7),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+2*864e5)),arrive:'seller’s estimate',fee:'£3.49 delivery'},
+      {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.6),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+3*864e5)),arrive:'seller’s estimate',fee:'£2.99 delivery'},
       {shop:'AliExpress',name:label+' (similar item)',price:r(b*0.35),stock:null,speed:'later',arrive:'usually 3 to 7 days from UK stock'},
       {shop:'Temu',name:label+' (similar item)',price:r(b*0.3),stock:null,speed:'later',arrive:'usually 5 to 14 working days'}
     ].map(p=>({...p,img,url:'#',sample:true}));
@@ -1538,7 +1540,7 @@
       if(g==='later') return `<b>${esc((p.arrive||'takes a few days').replace(/^./,c=>c.toUpperCase()))}</b>`;
       return `<b>Delivery time not listed</b><br>check on the shop's site`;
     };
-    const card=(p,g)=>{ pos++; const first=pos===1 && g==='today', shop=esc(p.shop);
+    const card=(p,g,flat)=>{ pos++; const first=pos===1 && (flat || g==='today'), shop=esc(p.shop);
       const stock = p.stock==='in' ? '<p class="pstock in">In stock</p>' : p.stock==='low' ? '<p class="pstock low">Only a few left</p>' : '<p class="pstock">Stock not listed</p>';
       return `<li class="pcard ${g}${first?' first':''}">
         <div class="pimg">${p.sample?'<span class="ptag">Sample</span>':''}<img src="${esc(p.img||phImg('No photo'))}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
@@ -1549,12 +1551,18 @@
           ${stock}
           <p class="parr">${arrival(p,g)}</p>
           ${p.fee?`<p class="pfee">${esc(p.fee)}</p>`:''}
+          ${flat?(()=>{ const t=totalOf(p); return t.known?`<p class="ptotal">${GBP(Math.round(t.v*100)/100)} with delivery</p>`:'<p class="ptotal">plus delivery</p>'; })():''}
           <a class="pbuy${p.sample?' sample':''}" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-shop="${esc(p.shop.toLowerCase().slice(0,20))}" data-pos="${pos}">${p.live?'Buy on':'Buy at'} ${shop}<span class="sr">: ${esc(p.name)}, ${GBP(p.price)} (opens in a new tab)</span></a>
         </div></li>`; };
     const count=n=>`<small>${n} product${n>1?'s':''}</small>`;
     const block=(g,title)=>G[g].length ? `<div class="pgroup"><h3>${title} ${count(G[g].length)}</h3><ul class="pgrid">${G[g].map(p=>card(p,g)).join('')}</ul></div>` : '';
     const shopsLater=[...new Set(G.later.map(p=>p.shop))].slice(0,3).join(', ');
-    $('pgroups').innerHTML = block('today','Arrives today') + block('tomorrow','Arrives tomorrow') + block('unknown','Delivery time not listed')
+    if(calSel!=null){
+      // A day is chosen: one list, cheapest first, of everything that arrives by then (each card keeps its own arrival day)
+      const pick=all.filter(x=>x.day!=null && (calSel===7 || x.day<=calSel)).map(x=>({...x,t:totalOf(x.p).v})).sort((a,b)=>a.t-b.t);
+      const title = calSel===7 ? 'Cheapest overall, any delivery day' : calSel===0 ? 'Cheapest ways to have it today' : `Cheapest ways to have it by ${dayLong(calSel)}`;
+      $('pgroups').innerHTML = `<div class="pgroup"><h3>${esc(title)} ${count(pick.length)}</h3><ul class="pgrid">${pick.map(x=>card(x.p,x.g,true)).join('')}</ul></div>`;
+    } else $('pgroups').innerHTML = block('today','Arrives today') + block('tomorrow','Arrives tomorrow') + block('unknown','Delivery time not listed')
       + (G.later.length ? `<div class="pgroup"><details${calSel!=null?' open':''}><summary>Takes longer, often cheaper <small>${G.later.length} from ${esc(shopsLater)}</small></summary><ul class="pgrid">${G.later.map(p=>card(p,'later')).join('')}</ul></details></div>` : '');
     $('pgroups').querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{ i.src=phImg('No photo'); },{once:true}));
     const sample=prodList.some(p=>p.sample);
