@@ -250,7 +250,11 @@
   .hero .narrow .search,.hero .narrow .sugg{text-align:left}
   .trust{color:var(--muted);font-size:16px;margin:14px 0 0}
   /* Airbnb: category icons */
-  .cats{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:26px 0 0}
+  .cats{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin:26px 0 0}
+  .subs{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+  .sub{min-height:40px;padding:6px 14px;border:0;border-radius:8px;background:none;color:var(--muted);font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+  .sub:hover{color:var(--ink);background:var(--soft)}
+  .sub[aria-pressed="true"]{color:#fff;background:var(--ink)}
   .cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:84px;min-height:72px;padding:10px 8px 8px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);font:inherit;font-size:15px;font-weight:600;cursor:pointer;border-radius:10px 10px 0 0}
   .cat svg{width:28px;height:28px}
   .cat:hover{color:var(--ink);border-bottom-color:var(--line)}
@@ -321,6 +325,20 @@
   section.prods{margin:4px 0 30px;padding:0}
   .pbanner{background:#FFF6DB;border:2px solid #E8C35A;border-radius:12px;padding:12px 16px;margin:0 0 18px;font-size:16px}
   .pgroup{margin:0 0 22px}
+  .pcalwrap{margin:0 0 22px}
+  .pcalh{font-size:20px;margin:0 0 10px}
+  .pcal{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
+  .pday{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:76px;padding:8px 4px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:inherit;cursor:pointer;text-align:center}
+  .pday .d{font-size:14px;font-weight:700;color:var(--muted);line-height:1.2}
+  .pday .p{font-size:18px;font-weight:700;line-height:1.2}
+  .pday .t{font-size:12px;font-weight:700;line-height:1.2}
+  .pday.none{cursor:default;color:var(--muted)} .pday.none .p{font-weight:400}
+  .pday.cheap{border-color:var(--ok)} .pday.cheap .p,.pday.cheap .t{color:var(--ok)}
+  .pday.fast .t{color:var(--blue)}
+  .pday[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-tint);box-shadow:inset 0 0 0 1px var(--blue)}
+  .pday:not(.none):hover{border-color:var(--ink)}
+  .pcalnote{color:var(--muted);font-size:15px;margin:8px 0 0}
+  @media(max-width:640px){ .pcal{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 4px} .pcal::-webkit-scrollbar{display:none} .pday{flex:none;width:84px} }
   .pgroup>h3,.pgroup>details>summary{font-size:20px;margin:0 0 12px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
   .pgroup>h3 small,.pgroup summary small{font-size:15px;color:var(--muted);font-weight:400}
   .pgroup details>summary{cursor:pointer;list-style:none;min-height:44px;align-items:center;border:2px solid var(--line);border-radius:12px;padding:8px 16px;background:var(--soft)}
@@ -386,6 +404,9 @@
     .sort b{font-size:15px;line-height:1.2}
     .sort small{font-size:13px;line-height:1.25;display:block;margin-top:2px}
     .cat{min-width:72px}
+    .cats,.subs{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;margin-left:-16px;margin-right:-16px;padding:0 16px}
+    .cats::-webkit-scrollbar,.subs::-webkit-scrollbar{display:none}
+    .cat,.sub{flex:none}
     .opt a.shop{width:100%}
     .helpcard{flex-direction:column;align-items:stretch}
     .doit{grid-template-columns:1fr;gap:24px}
@@ -443,7 +464,8 @@
   <p class="sr" id="qhint">Suggestions appear as you type. Use the up and down arrows to move through them and Enter to choose.</p>
   <p class="error-msg" id="s-err" role="alert"></p>
   <p class="trust">Free to search. Buy straight from the shop, or let us do it for you from £2.</p>
-  <div class="cats" id="cats" role="group" aria-label="Browse by category"></div>
+  <div class="cats" id="cats" role="group" aria-label="Browse by group"></div>
+  <div class="subs" id="subs" role="group" aria-label="Sections" hidden></div>
   <div class="quick" id="quick" aria-live="polite"></div>
 </div></div>
 
@@ -456,6 +478,11 @@
   </div>
   <section class="prods" id="prods" hidden aria-label="Products from the shops">
     <p class="pbanner" id="pbanner" hidden></p>
+    <div class="pcalwrap" id="pcalwrap" hidden>
+      <h3 class="pcalh">Cheapest by delivery day</h3>
+      <div class="pcal" id="pcal" role="group" aria-label="Cheapest price by delivery day"></div>
+      <p class="pcalnote" id="pcalnote">Item plus delivery where the shop lists it; “+” means delivery is extra. Choose a day to see what arrives by then.</p>
+    </div>
     <div id="pgroups"></div>
     <p class="pnote">Photos, prices and stock come from each shop's own product list, updated every night. eBay listings are live, and their delivery dates are the seller's estimate. The shop's site shows the final price before you pay.</p>
   </section>
@@ -1041,30 +1068,73 @@
     popular:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.9z"/>',
     tech:'<rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M2 19h20"/>',
     home:'<path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/>',
-    gifts:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M3 9h18M12 9v11M12 9c-2.5 0-4.5-1-4.5-2.8S9.8 3.8 12 9c2.2-5.2 4.5-4.6 4.5-2.8S14.5 9 12 9"/>',
+    food:'<path d="M5 11h14a7 7 0 0 1-14 0zM9 7c0-1.5 1-1.5 1-3M13 7c0-1.5 1-1.5 1-3"/>',
     health:'<path d="M12 20s-7-4.4-7-9.6A4 4 0 0 1 12 8a4 4 0 0 1 7 2.4C19 15.6 12 20 12 20z"/>',
     baby:'<path d="M9 3h6M10 3v3M14 3v3M8 9a2 2 0 0 1 2-3h4a2 2 0 0 1 2 3v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/><path d="M8 13h8"/>',
-    party:'<ellipse cx="12" cy="9" rx="5" ry="6"/><path d="M12 15l-1 2h2zM12 17c0 2-2 2.5-2 4"/>'
+    clothes:'<path d="M8 4l-4 3 2 4 2-1v10h8V10l2 1 2-4-4-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/>',
+    gifts:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M3 9h18M12 9v11M12 9c-2.5 0-4.5-1-4.5-2.8S9.8 3.8 12 9c2.2-5.2 4.5-4.6 4.5-2.8S14.5 9 12 9"/>',
+    more:'<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>'
   };
-  const CAT_SETS=[
-    {id:'popular',l:'Popular',items:['Phone charger (USB-C)','PS5 DualSense controller','HDMI cable (2m)','Flower bouquet','Paracetamol','Helium balloons']},
-    {id:'tech',l:'Tech',items:['USB-C laptop charger (65W)','PS5 console','Wireless earbuds','USB-C to HDMI adapter','Printer ink cartridges','Power bank']},
-    {id:'home',l:'Home',items:['Fan heater','Kettle','Extension lead (4-way)','Light bulb, screw fitting (E27)','Air fryer','Tool kit']},
-    {id:'gifts',l:'Gifts',items:['Flower bouquet','Perfume','LEGO set','Birthday cake','Aftershave','Red roses']},
-    {id:'health',l:'Health',items:['Paracetamol','Cold and flu relief','Digital thermometer','Plasters','First aid kit']},
-    {id:'baby',l:'Baby',items:['Nappies, size 3–4','Baby formula','Baby wipes','Calpol']},
-    {id:'party',l:'Party',items:['Helium balloons','Number balloons','Candles','Paper plates','Bluetooth speaker']}
+  // Browse by group: main groups, each with sections of one-tap searches (Argos/Amazon-style departments, kept short).
+  const BROWSE=[
+    {id:'popular',l:'Popular',subs:[{l:'Popular',items:['Phone charger (USB-C)','PS5 DualSense controller','HDMI cable (2m)','Flower bouquet','Paracetamol','Helium balloons','Fairy lights','Apple AirPods']}]},
+    {id:'tech',l:'Electronics',subs:[
+      {l:'Phones',items:['iPhone','Android phone','Phone charger (USB-C)','iPhone charger (20W USB-C)','Wireless charger','Power bank','Phone case','iPhone screen protector']},
+      {l:'Computers',items:['Laptop','MacBook charger','USB-C laptop charger (65W)','Monitor, 24 inch','Wireless mouse','Keyboard','Printer ink cartridges','USB-C to HDMI adapter']},
+      {l:'TV and audio',items:['TV, 43 inch','HDMI cable (2m)','Apple AirPods','Wireless earbuds','Over-ear headphones','Bluetooth speaker','Smart speaker']},
+      {l:'Gaming',items:['PS5 console','PS5 DualSense controller','PS5 games','Xbox Series X console','Nintendo Switch 2 console','Gaming headset']},
+      {l:'Cables and power',items:['USB-C cable','USB-C to Lightning cable','AA batteries','AAA batteries','Extension lead (4-way)','Travel plug adapter','SD card']}]},
+    {id:'home',l:'Home',subs:[
+      {l:'Kitchen',items:['Kettle','Toaster','Microwave','Air fryer','Coffee machine','Rice cooker','Blender','Frying pan']},
+      {l:'Heating and cooling',items:['Fan heater','Oil-filled radiator','Electric blanket','Hot water bottle','Desk fan']},
+      {l:'Lights and power',items:['Light bulb, screw fitting (E27)','Light bulb, bayonet fitting (B22)','Spotlight bulb (GU10)','Torch','Extension lead (4-way)','Smoke alarm']},
+      {l:'Cleaning',items:['Cordless vacuum','Iron','Bin bags','Washing up liquid','Laundry detergent','Toilet roll']},
+      {l:'Bedroom and bathroom',items:['Duvet','Pillows','Bed sheets','Towels']},
+      {l:'DIY',items:['Tool kit','Cordless drill','Screwdriver set','Superglue','Duct tape']}]},
+    {id:'food',l:'Food',subs:[
+      {l:'Everyday',items:['Milk','Bread','Eggs','Coffee','Tea','Snacks']},
+      {l:'Treats',items:['Birthday cake','Chocolates','Biscuits','Sweets']},
+      {l:'Drinks and ice',items:['Ice','Fizzy drinks','Sparkling water','Juice']}]},
+    {id:'health',l:'Health',subs:[
+      {l:'Medicines',items:['Paracetamol','Ibuprofen','Cold and flu relief','Throat lozenges','Antihistamine','Digital thermometer']},
+      {l:'First aid',items:['Plasters','First aid kit','Bandage']},
+      {l:'Toiletries',items:['Toothbrush','Toothpaste','Shampoo','Deodorant','Razor','Tissues']},
+      {l:'Hair and grooming',items:['Hair dryer','Hair straighteners','Electric toothbrush','Beard trimmer','Shaver']},
+      {l:'Fragrance',items:['Perfume','Aftershave']}]},
+    {id:'baby',l:'Baby',subs:[
+      {l:'Baby',items:['Nappies, size 1–2','Nappies, size 3–4','Nappies, size 5–6','Baby formula','Baby wipes','Calpol','Dummy']},
+      {l:'Toys and games',items:['LEGO set','Toys','Board game','Puzzle','Soft toy','Nerf']}]},
+    {id:'clothes',l:'Clothes',subs:[
+      {l:'Everyday',items:['Socks','Tights','Gloves','Scarf','Hat','Slippers','Pyjamas']},
+      {l:'Shoes and bags',items:['Trainers','Backpack','Suitcase','Umbrella']},
+      {l:'Watches and jewellery',items:['Apple Watch','Fitness tracker','Watch','Necklace']}]},
+    {id:'gifts',l:'Gifts',subs:[
+      {l:'Gifts',items:['Flower bouquet','Red roses','Perfume','Chocolates','Gift card','Gift set','Candles']},
+      {l:'Party',items:['Helium balloons','Number balloons','Birthday cake','Birthday card','Wrapping paper','Gift bag']},
+      {l:'Christmas',items:['Artificial Christmas tree','Fairy lights','Christmas decorations','Advent calendar','Christmas crackers','Christmas cards']}]},
+    {id:'more',l:'More',subs:[
+      {l:'Pets',items:['Cat food','Dog food','Cat litter','Dog treats']},
+      {l:'Car',items:['Jump leads','De-icer','Ice scraper','Car charger','Car phone holder']},
+      {l:'Sport',items:['Yoga mat','Dumbbells','Football','Bike lock','Bike light']}]}
   ];
   const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  $('cats').innerHTML=CAT_SETS.map((c,i)=>`<button type="button" class="cat" data-c="${c.id}" aria-pressed="${i===0}">${svg(ICON[c.id])}${c.l}</button>`).join('');
-  function showCat(id){
-    const c=CAT_SETS.find(x=>x.id===id);
+  $('cats').innerHTML=BROWSE.map((g,i)=>`<button type="button" class="cat" data-c="${g.id}" aria-pressed="${i===0}">${svg(ICON[g.id])}${esc(g.l)}</button>`).join('');
+  let curGroup='popular';
+  function showGroup(id, subIndex=0){
+    const g=BROWSE.find(x=>x.id===id); curGroup=id;
     $('cats').querySelectorAll('.cat').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.c===id)));
-    $('quick').innerHTML=c.items.map(l=>`<button type="button" class="chip" data-l="${esc(l)}">${esc(l)}</button>`).join('');
+    const subs=$('subs');
+    if(g.subs.length>1){
+      subs.innerHTML=g.subs.map((s,i)=>`<button type="button" class="sub" data-i="${i}" aria-pressed="${i===subIndex}">${esc(s.l)}</button>`).join('');
+      subs.hidden=false;
+    } else { subs.hidden=true; subs.innerHTML=''; }
+    $('quick').innerHTML=g.subs[subIndex].items.map(l=>`<button type="button" class="chip" data-l="${esc(l)}">${esc(l)}</button>`).join('');
   }
-  showCat('popular');
-  $('cats').addEventListener('click',e=>{ const b=e.target.closest('.cat'); if(b) showCat(b.dataset.c); });
-  $('quick').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=optFor(b.dataset.l); $('sf').requestSubmit(); });
+  showGroup('popular');
+  $('cats').addEventListener('click',e=>{ const b=e.target.closest('.cat'); if(b) showGroup(b.dataset.c); });
+  $('subs').addEventListener('click',e=>{ const b=e.target.closest('.sub'); if(b) showGroup(curGroup,+b.dataset.i); });
+  // a one-tap item searches exactly that product when we know it, otherwise the normal search works out the item type
+  $('quick').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; qIn.value=b.dataset.l; chosen=ALLOPTS[b.dataset.l.toLowerCase()] ? optFor(b.dataset.l) : null; $('sf').requestSubmit(); });
 
   // Google-style recent searches (kept only in this browser)
   const RKEY='nolag-recent';
@@ -1263,13 +1333,14 @@
       {shop:'Argos',name:label+', larger size',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Currys',name:label,price:r(b*0.95),stock:'in',speed:'tomorrow',arrive:'next day',fee:'£5.99 next-day delivery'},
       {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.9),stock:'in',speed:'tomorrow',arrive:'seller’s estimate',fee:'Free delivery'},
+      {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.75),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+3*864e5)),arrive:'seller’s estimate',fee:'£2.99 delivery'},
       {shop:'AliExpress',name:label+' (similar item)',price:r(b*0.35),stock:null,speed:'later',arrive:'usually 3 to 7 days from UK stock'},
       {shop:'Temu',name:label+' (similar item)',price:r(b*0.3),stock:null,speed:'later',arrive:'usually 5 to 14 working days'}
     ].map(p=>({...p,img,url:'#',sample:true}));
   }
   async function loadProducts(spec){
     const seq=++pSeq, label=spec.l, area=(((current&&current.pc)||'').toUpperCase().replace(/\s/g,'').match(/^[A-Z]{1,2}\d[A-Z\d]?/)||[''])[0], key=norm(label)+'|'+area;
-    prodList=null; $('prods').hidden=true; $('shopshead').hidden=true; $('pgroups').innerHTML='';
+    prodList=null; calSel=null; $('prods').hidden=true; $('shopshead').hidden=true; $('pgroups').innerHTML=''; $('pcalwrap').hidden=true;
     if(BANNED.test(spec.q)) return;
     let list=PCACHE[key];
     if(!list){
@@ -1284,12 +1355,48 @@
     prodList=list; drawProducts();
     if($('results').classList.contains('unknown')){ $('results').classList.remove('unknown'); $('r-title').textContent=`Products for “${label}”`; }
   }
+  // ---------- price calendar (Skyscanner-style): cheapest total for each delivery day ----------
+  let calSel=null; // chosen day index, or null for everything
+  const dayLabel=i=>i===0?'Today':i===1?'Tomorrow':i===7?'Later':new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',day:'numeric'}).format(new Date(Date.now()+i*864e5));
+  const dayLong=i=>i===0?'today':i===1?'tomorrow':i===7?'later':new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'long',day:'numeric',month:'long'}).format(new Date(Date.now()+i*864e5));
+  function dayOf(p,g){
+    if(g==='today') return 0;
+    if(g==='tomorrow') return 1;
+    if(p.arriveDate){ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date()); return Math.max(0,Math.round((Date.parse(p.arriveDate)-Date.parse(today))/864e5)); }
+    const m=String(p.arrive||'').match(/(\d+)\s*(?:-|–|to)\s*(\d+)\s*(working )?days?/i) || String(p.arrive||'').match(/(\d+)()\s*(working )?days?/i);
+    if(m){ const n=+(m[2]||m[1]); return m[3] ? Math.round(n*7/5) : n; }
+    return null;
+  }
+  function totalOf(p){ // item + delivery when the shop says what delivery costs
+    const f=String(p.fee||'');
+    if(/free/i.test(f)) return {v:p.price, known:true};
+    const m=f.match(/£\s*(\d+(?:\.\d+)?)/);
+    return m ? {v:p.price+parseFloat(m[1]), known:true} : {v:p.price, known:false};
+  }
+  function drawCalendar(items){
+    const cells=[0,1,2,3,4,5,6,7].map(i=>{ const c=items.filter(x=>x.day!=null && (i===7 || x.day<=i)).map(x=>({...x,t:totalOf(x.p)})).sort((a,b)=>a.t.v-b.t.v)[0]; return {i,c}; });
+    const priced=cells.filter(x=>x.c), wrap=$('pcalwrap');
+    if(priced.length<2){ wrap.hidden=true; return; }
+    const low=Math.min(...priced.map(x=>x.c.t.v)), firstDay=priced[0].i;
+    const cheapDay=priced.find(x=>x.c.t.v===low).i;
+    $('pcal').innerHTML=cells.map(({i,c})=>{
+      if(!c) return `<button type="button" class="pday none" disabled><span class="d">${dayLabel(i)}</span><span class="p">–</span><span class="sr">, nothing arrives by then</span></button>`;
+      const tag = i===cheapDay ? 'Cheapest' : i===firstDay ? 'Fastest' : '';
+      const price = GBP(Math.round(c.t.v*100)/100) + (c.t.known?'':'+');
+      return `<button type="button" class="pday${i===cheapDay?' cheap':''}${i===firstDay&&i!==cheapDay?' fast':''}" data-day="${i}" aria-pressed="${calSel===i}"><span class="d">${dayLabel(i)}</span><span class="p">${price}</span>${tag?`<span class="t">${tag}</span>`:''}<span class="sr">, ${i===7?'any day':'arrives by '+dayLong(i)}${c.t.known?'':', plus delivery'}</span></button>`;
+    }).join('');
+    wrap.hidden=false;
+  }
+  $('pcal').addEventListener('click',e=>{ const b=e.target.closest('.pday'); if(!b||b.disabled) return; const d=+b.dataset.day; calSel = calSel===d ? null : d; drawProducts(); });
   function drawProducts(){
     if(!prodList) return;
     const now=londonHours(), G={today:[],tomorrow:[],unknown:[],later:[]};
     prodList.forEach(p=>{ let g=p.speed in G ? p.speed : 'unknown';
       if(g==='today' && p.cutoff!=null && now>=p.cutoff){ g='tomorrow'; p={...p,missed:true}; }
       G[g].push(p); });
+    const all=Object.entries(G).flatMap(([g,ps])=>ps.map(p=>({p,g,day:dayOf(p,g)})));
+    drawCalendar(all);
+    if(calSel!=null) Object.keys(G).forEach(g=>{ G[g]=all.filter(x=>x.g===g && x.day!=null && (calSel===7 || x.day<=calSel)).map(x=>x.p); });
     let pos=0;
     const arrival=(p,g)=>{
       if(g==='today' && p.live) return `<b>Today</b><br>seller’s estimate`;
@@ -1317,7 +1424,7 @@
     const block=(g,title)=>G[g].length ? `<div class="pgroup"><h3>${title} ${count(G[g].length)}</h3><ul class="pgrid">${G[g].map(p=>card(p,g)).join('')}</ul></div>` : '';
     const shopsLater=[...new Set(G.later.map(p=>p.shop))].slice(0,3).join(', ');
     $('pgroups').innerHTML = block('today','Arrives today') + block('tomorrow','Arrives tomorrow') + block('unknown','Delivery time not listed')
-      + (G.later.length ? `<div class="pgroup"><details><summary>Takes longer, often cheaper <small>${G.later.length} from ${esc(shopsLater)}</small></summary><ul class="pgrid">${G.later.map(p=>card(p,'later')).join('')}</ul></details></div>` : '');
+      + (G.later.length ? `<div class="pgroup"><details${calSel!=null?' open':''}><summary>Takes longer, often cheaper <small>${G.later.length} from ${esc(shopsLater)}</small></summary><ul class="pgrid">${G.later.map(p=>card(p,'later')).join('')}</ul></details></div>` : '');
     $('pgroups').querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{ i.src=phImg('No photo'); },{once:true}));
     const sample=prodList.some(p=>p.sample);
     $('pbanner').hidden=!sample;

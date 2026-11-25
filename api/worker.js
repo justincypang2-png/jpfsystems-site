@@ -200,7 +200,7 @@ async function ebayLive(env, q, area) {
     return {
       shop: 'eBay', seller: it.seller?.username || '', name: String(it.title || '').slice(0, 200), price: Number(it.price?.value),
       img: it.image?.imageUrl || it.thumbnailImages?.[0]?.imageUrl || '', url: it.itemAffiliateWebUrl || it.itemWebUrl,
-      stock: 'in', speed, cutoff: null, live: true,
+      stock: 'in', speed, cutoff: null, live: true, arriveDate: max,
       arrive: !maxD ? '' : speed === 'later' ? 'by ' + shortDate(maxD) + ' (seller’s estimate)' : 'seller’s estimate',
       fee: cost === 0 ? 'Free delivery' : cost != null ? `£${cost.toFixed(2)} delivery` : '',
     };
