@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NoLag: search every same-day shop in London at once</title>
-<meta name="description" content="Type what you need and your postcode. See every shop that can deliver it to you in London today, fastest first. Or let us order it for you.">
+<title>NoLag: search every same-day shop in the UK at once</title>
+<meta name="description" content="Type what you need and your postcode. See every shop that can deliver it to you today, anywhere in the UK. Or let us order it for you.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231556D6'/%3E%3Cpath d='M17.5 5 8 18h8l-1.5 9L24 14h-8z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -492,7 +492,7 @@
   <button type="button" id="fillex">Fill in an example</button>
 </div></aside>
 
-<aside class="promo" id="promo" aria-label="Same-day cut-offs"><div class="wrap"><p><span id="promotext">Same-day delivery across London.</span><a href="#board"><span class="pl">See all cut-off times</span><span class="ps">All cut-offs</span></a></p></div></aside>
+<aside class="promo" id="promo" aria-label="Same-day cut-offs"><div class="wrap"><p><span id="promotext">Same-day delivery across the UK.</span><a href="#board"><span class="pl">See all cut-off times</span><span class="ps">All cut-offs</span></a></p></div></aside>
 <header><div class="wrap">
   <a class="logo" href="#top" aria-label="NoLag home">
     <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg></span>
@@ -506,7 +506,7 @@
 <main id="top">
 <div class="hero"><div class="wrap narrow">
   <h1>What do you need today?</h1>
-  <p class="lead">Every shop that can deliver it to you in London today, in one search.</p>
+  <p class="lead">Every shop that can deliver it to you today, in one search.</p>
   <div class="searchwrap">
   <form class="search" id="sf" role="search" novalidate>
     <div class="sfield grow">
@@ -571,14 +571,14 @@
     </div>
     <a class="btn" href="#ask" id="toask">Do it for me</a>
   </div>
-  <p class="disclaimer">Delivery charges and cut-off times come from each shop's published delivery information and can vary by item and postcode. App delivery fees (Deliveroo, Uber Eats) depend on the shop and distance. The shop list is not a live stock check, so check on the shop's site before you buy. Last checked: 24 November 2026.</p>
+  <p class="disclaimer">Delivery charges and cut-off times come from each shop's published delivery information and can vary by item and postcode. App delivery fees (Deliveroo, Uber Eats) depend on the shop and distance. The shop list is not a live stock check, so check on the shop's site before you buy. Same-day coverage is thinner in the Scottish Highlands and islands, Northern Ireland, the Isles of Scilly, the Isle of Man and the Channel Islands. Last checked: 25 November 2026.</p>
 </div></section>
 
 <section id="board" class="board" aria-labelledby="b-title"><div class="wrap">
   <div class="bhead">
     <div>
       <h2 class="s" id="b-title">Still delivering today</h2>
-      <p class="bsub">Time left to order for delivery today, across London. <span id="b-updated"></span></p>
+      <p class="bsub">Time left to order for delivery today. Cut-offs are the same across the UK. <span id="b-updated"></span></p>
     </div>
   </div>
   <ul class="bgrid" id="bgrid"></ul>
@@ -614,7 +614,7 @@
 
       <div class="field" id="f-postcode">
         <label for="postcode">Your postcode</label>
-        <span class="help" id="pc-help">Where it should be delivered. London only for now.</span>
+        <span class="help" id="pc-help">Where it should be delivered. Anywhere in the UK.</span>
         <input type="text" id="postcode" name="postcode" autocomplete="postal-code" autocapitalize="characters" aria-describedby="pc-help pc-err" placeholder="SE15 4AB" style="max-width:220px">
         <p class="error-msg" id="pc-err">Enter a UK postcode, like SE15 4AB.</p>
       </div>
@@ -723,7 +723,7 @@
         <li>Alcohol, tobacco, vapes or pharmacy medicines</li>
         <li>Items over £500</li>
         <li>Very heavy items, over 30 kg</li>
-        <li>Addresses outside London</li>
+        <li>Addresses outside the UK</li>
       </ul>
     </div>
   </div>
@@ -735,14 +735,14 @@
     <details><summary>Is searching really free?</summary><p>Yes. You buy from the shop at its normal price. We may earn a small commission from some shops, which never changes what you pay.</p></details>
     <details><summary>How do I pay?</summary><p>We send you a quote first. If you're happy, you pay the item price by a secure link and we order it. Our fee is a second link, sent only after it has arrived.</p></details>
     <details><summary>What if it's late or wrong?</summary><p>You pay no fee. We'll also chase the shop or courier for you. The item itself is covered by the shop's normal returns.</p></details>
-    <details><summary>Where do you deliver?</summary><p>London, starting in <span class="borough">Southwark and Lambeth</span>. Send your postcode anyway and we'll tell you straight away if we can help.</p></details>
-    <details><summary>Who are you?</summary><p>A small London team. A real person handles every request right now, which is why we can reply quickly and tell you honestly when something isn't possible.</p></details>
+    <details><summary>Where do you deliver?</summary><p>Anywhere in the UK. Searching works for any UK postcode. Same-day options are best in towns and cities, and there are fewer in the Scottish Highlands and islands, Northern Ireland and other islands, so we'll tell you honestly if nothing can reach you today.</p></details>
+    <details><summary>Who are you?</summary><p>A small team based in London. A real person handles every request right now, which is why we can reply quickly and tell you honestly when something isn't possible.</p></details>
   </div>
 </div></section>
 
 <div class="cta"><div class="wrap">
   <h2 class="s" style="margin:0 auto 10px">Need something today?</h2>
-  <p>Search every same-day shop in London at once.</p>
+  <p>Search every same-day shop in the UK at once.</p>
   <a class="btn" href="#top" id="backtosearch">Search now</a>
 </div></div>
 </main>
@@ -1090,11 +1090,18 @@
   }
   // Tidy what was typed: pull out a postcode and price words, keep the item.
   const LONDON_AREAS=/^(E|EC|N|NW|SE|SW|W|WC|BR|CR|DA|EN|HA|IG|KT|RM|SM|TW|UB|WD)$/;
+  // Every UK postcode area. A short code like "M1" or "B12" is only read as a postcode after "in/to/near", so "vitamin b12" stays a product.
+  const UK_AREAS=/^(AB|AL|B|BA|BB|BD|BH|BL|BN|BR|BS|BT|CA|CB|CF|CH|CM|CO|CR|CT|CV|CW|DA|DD|DE|DG|DH|DL|DN|DT|DY|E|EC|EH|EN|EX|FK|FY|G|GL|GU|GY|HA|HD|HG|HP|HR|HS|HU|HX|IG|IM|IP|IV|JE|KA|KT|KW|KY|L|LA|LD|LE|LL|LN|LS|LU|M|ME|MK|ML|N|NE|NG|NN|NP|NR|NW|OL|OX|PA|PE|PH|PL|PO|PR|RG|RH|RM|S|SA|SE|SG|SK|SL|SM|SN|SO|SP|SR|SS|ST|SW|SY|TA|TD|TF|TN|TQ|TR|TS|TW|UB|W|WA|WC|WD|WF|WN|WR|WS|WV|YO|ZE)$/;
+  const NOT_PC=/^WD40$/i; // product names that look like postcodes
   function tidy(raw){
     let text=raw.trim(), pc='', budget='';
     const full=text.match(/(?:^|\s)([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})$/i);
     if(full){ pc=full[1].toUpperCase(); text=text.slice(0,full.index).trim(); }
-    else { const out=text.match(/\s([A-Z]{1,2})(\d[A-Z\d]?)$/i); if(out && LONDON_AREAS.test(out[1].toUpperCase())){ pc=(out[1]+out[2]).toUpperCase(); text=text.slice(0,out.index).trim(); } }
+    else {
+      const near=text.match(/\s(?:in|to|near|at|around)\s+([A-Z]{1,2})(\d[A-Z\d]?)$/i), out=text.match(/\s([A-Z]{1,2})(\d[A-Z\d]?)$/i);
+      const m=near && UK_AREAS.test(near[1].toUpperCase()) ? near : (out && LONDON_AREAS.test(out[1].toUpperCase()) && !NOT_PC.test(out[1]+out[2]) ? out : null);
+      if(m){ pc=(m[1]+m[2]).toUpperCase(); text=text.slice(0,m.index).trim(); }
+    }
     const b=text.match(/\b(?:under|below|less than|max|up to|around|about)?\s*£\s*(\d+)\b|\b(?:under|below|less than|max|up to)\s+(\d+)\b/i);
     if(b){ budget=b[1]||b[2]; text=(text.slice(0,b.index)+text.slice(b.index+b[0].length)).trim(); }
     text=text.replace(/\b(cheap|cheapest|cheaper|budget|best|good|decent|affordable|quality)\b/ig,'').replace(/\s+/g,' ').trim();
@@ -1226,7 +1233,11 @@
 
   // ---------- same-day search ----------
   // Typical service facts (not live stock). Review these every couple of weeks and update "Last checked".
-  // cutoff = latest London time (24h, decimal hours) you can usually still order for delivery today.
+  // cutoff = latest UK time (24h, decimal hours) you can usually still order for delivery today.
+  // Places where national same-day services mostly don't reach (Argos lists these as excluded or 2 to 5 days).
+  const REMOTE=/^(GY|JE|IM|HS|ZE)\d|^KW1[5-7]\b|^TR2[1-5]\b|^PH4\d\b|^IV(4[1-9]|5\d)\b|^PA(2\d|[3-7]\d)\b/i;
+  const NI=/^BT\d/i;
+  const reaches=(s,pc)=>{ if(!pc) return true; const p=pc.replace(/\s/g,''); if(s.national && REMOTE.test(p)) return false; if(s.noNI && NI.test(p)) return false; return true; };
   const SOURCES=[
     {id:'amznow', how:"Amazon's 30-minute delivery, only in parts of Southwark so far", etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes', opens:8, name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
      eta:'about 30 minutes', fee:'Prime: £1.99, without Prime: £3.99, free over £20', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
@@ -1237,13 +1248,13 @@
      eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.ubereats.com/gb/search?q=${encodeURIComponent(q)}`},
     {id:'deliveroo', how:'Local shops such as B&Q, Screwfix and The Perfume Shop. The app shows the delivery time', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', opens:8, name:'Shops on Deliveroo', via:'B&Q, Screwfix, The Perfume Shop and more', cats:['home','beauty','health','gift','grocery'], cutoff:21.5, speed:45,
      eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', note:'Search in the Deliveroo app or site', url:q=>`https://deliveroo.co.uk/`},
-    {id:'johnlewis', how:'From John Lewis shops through Deliveroo and Uber Eats. The app shows the delivery time', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour', opens:9, name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
+    {id:'johnlewis', national:true, noNI:true, how:'From John Lewis shops through Deliveroo and Uber Eats. The app shows the delivery time', etaBig:'30–60 min',etaSmall:'after ordering',promise:'within the hour', opens:9, name:'John Lewis', via:'on Deliveroo and Uber Eats', cats:['tech','home','gift','beauty'], cutoff:19.5, speed:45,
      eta:'about 30 to 60 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.johnlewis.com/search?search-term=${encodeURIComponent(q)}`},
-    {id:'argos', how:'Same-day delivery by 10pm tonight', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:17, speed:240,
+    {id:'argos', national:true, noNI:true, how:'Same-day delivery by 10pm tonight', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:17, speed:240,
      eta:'by 10pm tonight', fee:'from £5.95 to £7.95', note:'Some items must be ordered by 1pm', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
-    {id:'amazon', how:'Same-day delivery in eligible postcodes', etaBig:'Today',etaSmall:'same-day',promise:'today', name:'Amazon same-day', via:'Amazon same-day delivery, in eligible postcodes', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
+    {id:'amazon', national:true, how:'Same-day delivery in eligible postcodes', etaBig:'Today',etaSmall:'same-day',promise:'today', name:'Amazon same-day', via:'Amazon same-day delivery, in eligible postcodes', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
      eta:'later today', fee:'Prime: free over £20, £1.99 under. Without Prime: £5.99', note:'Cut-off varies by item', url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
-    {id:'currys', how:'Next-day delivery, or collect from a store', today:false, etaBig:'Tomorrow',etaSmall:'next-day delivery',promise:'tomorrow', name:'Currys', via:'Next-day delivery, or collect from a store', cats:['tech','home'], cutoff:21, speed:1440,
+    {id:'currys', national:true, how:'Next-day delivery, or collect from a store', today:false, etaBig:'Tomorrow',etaSmall:'next-day delivery',promise:'tomorrow', name:'Currys', via:'Next-day delivery, or collect from a store', cats:['tech','home'], cutoff:21, speed:1440,
      eta:'tomorrow', fee:'£5.99 next-day', url:q=>`https://www.currys.co.uk/search?q=${encodeURIComponent(q)}`}
   ];
   const CATS={
@@ -1345,7 +1356,8 @@
     // Which shops sell this? Known products use their where-to-buy list; anything else falls back to category, marked "might have it".
     let opts = spec.w ? SOURCES.filter(s=>spec.w[s.id]).map(s=>({...s,fit:spec.w[s.id]}))
                       : SOURCES.filter(s=> cats.length ? s.cats.some(c=>cats.includes(c)) : GENERAL.includes(s.id)).map(s=>({...s,fit:1}));
-    opts=opts.filter(s=>!s.area || (pc ? s.area.test(pc) : false));
+    opts=opts.filter(s=>(!s.area || (pc ? s.area.test(pc) : false)) && reaches(s,pc));
+    const remote = pc && (REMOTE.test(pc.replace(/\s/g,'')) || NI.test(pc.replace(/\s/g,'')));
     const open=opts.filter(s=>!shutToday(s,now)), shut=opts.filter(s=>shutToday(s,now)).sort((a,b)=>b.fit-a.fit);
     const banned=BANNED.test(q);
     // Shops to search yourself: one honest line each, plus the order deadline. No minute promises (the apps' times depend on the shop and courier).
@@ -1380,7 +1392,7 @@
     const extra=(spec.kind?`Showing shops that sell ${spec.kind}. `:'')+(spec.budget?`Prices vary; filter by up to £${spec.budget} on the shop's site. `:'')+(HOL.note?HOL.note+' ':'');
     $('r-sub').textContent = extra + (unknown
       ? `We don't recognise “${label}” yet, so these are general shops that might have it. Try the exact product name, or let us find it for you.`
-      : (pc?`Delivering to ${pc}. `:'Add your postcode to see local-only options. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.'));
+      : (pc?`Delivering to ${pc}. `+(remote?'Fewer same-day services reach this area, so we only show the ones that do. ':''):'Add your postcode to see only shops that reach you. ') + (n ? (likely?`${likely} usually stock${likely>1?'':'s'} this. `:'None of these are known to stock it, so check each one. ') : 'Try first thing tomorrow, or ask us to find another way.'));
     $('results').classList.toggle('unknown', unknown);
     document.title = banned ? 'Not available | NoLag' : unknown ? `${label} | NoLag` : `${label}: ${n} way${n===1?'':'s'} today | NoLag`;
     $('qclear').hidden=!qIn.value;
