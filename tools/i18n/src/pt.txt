@@ -1,0 +1,503 @@
+t0|1 forma de receber «{0}» hoje
+t1|{0} formas de receber «{1}» hoje
+t2|Já ninguém consegue entregar «{0}» hoje
+t3|Ainda sem resultados para «{0}»
+t4|{0}: 1 forma hoje | NoLag
+t5|{0}: {1} formas hoje | NoLag
+t6|{0} | NoLag
+t7|Pesquisar «{0}» em vez disso
+t8|Pesquisar «{0}»
+t9|Pesquisar na {0}
+t10|Comprar na {0}
+t11|Comprar no {0}
+t12|Faltam {0} h {1} min
+t13|Faltam {0} min
+t14|{0} h {1} min
+t15|{0} min
+t16|Abre às {0}, encomendas até às {1}
+t17|Abre às {0}
+t18|Amanhã, {0}
+t19|Chega até {0}
+t20|Os mais baratos para receber até {0}
+t21|O que chega até {0}.
+t22|, chega até {0}
+t23|{0} £ com entrega
+t24|Entrega de {0} £ a {1} £
+t25|Entrega no dia seguinte {0} £
+t26|Entrega {0} £
+t27|Taxa de {0} £
+t28|Entrega: de {0} £ a {1} £
+t29|Entrega: {0} £ no dia seguinte
+t30|Entrega: {0}
+t31|Entrega em {0}.
+t32|Ainda não reconhecemos «{0}», por isso estas são lojas gerais que podem ter.
+t33|Lojas que vendem {0}.
+t34|Os preços variam; filtre até {0} £ no site da loja.
+t35|Fechado por hoje: as encomendas terminaram às {0}.
+t36|encomendas de hoje fechadas às {0}
+t37|encomendas fechadas às {0}
+t38|Encomende até às {0}:
+t39|depois encomende até às {0}, chega {1}
+t40|encomende até às {0}, chega {1}
+t41|Atualizado às {0}.
+t42|1 produto
+t43|{0} produtos
+t44|{0} de {1}
+t45|: {0}, {1} £ (abre num novo separador)
+t46|para {0} (abre num novo separador)
+t47|em {0} (abre num novo separador)
+t48|, vendido por {0}
+t49|Ideias: {0}
+t50|Copie esta ligação: {0}
+t51|Hoje até às {0}
+t52|Precisa hoje? {0} deixa de aceitar encomendas para hoje dentro de
+t53|A entrega no próprio dia está aberta. {0} aceita encomendas até às
+t54|No próprio dia: {0} fecha dentro de
+t55|Que tipo de {0} procura?
+t56|Idioma: {0}
+0|Ir para a pesquisa
+1|Pré-visualização: os resultados usam horários típicos e os pedidos não são enviados.
+2|Experimentar uma pesquisa
+3|Ver todas as horas limite
+4|Horas limite
+5|Abertos agora
+6|Como funciona
+7|Façam por mim
+8|Sobre nós
+9|Pesquisar
+10|Acessibilidade
+11|Nova pesquisa
+12|Voltar ao topo
+13|← Voltar à pesquisa
+14|Do que precisa hoje?
+15|Todas as lojas que lhe podem entregar hoje, numa só pesquisa.
+16|Artigo
+17|Código postal
+18|As sugestões aparecem enquanto escreve.
+19|Use as setas para cima e para baixo para as percorrer e Enter para escolher.
+20|Pesquisar é grátis.
+21|Compre diretamente à loja, ou deixe-nos tratar disso por si a partir de 2 £.
+22|Populares
+23|Eletrónica
+24|Casa
+25|Comida
+26|Saúde
+27|Bebé
+28|Roupa
+29|Presentes
+30|Mais
+31|A sua resposta
+32|Enviar
+33|O mais barato por dia de entrega
+34|Mostrar tudo
+35|Entrega incluída («+» significa que a entrega é à parte).
+36|Toque num dia para ver o que chega até lá.
+37|As fotos, preços e stock vêm da lista de produtos de cada loja, atualizada todas as noites. Os anúncios do eBay são em tempo real e as datas de entrega são estimativas do vendedor.
+38|O site da loja mostra o preço final antes de pagar.
+39|Ou pesquise nestas lojas por si
+40|Não encontra, ou não tem tempo para verificar?
+41|Pesquisamos em todas as lojas, encomendamos e acompanhamos a entrega por si. 2 £, 5 £ ou 10 £, pagos só depois de chegar.
+42|Copiar a ligação desta pesquisa
+43|Os custos de entrega e as horas limite vêm da informação publicada por cada loja e podem variar consoante o artigo e o código postal.
+44|As taxas de entrega das apps (Deliveroo, Uber Eats) dependem da loja e da distância.
+45|A lista de lojas não verifica o stock em tempo real, por isso confirme no site da loja antes de comprar.
+46|A cobertura no próprio dia é menor nas Terras Altas e ilhas da Escócia, na Irlanda do Norte, nas ilhas Scilly, na ilha de Man e nas ilhas do Canal.
+47|Última verificação: 25 de novembro de 2026.
+48|Que lojas ainda entregam hoje e quanto tempo tem para encomendar.
+49|Encontramos, encomendamos e acompanhamos. De 2 £ a 10 £, pagos só depois de chegar.
+50|Como funciona a pesquisa, quanto custa e respostas a perguntas frequentes.
+51|Ainda entregam hoje
+52|Tempo restante para encomendar com entrega hoje.
+53|As horas limite são iguais em todo o Reino Unido.
+54|Por agora só em algumas zonas de Southwark
+55|Fechado hoje
+56|Horas limite habituais de cada serviço.
+57|Algumas lojas fecham mais cedo na sua zona.
+58|Deixe-nos tratar disso
+59|Diga-nos o artigo e quando precisa dele.
+60|Verificamos todas as opções no próprio dia, encomendamos por si e acompanhamos até chegar.
+61|Uma resposta em 15 minutos
+62|com a origem e a hora de chegada.
+63|Preços da loja, sem margem.
+64|A nossa taxa é de 2 £, 5 £ ou 10 £.
+65|Sem taxa se chegar tarde ou errado.
+66|Só a paga depois de chegar.
+67|Diga-nos do que precisa
+68|Todas as perguntas são obrigatórias.
+69|Demora cerca de um minuto.
+70|Verifique estes campos:
+71|O artigo
+72|Seja o mais preciso possível: marca, modelo, tamanho ou cor.
+73|Diga-nos do que precisa.
+74|O seu código postal
+75|Onde deve ser entregue.
+76|Em qualquer ponto do Reino Unido.
+77|Introduza um código postal do Reino Unido, por exemplo SE15 4AB.
+78|Quando precisa?
+79|O mais depressa possível
+80|Até ao fim da tarde
+81|antes das 21:00
+82|A uma hora certa
+83|diga-nos quando
+84|A hora até à qual precisa
+85|Escolha quando precisa.
+86|Quanto custa, mais ou menos?
+87|Isto define a nossa taxa.
+88|Uma estimativa chega.
+89|Menos de 20 £
+90|De 20 £ a 100 £
+91|Mais de 100 £
+92|Escolha um preço aproximado para vermos a sua taxa.
+93|O seu nome próprio
+94|Diga-nos o seu nome.
+95|Telemóvel ou email
+96|Introduza um número de telemóvel ou email para lhe podermos responder.
+97|A sua taxa NoLag
+98|paga só depois de chegar
+99|Enviar o meu pedido
+100|Nada a pagar agora.
+101|Primeiro enviamos-lhe um orçamento.
+102|Pedido enviado
+103|Estamos a ver quem consegue entregar em
+104|o mais depressa possível.
+105|Dentro de 15 minutos enviamos um orçamento para
+106|Se concordar, paga o artigo e nós encomendamos.
+107|Quando chegar, enviamos a ligação para a nossa taxa.
+108|Nada a pagar ainda.
+109|Enviar outro pedido
+110|Voltar à pesquisa
+111|O seu pedido não foi enviado.
+112|Verifique a ligação e prima novamente «Enviar o meu pedido», ou envie-nos um email para
+113|Escreva o artigo e o seu código postal.
+114|Mostramos todas as lojas que ainda lhe podem entregar hoje, as mais rápidas primeiro.
+115|Escolha uma loja e compre
+116|Abra a loja que preferir e pague lá, ao preço normal.
+117|Não precisa de conta connosco.
+118|Ou deixe-nos tratar disso
+119|Sem tempo para verificar?
+120|Encontramos, encomendamos e acompanhamos por uma pequena taxa, paga só depois de chegar.
+121|Pesquisar é grátis.
+122|Se tratarmos disso por si, uma pequena taxa.
+123|Artigos abaixo de 20 £, como um cabo ou um postal
+124|Artigos de 20 £ a 100 £, como um carregador ou um presente
+125|Artigos acima de 100 £, ou muito difíceis de encontrar
+126|Paga o preço normal da loja e eventuais portes, mais a nossa taxa.
+127|Se chegar tarde ou errado, a taxa é 0 £.
+128|O que lhe podemos arranjar
+129|Sim
+130|Tecnologia: carregadores, cabos, jogos, tinteiros, auscultadores
+131|Casa: pequenos eletrodomésticos, ferramentas, peças de substituição
+132|Presentes: flores, bolos, balões, perfume, brinquedos, livros
+133|Outra coisa?
+134|Pergunte.
+135|Dizemos-lhe com honestidade se não conseguirmos.
+136|Por agora não
+137|Álcool, tabaco, cigarros eletrónicos ou medicamentos de farmácia
+138|Artigos acima de 500 £
+139|Artigos muito pesados, acima de 30 kg
+140|Moradas fora do Reino Unido
+141|Perguntas
+142|Pesquisar é mesmo grátis?
+143|Sim.
+144|Compra à loja, ao preço normal.
+145|Algumas lojas podem pagar-nos uma pequena comissão, o que nunca altera o que paga.
+146|Como pago?
+147|Primeiro enviamos-lhe um orçamento.
+148|Se concordar, paga o preço do artigo através de uma ligação segura e nós encomendamos.
+149|A nossa taxa é uma segunda ligação, enviada só depois de chegar.
+150|E se chegar tarde ou errado?
+151|Não paga taxa.
+152|Também reclamamos junto da loja ou da transportadora por si.
+153|O artigo fica coberto pela política de devoluções normal da loja.
+154|Onde entregam?
+155|A pesquisa funciona com qualquer código postal do Reino Unido.
+156|As opções no próprio dia são melhores em vilas e cidades, e há menos nas Terras Altas e ilhas da Escócia, na Irlanda do Norte e noutras ilhas; dizemos-lhe com honestidade se hoje nada lhe puder chegar.
+157|Quem somos?
+158|A NoLag é uma pequena equipa sediada em Londres, parte da J.P. Freglien Systems.
+159|O nosso objetivo é devolver tempo às pessoas.
+160|Ler a nossa história
+161|Sobre a NoLag
+162|A sua 25.ª hora.
+163|Todos temos as mesmas 24 horas, e demasiadas vão-se a saltar de app em app, à espera de entregas ou a atravessar a cidade por uma só coisa.
+164|A NoLag existe para lhe devolver esse tempo.
+165|Estamos a criar uma nova forma de comprar online.
+166|Diz-nos do que precisa e a NoLag liga-o a todas as lojas que lho podem entregar, grandes cadeias e lojas de bairro, numa só pesquisa.
+167|Se tiver pouco tempo, uma pessoa real da nossa equipa encontra, encomenda e acompanha por si.
+168|Menos pesquisa, menos espera, mais tempo para o que importa.
+169|Quem somos
+170|Somos uma pequena equipa sediada em Londres.
+171|A NoLag faz parte da
+172|, a empresa-mãe que a desenvolve e gere.
+173|Contacte-nos
+174|Email
+175|Lemos todas as mensagens.
+176|Precisa de algo hoje?
+177|Parte da
+178|, Londres.
+179|As alterações aplicam-se de imediato e ficam guardadas neste dispositivo.
+180|Tema
+181|Claro
+182|Escuro
+183|Como o dispositivo
+184|Tamanho do texto
+185|Alto contraste
+186|Texto mais escuro e contornos mais fortes
+187|Mais espaço entre linhas e letras
+188|Mais fácil seguir cada linha
+189|Destacar ligações
+190|Sublinhar e colorir cada ligação, com um contorno de foco forte
+191|Parar animações
+192|Sem animações nem deslocamento suave
+193|Cursor grande
+194|Um ponteiro do rato maior
+195|Repor predefinições
+196|Anterior
+197|Seguinte
+198|Aviso de pré-visualização
+199|Horas limite no próprio dia
+200|Página inicial da NoLag
+201|Principal
+202|Um produto, ou para que serve: «ps5», «aniversário», «falta de luz»
+203|Limpar a pesquisa
+204|Sugestões
+205|Explorar por grupo
+206|Secções
+207|Ou escreva a sua resposta
+208|Fechar o assistente
+209|Produtos das lojas
+210|Preço mais baixo por dia de entrega
+211|Ordenar resultados
+212|Mais da NoLag
+213|Por exemplo: um carregador USB-C de 65 W para um Lenovo
+214|Por exemplo: hoje às 19:00
+215|Fechar definições de acessibilidade
+216|Texto normal
+217|Texto grande
+218|Texto muito grande
+219|Fechar a apresentação
+220|NoLag: pesquise em todas as lojas do Reino Unido com entrega no próprio dia
+221|Telemóveis
+222|Computadores
+223|TV e áudio
+224|Jogos
+225|Cabos e energia
+226|Cozinha
+227|Aquecimento e arrefecimento
+228|Iluminação e eletricidade
+229|Limpeza
+230|Quarto e casa de banho
+231|Bricolage
+232|Dia a dia
+233|Guloseimas
+234|Bebidas e gelo
+235|Medicamentos
+236|Primeiros socorros
+237|Higiene
+238|Cabelo e barbear
+239|Perfumes
+240|Brinquedos e jogos
+241|Sapatos e malas
+242|Relógios e joias
+243|Festa
+244|Natal
+245|Animais
+246|Carro
+247|Desporto
+248|Adicione o seu código postal para ver só as lojas que chegam até si.
+249|Produtos de exemplo, para mostrar o aspeto.
+250|Os reais aparecem quando as lojas estiverem ligadas.
+251|Hoje
+252|O mais rápido
+253|Amanhã
+254|Mais tarde
+255|O mais barato
+256|, qualquer dia, mais entrega
+257|Chega hoje
+258|Exemplo
+259|antes
+260|Em stock
+261|se encomendar dentro de
+262|Restam poucas unidades
+263|Chega amanhã
+264|estimativa do vendedor
+265|Entrega grátis
+266|Demora mais, muitas vezes mais barato
+267|Stock não indicado
+268|Normalmente 3 a 7 dias a partir de stock no Reino Unido
+269|Normalmente 5 a 14 dias úteis
+270|A partir de lojas John Lewis através da Deliveroo e Uber Eats.
+271|A app mostra o tempo de entrega.
+272|Costuma ter
+273|restantes
+274|Entrega no próprio dia até às 22:00 de hoje.
+275|Entrega no dia seguinte, ou levantamento na loja.
+276|Este é um produto de exemplo.
+277|Os produtos reais abrem a loja para poder pagar.
+278|Também:
+279|Lojas locais como Tesco, GameStop e floristas.
+280|Pode ter
+281|Que tamanho?
+282|Resultados para
+283|Qual destes ajudaria?
+284|A partir de farmácias Boots próximas através da Deliveroo, Uber Eats ou Just Eat.
+285|Lojas locais como B&Q, Screwfix e The Perfume Shop.
+286|Experimente o nome exato do produto, ou deixe-nos encontrá-lo por si.
+287|Pode dizer-me um pouco mais?
+288|Uma marca, um modelo ou para que serve ajuda.
+289|Por exemplo: Samsung, 55 polegadas, para um portátil…
+290|Não podemos ajudar com isto
+291|Nenhuma destas lojas é conhecida por ter, por isso verifique cada uma.
+292|Não podemos ajudar com álcool ou tabaco
+293|Terá de os encomendar diretamente a uma loja que verifique a identificação na entrega.
+294|Menos serviços no próprio dia chegam a esta zona, por isso só mostramos os que chegam.
+295|Tente amanhã logo de manhã, ou peça-nos para encontrar outra solução.
+296|Entrega da Amazon em 30 minutos, por agora só em algumas zonas de Southwark.
+297|Produtos
+298|Pesquisas recentes
+299|recente
+300|Escreva do que precisa, por exemplo «carregador USB-C para portátil».
+301|Quando precisa
+302|Preço aproximado
+303|Predefinições repostas.
+304|As encomendas no próprio dia fecharam por hoje.
+305|A maioria das lojas volta a aceitar encomendas a partir das 8:00.
+306|As encomendas no próprio dia reabrem às 8:00.
+307|, nada chega até lá
+308|Amanhã ou mais tarde
+309|A entrega no próprio dia está aberta.
+310|Entrega no próprio dia em códigos postais elegíveis.
+311|Sem Prime: 5,99 £
+312|Dia de Natal: as grandes lojas estão fechadas.
+313|Algumas lojas pequenas nas apps de entrega podem estar abertas.
+314|Dia de Natal: confirme as horas limite.
+315|Fechado no dia de Natal.
+316|Véspera de Natal: as lojas podem deixar de aceitar encomendas mais cedo, por isso confirme a hora limite no site da loja.
+317|Véspera de Natal: confirme as horas limite.
+318|Está offline.
+319|Os resultados podem estar desatualizados até voltar a ligar-se.
+320|Novamente online.
+321|A enviar…
+322|Esse código postal não parece correto. Experimente um como SE15 4AB, ou deixe em branco.
+323|A NoLag pesquisa em todas as lojas por si: escreva o artigo de que precisa, por exemplo «chaleira» ou «carregador de telemóvel».
+324|A mostrar tudo, incluindo opções mais lentas.
+325|O mais barato no total, qualquer dia
+326|Melhor opção
+327|Tempo de entrega não indicado
+328|Encomendar até
+329|As apps de entrega abrem a partir das 8:00.
+330|As lojas nas apps de entrega abrem a partir das 8:00. As encomendas no próprio dia estão abertas até ao fim do dia.
+331|A hora limite varia por artigo
+332|Alguns artigos têm de ser encomendados até às 13:00
+333|Pesquise na app ou no site da Deliveroo
+334|Ligação copiada. Cole-a onde quiser para partilhar esta pesquisa.
+335|Por agora, produtos de exemplo. Em breve aparecem aqui fotos, preços e stock reais das lojas.
+336|Qual precisa?
+337|Qual?
+338|De que tipo?
+339|Que carregador?
+340|Que cabo?
+341|Que ventoinha?
+342|Que casquilho?
+343|Que telemóvel?
+344|Que portátil?
+345|Que tablet?
+346|Que relógio?
+347|Que aspirador?
+348|Que coluna?
+349|Que máquina de café?
+350|Que artigo de impressora?
+351|Que artigo de iPhone?
+352|Que artigo de Xbox?
+353|Que artigo de Nintendo?
+354|Que artigo de PS5?
+355|Antes de uma viagem
+356|Noite a dois
+357|Estou doente
+358|Noite de jogos
+359|Aquecimento avariado
+360|Convidados esta noite
+361|Mudança de casa
+362|Falta de luz
+363|Emergência no trabalho
+364|Essenciais para bebé
+365|Coisas de Natal
+366|Aniversário à última hora
+367|Idioma
+368|Os nomes das lojas e dos produtos ficam em inglês, porque os sites das lojas estão em inglês.
+369|Escolha o seu idioma
+370|Fechar definições de idioma
+371|Lamentamos, não foi possível carregar esse idioma. Verifique a ligação e tente novamente.
+372|Boxing Day: os horários são diferentes, por isso confirme com a loja antes de encomendar.
+373|Véspera de Ano Novo: as horas limite podem ser mais cedo do que o habitual.
+374|Dia de Ano Novo: muitas lojas estão fechadas ou com horário de feriado.
+375|Chega um novo pedido à sua caixa de entrada
+376|Verifica todas as opções no próprio dia
+377|Envia o orçamento
+378|Eles pagam, você encomenda
+379|Chegou: agora a taxa
+380|Regista a encomenda
+381|eletrodomésticos de cozinha
+382|utensílios de cozinha
+383|eletrodomésticos
+384|roupa de cama e toalhas
+385|produtos de higiene
+386|aparelhos de cuidado pessoal
+387|artigos para bebé
+388|medicamentos e primeiros socorros
+389|acessórios de tecnologia
+390|postais e papel de embrulho
+391|presentes
+392|brinquedos e jogos
+393|bricolage e limpeza
+394|comida e mercearia
+395|artigos para animais
+396|roupa e acessórios
+397|desporto e fitness
+398|telemóveis e tecnologia
+399|roupa e calçado
+400|brinquedos
+401|acessórios para carro
+402|30 min
+403|depois de encomendar
+404|em cerca de 30 minutos
+405|Amazon, teste de entrega em 30 minutos
+406|cerca de 30 minutos
+407|Prime: 1,99 £, sem Prime: 3,99 £, grátis acima de 20 £
+408|A app mostra o tempo de entrega
+409|20–45 min
+410|em 20 a 45 minutos
+411|na Deliveroo, Uber Eats ou Just Eat
+412|cerca de 20 a 45 minutos
+413|taxa de entrega da app, mostrada no pagamento
+414|Tesco, GameStop, JD Sports, floristas e mais
+415|B&Q, Screwfix, The Perfume Shop e mais
+416|30–60 min
+417|dentro de uma hora
+418|na Deliveroo e Uber Eats
+419|cerca de 30 a 60 minutos
+420|Entrega no próprio dia até às 22:00 de hoje
+421|Até às 22:00
+422|hoje à noite
+423|até às 22:00 de hoje
+424|Entrega Fast Track no próprio dia
+425|de 5,95 £ a 7,95 £
+426|Entrega no próprio dia em códigos postais elegíveis
+427|no próprio dia
+428|hoje
+429|Entrega da Amazon no próprio dia, em códigos postais elegíveis
+430|mais logo
+431|Prime: grátis acima de 20 £, 1,99 £ abaixo.
+432|Entrega no dia seguinte, ou levantamento na loja
+433|entrega no dia seguinte
+434|amanhã
+435|5,99 £ no dia seguinte
+436|Entrega de 5,95 £ a 7,95 £
+437|Entrega no dia seguinte 5,99 £
+438|Entrega 3,49 £
+439|Entrega 2,99 £
+440|em cerca de 35 minutos
+441|até às 21:30 de hoje
+442|entre as 20:00 e as 22:00 de hoje
+443|Entrega da Amazon em 30 minutos, por agora só em algumas zonas de Southwark.
+444|Pesquisar para amanhã
+445|Menu

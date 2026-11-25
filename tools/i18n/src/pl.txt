@@ -1,0 +1,503 @@
+t0|Sposoby na „{0}” dziś: 1
+t1|Sposoby na „{1}” dziś: {0}
+t2|Nikt już dziś nie dostarczy „{0}”
+t3|Brak wyników dla „{0}”
+t4|{0}: opcje dziś: 1 | NoLag
+t5|{0}: opcje dziś: {1} | NoLag
+t6|{0} | NoLag
+t7|Zamiast tego szukaj „{0}”
+t8|Szukaj „{0}”
+t9|Szukaj w {0}
+t10|Kup w {0}
+t11|Kup na {0}
+t12|Zostało {0} godz. {1} min
+t13|Zostało {0} min
+t14|{0} godz. {1} min
+t15|{0} min
+t16|Otwarte od {0}, zamówienia do {1}
+t17|Otwarte od {0}
+t18|Jutro, {0}
+t19|Dostawa do {0}
+t20|Najtaniej z dostawą do {0}
+t21|Co dotrze do {0}.
+t22|, dostawa do {0}
+t23|{0} £ z dostawą
+t24|Dostawa od {0} £ do {1} £
+t25|Dostawa następnego dnia {0} £
+t26|Dostawa {0} £
+t27|Opłata {0} £
+t28|Dostawa: od {0} £ do {1} £
+t29|Dostawa: {0} £ następnego dnia
+t30|Dostawa: {0}
+t31|Dostawa do: {0}.
+t32|Jeszcze nie rozpoznajemy „{0}”, więc oto ogólne sklepy, które mogą to mieć.
+t33|Sklepy, które sprzedają: {0}.
+t34|Ceny się różnią; na stronie sklepu ustaw filtr do {0} £.
+t35|Na dziś zamknięte: zamówienia przyjmowano do {0}.
+t36|dzisiejsze zamówienia zamknięto o {0}
+t37|zamówienia zamknięto o {0}
+t38|Zamów do {0}:
+t39|potem zamów do {0}, dostawa {1}
+t40|zamów do {0}, dostawa {1}
+t41|Zaktualizowano o {0}.
+t42|1 produkt
+t43|Produkty: {0}
+t44|{0} z {1}
+t45|: {0}, {1} £ (otwiera się w nowej karcie)
+t46|dla {0} (otwiera się w nowej karcie)
+t47|w {0} (otwiera się w nowej karcie)
+t48|, sprzedawca: {0}
+t49|Pomysły: {0}
+t50|Skopiuj ten link: {0}
+t51|Dziś do {0}
+t52|Potrzebne dziś? {0} przestaje przyjmować zamówienia na dziś za
+t53|Dostawa tego samego dnia jest otwarta. {0} przyjmuje zamówienia do
+t54|Tego samego dnia: {0} zamyka za
+t55|Jakiego rodzaju ({0}) szukasz?
+t56|Język: {0}
+0|Przejdź do wyszukiwania
+1|Podgląd: wyniki opierają się na typowych godzinach, a zgłoszenia nie są wysyłane.
+2|Wypróbuj wyszukiwanie
+3|Zobacz wszystkie godziny zamknięcia
+4|Godziny zamknięcia
+5|Teraz otwarte
+6|Jak to działa
+7|Zrób to za mnie
+8|O nas
+9|Szukaj
+10|Dostępność
+11|Nowe wyszukiwanie
+12|Do góry
+13|← Wróć do wyszukiwania
+14|Czego potrzebujesz dziś?
+15|Wszystkie sklepy, które mogą dostarczyć to dziś, w jednym wyszukiwaniu.
+16|Produkt
+17|Kod pocztowy
+18|Podpowiedzi pojawiają się podczas pisania.
+19|Strzałkami w górę i w dół przechodź między nimi, a Enter wybiera.
+20|Wyszukiwanie jest bezpłatne.
+21|Kup bezpośrednio w sklepie albo pozwól nam to zrobić za ciebie już od 2 £.
+22|Popularne
+23|Elektronika
+24|Dom
+25|Jedzenie
+26|Zdrowie
+27|Dziecko
+28|Ubrania
+29|Prezenty
+30|Więcej
+31|Twoja odpowiedź
+32|Wyślij
+33|Najtaniej według dnia dostawy
+34|Pokaż wszystko
+35|Z dostawą („+” oznacza, że dostawa jest płatna osobno).
+36|Dotknij dnia, by zobaczyć, co do tego czasu dotrze.
+37|Zdjęcia, ceny i stany magazynowe pochodzą z listy produktów każdego sklepu, aktualizowanej co noc. Oferty eBay są na żywo, a ich terminy dostawy to szacunki sprzedawców.
+38|Strona sklepu pokaże ostateczną cenę przed zapłatą.
+39|Albo przeszukaj te sklepy samodzielnie
+40|Nie możesz znaleźć albo nie masz czasu sprawdzać?
+41|Przeszukamy wszystkie sklepy, zamówimy i będziemy śledzić dostawę za ciebie. 2 £, 5 £ lub 10 £, płatne dopiero po dostawie.
+42|Skopiuj link do tego wyszukiwania
+43|Koszty dostawy i godziny zamknięcia pochodzą z informacji publikowanych przez sklepy i mogą się różnić zależnie od produktu i kodu pocztowego.
+44|Opłaty za dostawę w aplikacjach (Deliveroo, Uber Eats) zależą od sklepu i odległości.
+45|Lista sklepów nie sprawdza stanów na żywo, więc przed zakupem sprawdź na stronie sklepu.
+46|Dostawa tego samego dnia jest słabiej dostępna w szkockich Highlands i na wyspach, w Irlandii Północnej, na wyspach Scilly, na wyspie Man i na Wyspach Normandzkich.
+47|Ostatnio sprawdzono: 25 listopada 2026.
+48|Które sklepy jeszcze dziś dostarczają i ile masz czasu na zamówienie.
+49|Znajdziemy, zamówimy i będziemy śledzić. Od 2 £ do 10 £, płatne dopiero po dostawie.
+50|Jak działa wyszukiwanie, ile kosztuje i odpowiedzi na częste pytania.
+51|Jeszcze dziś dostarczają
+52|Czas na zamówienie z dostawą dziś.
+53|Godziny zamknięcia są takie same w całej Wielkiej Brytanii.
+54|Na razie tylko w części Southwark
+55|Dziś zamknięte
+56|Typowe godziny zamknięcia każdej usługi.
+57|Niektóre sklepy zamykają wcześniej w twojej okolicy.
+58|Pozwól nam to zrobić
+59|Podaj produkt i kiedy go potrzebujesz.
+60|Sprawdzimy wszystkie opcje na dziś, zamówimy za ciebie i będziemy pilnować dostawy do końca.
+61|Odpowiedź w ciągu 15 minut
+62|z informacją, skąd i kiedy dotrze.
+63|Ceny sklepów, bez narzutu.
+64|Nasza opłata to 2 £, 5 £ lub 10 £.
+65|Bez opłaty, jeśli coś się spóźni lub będzie nie tak.
+66|Płacisz ją dopiero po dostawie.
+67|Powiedz nam, czego potrzebujesz
+68|Wszystkie pytania są wymagane.
+69|Zajmie to około minuty.
+70|Sprawdź te pola:
+71|Produkt
+72|Podaj jak najwięcej szczegółów: marka, model, rozmiar lub kolor.
+73|Powiedz nam, czego potrzebujesz.
+74|Twój kod pocztowy
+75|Gdzie ma zostać dostarczone.
+76|W dowolnym miejscu w Wielkiej Brytanii.
+77|Wpisz brytyjski kod pocztowy, np. SE15 4AB.
+78|Kiedy tego potrzebujesz?
+79|Jak najszybciej
+80|Do wieczora
+81|przed 21:00
+82|Na konkretną godzinę
+83|podaj godzinę
+84|Godzina, na którą tego potrzebujesz
+85|Wybierz, kiedy tego potrzebujesz.
+86|Ile to mniej więcej kosztuje?
+87|Od tego zależy nasza opłata.
+88|Wystarczy szacunek.
+89|Poniżej 20 £
+90|Od 20 £ do 100 £
+91|Powyżej 100 £
+92|Wybierz przybliżoną cenę, żebyśmy mogli pokazać opłatę.
+93|Twoje imię
+94|Podaj swoje imię.
+95|Telefon lub e-mail
+96|Podaj numer telefonu lub e-mail, abyśmy mogli odpowiedzieć.
+97|Twoja opłata NoLag
+98|płatna dopiero po dostawie
+99|Wyślij zgłoszenie
+100|Teraz nic nie płacisz.
+101|Najpierw wyślemy wycenę.
+102|Zgłoszenie wysłane
+103|Sprawdzamy, kto najszybciej dostarczy pod adres
+104|— wkrótce odpowiemy.
+105|W ciągu 15 minut wyślemy wycenę na
+106|Jeśli ci pasuje, płacisz za produkt, a my go zamawiamy.
+107|Po dostawie wyślemy link do naszej opłaty.
+108|Na razie nic do zapłaty.
+109|Wyślij kolejne zgłoszenie
+110|Wróć do wyszukiwania
+111|Zgłoszenie nie zostało wysłane.
+112|Sprawdź połączenie i ponownie naciśnij „Wyślij zgłoszenie” albo napisz do nas na
+113|Wpisz produkt i swój kod pocztowy.
+114|Pokazujemy wszystkie sklepy, które mogą jeszcze dziś dostarczyć, najszybsze na początku.
+115|Wybierz sklep i kup
+116|Otwórz wybrany sklep i zapłać tam, w normalnej cenie.
+117|Nie potrzebujesz u nas konta.
+118|Albo pozwól nam to zrobić
+119|Nie masz czasu sprawdzać?
+120|Znajdziemy, zamówimy i będziemy śledzić za niewielką opłatą, płatną dopiero po dostawie.
+121|Wyszukiwanie jest bezpłatne.
+122|Jeśli zrobimy to za ciebie, niewielka opłata.
+123|Produkty poniżej 20 £, np. kabel lub kartka
+124|Produkty od 20 £ do 100 £, np. ładowarka lub prezent
+125|Produkty powyżej 100 £ albo bardzo trudne do znalezienia
+126|Płacisz normalną cenę sklepu i ewentualną dostawę, plus naszą opłatę.
+127|Jeśli coś się spóźni lub będzie nie tak, opłata wynosi 0 £.
+128|Co możemy dla ciebie zdobyć
+129|Tak
+130|Elektronika: ładowarki, kable, gry, tusz do drukarki, słuchawki
+131|Dom: małe AGD, narzędzia, części zamienne
+132|Prezenty: kwiaty, torty, balony, perfumy, zabawki, książki
+133|Coś innego?
+134|Zapytaj.
+135|Uczciwie powiemy, jeśli nie damy rady.
+136|Na razie nie
+137|Alkohol, tytoń, e-papierosy lub leki apteczne
+138|Produkty powyżej 500 £
+139|Bardzo ciężkie produkty, powyżej 30 kg
+140|Adresy poza Wielką Brytanią
+141|Pytania
+142|Czy wyszukiwanie naprawdę jest bezpłatne?
+143|Tak.
+144|Kupujesz w sklepie po normalnej cenie.
+145|Niektóre sklepy mogą płacić nam niewielką prowizję, co nigdy nie zmienia twojej ceny.
+146|Jak zapłacić?
+147|Najpierw wysyłamy wycenę.
+148|Jeśli ci pasuje, płacisz cenę produktu przez bezpieczny link, a my go zamawiamy.
+149|Nasza opłata to drugi link, wysyłany dopiero po dostawie.
+150|A jeśli się spóźni lub będzie nie tak?
+151|Nie płacisz opłaty.
+152|Dodatkowo sami będziemy ponaglać sklep lub kuriera.
+153|Sam produkt objęty jest standardowymi zasadami zwrotów sklepu.
+154|Gdzie dostarczacie?
+155|Wyszukiwanie działa z każdym brytyjskim kodem pocztowym.
+156|Opcji na ten sam dzień jest najwięcej w miastach, a mniej w szkockich Highlands i na wyspach, w Irlandii Północnej i na innych wyspach; uczciwie powiemy, jeśli dziś nic do ciebie nie dotrze.
+157|Kim jesteśmy?
+158|NoLag to mały zespół z Londynu, część J.P. Freglien Systems.
+159|Naszym celem jest oddawanie ludziom czasu.
+160|Przeczytaj naszą historię
+161|O NoLag
+162|Twoja 25. godzina.
+163|Każdy ma te same 24 godziny, a zbyt wiele z nich mija na przeskakiwaniu między aplikacjami, czekaniu na dostawy albo jeżdżeniu przez miasto po jedną rzecz.
+164|NoLag istnieje, by oddać ci ten czas.
+165|Tworzymy nowy sposób robienia zakupów online.
+166|Mówisz, czego potrzebujesz, a NoLag łączy cię ze wszystkimi sklepami, które mogą to dostarczyć, dużymi sieciami i lokalnymi sklepami, w jednym wyszukiwaniu.
+167|Jeśli brakuje ci czasu, prawdziwa osoba z naszego zespołu znajdzie, zamówi i dopilnuje dostawy za ciebie.
+168|Mniej szukania, mniej czekania, więcej czasu na to, co ważne.
+169|Kim jesteśmy
+170|Jesteśmy małym zespołem z Londynu.
+171|NoLag należy do
+172|, spółki matki, która go tworzy i prowadzi.
+173|Kontakt
+174|E-mail
+175|Czytamy każdą wiadomość.
+176|Potrzebujesz czegoś dziś?
+177|Część
+178|, Londyn.
+179|Zmiany działają od razu i są zapisywane na tym urządzeniu.
+180|Motyw
+181|Jasny
+182|Ciemny
+183|Jak urządzenie
+184|Rozmiar tekstu
+185|Wysoki kontrast
+186|Ciemniejszy tekst i wyraźniejsze obramowania
+187|Większe odstępy między wierszami i literami
+188|Łatwiej śledzić każdy wiersz
+189|Wyróżnij linki
+190|Podkreśl i pokoloruj każdy link, z grubą ramką fokusu
+191|Zatrzymaj animacje
+192|Bez animacji i płynnego przewijania
+193|Duży kursor
+194|Większy wskaźnik myszy
+195|Przywróć ustawienia standardowe
+196|Wstecz
+197|Dalej
+198|Informacja o podglądzie
+199|Godziny zamknięcia na ten sam dzień
+200|Strona główna NoLag
+201|Główne
+202|Produkt albo do czego służy: „ps5”, „urodziny”, „brak prądu”
+203|Wyczyść wyszukiwanie
+204|Podpowiedzi
+205|Przeglądaj według grup
+206|Sekcje
+207|Albo wpisz odpowiedź
+208|Zamknij asystenta
+209|Produkty ze sklepów
+210|Najniższa cena według dnia dostawy
+211|Sortuj wyniki
+212|Więcej od NoLag
+213|Na przykład: ładowarka USB-C 65 W do laptopa Lenovo
+214|Na przykład: dziś 19:00
+215|Zamknij ustawienia dostępności
+216|Standardowy tekst
+217|Duży tekst
+218|Bardzo duży tekst
+219|Zamknij przewodnik
+220|NoLag: przeszukaj naraz wszystkie sklepy w Wielkiej Brytanii z dostawą tego samego dnia
+221|Telefony
+222|Komputery
+223|TV i audio
+224|Gry
+225|Kable i zasilanie
+226|Kuchnia
+227|Ogrzewanie i chłodzenie
+228|Oświetlenie i prąd
+229|Sprzątanie
+230|Sypialnia i łazienka
+231|Majsterkowanie
+232|Na co dzień
+233|Przekąski
+234|Napoje i lód
+235|Leki
+236|Pierwsza pomoc
+237|Kosmetyki
+238|Włosy i golenie
+239|Perfumy
+240|Zabawki i gry
+241|Buty i torby
+242|Zegarki i biżuteria
+243|Impreza
+244|Boże Narodzenie
+245|Zwierzęta
+246|Samochód
+247|Sport
+248|Dodaj kod pocztowy, by widzieć tylko sklepy, które do ciebie dowożą.
+249|Przykładowe produkty, by pokazać układ.
+250|Prawdziwe pojawią się po podłączeniu sklepów.
+251|Dziś
+252|Najszybciej
+253|Jutro
+254|Później
+255|Najtaniej
+256|, dowolny dzień, plus dostawa
+257|Dostawa dziś
+258|Przykład
+259|wcześniej
+260|Dostępne
+261|jeśli zamówisz w ciągu
+262|Zostało tylko kilka
+263|Dostawa jutro
+264|szacunek sprzedawcy
+265|Darmowa dostawa
+266|Dłużej, często taniej
+267|Stan magazynowy nieznany
+268|Zwykle 3–7 dni z magazynu w Wielkiej Brytanii
+269|Zwykle 5–14 dni roboczych
+270|Ze sklepów John Lewis przez Deliveroo i Uber Eats.
+271|Aplikacja pokazuje czas dostawy.
+272|Zwykle ma
+273|zostało
+274|Dostawa tego samego dnia do 22:00.
+275|Dostawa następnego dnia lub odbiór w sklepie.
+276|To przykładowy produkt.
+277|Prawdziwe produkty otwierają sklep, gdzie możesz zapłacić.
+278|Także:
+279|Lokalne sklepy, takie jak Tesco, GameStop i kwiaciarnie.
+280|Może mieć
+281|Jaki rozmiar?
+282|Wyniki dla
+283|Co z tego by pomogło?
+284|Z pobliskich drogerii Boots przez Deliveroo, Uber Eats lub Just Eat.
+285|Lokalne sklepy, takie jak B&Q, Screwfix i The Perfume Shop.
+286|Wpisz dokładną nazwę produktu albo pozwól nam go znaleźć.
+287|Możesz powiedzieć coś więcej?
+288|Pomoże marka, model albo do czego to ma służyć.
+289|Na przykład: Samsung, 55 cali, do laptopa…
+290|Nie możemy w tym pomóc
+291|Żaden z tych sklepów nie jest znany z tego produktu, więc sprawdź każdy.
+292|Nie pomagamy przy alkoholu ani tytoniu
+293|Musisz zamówić je bezpośrednio w sklepie, który sprawdza dowód tożsamości przy dostawie.
+294|Mniej usług na ten sam dzień dociera w tę okolicę, więc pokazujemy tylko te, które dowożą.
+295|Spróbuj jutro z samego rana albo poproś nas o inne rozwiązanie.
+296|Dostawa Amazon w 30 minut, na razie tylko w części Southwark.
+297|Produkty
+298|Ostatnie wyszukiwania
+299|ostatnie
+300|Wpisz, czego potrzebujesz, np. „ładowarka USB-C do laptopa”.
+301|Kiedy tego potrzebujesz
+302|Przybliżona cena
+303|Przywrócono ustawienia standardowe.
+304|Zamówienia na dziś są już zamknięte.
+305|Większość sklepów przyjmuje zamówienia ponownie od 8:00.
+306|Zamówienia na ten sam dzień ponownie od 8:00.
+307|, do tego czasu nic nie dotrze
+308|Jutro lub później
+309|Dostawa tego samego dnia jest otwarta.
+310|Dostawa tego samego dnia w obsługiwanych kodach pocztowych.
+311|Bez Prime: 5,99 £
+312|Boże Narodzenie: duże sklepy są zamknięte.
+313|Niektóre małe sklepy w aplikacjach dostawczych mogą być otwarte.
+314|Boże Narodzenie: sprawdź godziny zamknięcia.
+315|Zamknięte w Boże Narodzenie.
+316|Wigilia: sklepy mogą przestać przyjmować zamówienia wcześniej niż zwykle, więc sprawdź godzinę zamknięcia na stronie sklepu.
+317|Wigilia: sprawdź godziny zamknięcia.
+318|Jesteś offline.
+319|Wyniki mogą być nieaktualne, dopóki nie połączysz się ponownie.
+320|Znowu online.
+321|Wysyłanie…
+322|Ten kod pocztowy wygląda na błędny. Spróbuj np. SE15 4AB albo zostaw puste.
+323|NoLag przeszukuje za ciebie wszystkie sklepy: wpisz potrzebny produkt, np. „czajnik” lub „ładowarka do telefonu”.
+324|Pokazujemy wszystko, także wolniejsze opcje.
+325|Najtaniej łącznie, dowolny dzień
+326|Najlepszy wybór
+327|Czas dostawy nieznany
+328|Zamów najpóźniej
+329|Aplikacje dostawcze działają od 8:00.
+330|Sklepy w aplikacjach dostawczych otwierają się od 8:00. Zamówienia na ten sam dzień są przyjmowane do wieczora.
+331|Godzina zamknięcia zależy od produktu
+332|Niektóre produkty trzeba zamówić do 13:00
+333|Szukaj w aplikacji lub na stronie Deliveroo
+334|Link skopiowany. Wklej go, gdzie chcesz, by udostępnić to wyszukiwanie.
+335|Na razie przykładowe produkty. Wkrótce pojawią się tu prawdziwe zdjęcia, ceny i stany ze sklepów.
+336|Którego potrzebujesz?
+337|Który?
+338|Jaki rodzaj?
+339|Która ładowarka?
+340|Który kabel?
+341|Który wentylator?
+342|Który trzonek?
+343|Który telefon?
+344|Który laptop?
+345|Który tablet?
+346|Który zegarek?
+347|Który odkurzacz?
+348|Który głośnik?
+349|Który ekspres do kawy?
+350|Który produkt do drukarki?
+351|Który produkt do iPhone'a?
+352|Który produkt do Xbox?
+353|Który produkt do Nintendo?
+354|Który produkt do PS5?
+355|Przed podróżą
+356|Randka
+357|Złe samopoczucie
+358|Wieczór gier
+359|Zepsute ogrzewanie
+360|Goście dziś wieczorem
+361|Przeprowadzka
+362|Brak prądu
+363|Nagła sprawa w pracy
+364|Niezbędnik dla dziecka
+365|Świąteczne rzeczy
+366|Urodziny na ostatnią chwilę
+367|Język
+368|Nazwy sklepów i produktów pozostają po angielsku, bo strony sklepów są po angielsku.
+369|Wybierz język
+370|Zamknij ustawienia języka
+371|Nie udało się wczytać tego języka. Sprawdź połączenie i spróbuj ponownie.
+372|Drugi dzień świąt: godziny są inne, więc przed zamówieniem sprawdź sklep.
+373|Sylwester: godziny zamknięcia mogą być wcześniejsze niż zwykle.
+374|Nowy Rok: wiele sklepów jest zamkniętych lub działa w godzinach świątecznych.
+375|Nowe zgłoszenie trafia do twojej skrzynki
+376|Sprawdzasz wszystkie opcje na ten sam dzień
+377|Wysyłasz wycenę
+378|Klient płaci, ty zamawiasz
+379|Dotarło: teraz opłata
+380|Zapisujesz zamówienie
+381|sprzęt kuchenny
+382|akcesoria kuchenne
+383|AGD
+384|pościel i ręczniki
+385|kosmetyki
+386|elektryczne akcesoria do pielęgnacji
+387|rzeczy dla dzieci
+388|leki i pierwsza pomoc
+389|akcesoria elektroniczne
+390|kartki i papier do pakowania
+391|prezenty
+392|zabawki i gry
+393|majsterkowanie i sprzątanie
+394|jedzenie i artykuły spożywcze
+395|artykuły dla zwierząt
+396|ubrania i dodatki
+397|sport i fitness
+398|telefony i elektronika
+399|ubrania i buty
+400|zabawki
+401|akcesoria samochodowe
+402|30 min
+403|po zamówieniu
+404|w około 30 minut
+405|Amazon, test dostawy w 30 minut
+406|około 30 minut
+407|Prime: 1,99 £, bez Prime: 3,99 £, za darmo od 20 £
+408|Aplikacja pokazuje czas dostawy
+409|20–45 min
+410|w 20–45 minut
+411|przez Deliveroo, Uber Eats lub Just Eat
+412|około 20–45 minut
+413|opłata za dostawę w aplikacji, widoczna przy płatności
+414|Tesco, GameStop, JD Sports, kwiaciarnie i inne
+415|B&Q, Screwfix, The Perfume Shop i inne
+416|30–60 min
+417|w ciągu godziny
+418|przez Deliveroo i Uber Eats
+419|około 30–60 minut
+420|Dostawa tego samego dnia do 22:00
+421|Do 22:00
+422|dziś wieczorem
+423|do 22:00 dziś
+424|Dostawa Fast Track tego samego dnia
+425|od 5,95 £ do 7,95 £
+426|Dostawa tego samego dnia w obsługiwanych kodach pocztowych
+427|tego samego dnia
+428|dziś
+429|Dostawa Amazon tego samego dnia, w obsługiwanych kodach pocztowych
+430|później dziś
+431|Prime: za darmo od 20 £, poniżej 1,99 £.
+432|Dostawa następnego dnia lub odbiór w sklepie
+433|dostawa następnego dnia
+434|jutro
+435|5,99 £ następnego dnia
+436|Dostawa od 5,95 £ do 7,95 £
+437|Dostawa następnego dnia 5,99 £
+438|Dostawa 3,49 £
+439|Dostawa 2,99 £
+440|w około 35 minut
+441|do 21:30 dziś
+442|między 20:00 a 22:00 dziś
+443|Dostawa Amazon w 30 minut, na razie tylko w części Southwark.
+444|Szukaj na jutro
+445|Menu

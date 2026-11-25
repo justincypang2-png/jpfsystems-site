@@ -41,7 +41,8 @@ export default {
       if (!q) return reply({ ai: false });
       if (BLOCKED.test(q) || history.some(h => BLOCKED.test(h.a))) return reply({ ai: true, done: true, question: '', options: [], search: '' });
       const user = `They searched: "${q}"` + (history.length ? '\nTheir answers so far:\n' + history.map(h => `- ${h.q} ${h.a}`).join('\n') : '') +
-        `\nQuestions asked so far: ${history.length} of 2.`;
+        `\nQuestions asked so far: ${history.length} of 2.` +
+        (LANG_NAMES[body.lang] ? `\nWrite "question" and "options" in ${LANG_NAMES[body.lang]}. Keep "search" in English, because the shops search in English.` : '');
       try {
         const out = await env.AI.run('@cf/meta/llama-3.1-8b-instruct-fast', {
           messages: [{ role: 'system', content: ASK_PROMPT }, { role: 'user', content: user }],
@@ -243,6 +244,7 @@ async function ebayLive(env, q, area) {
 
 // ---------- search assistant settings ----------
 const BLOCKED = /\b(beers?|wines?|vodka|gin|whiske?y|rum|spirits?|alcohol|lager|cider|cigarettes?|cigars?|tobacco|nicotine|vapes?|vaping|e-?cigs?|knife|knives|weapon|gun|drugs?)\b/i;
+const LANG_NAMES = { fr: 'French', es: 'Spanish', de: 'German', it: 'Italian', pt: 'Portuguese', pl: 'Polish', zh: 'Simplified Chinese', ar: 'Arabic', hi: 'Hindi' };
 const ASK_PROMPT = `You help people in the UK find an item they need delivered today. They typed a search into a shopping site.
 Decide whether it is specific enough to search shops for. Specific enough means a shopper could pick the right product: for example "PS5 DualSense controller", "43 inch smart TV", "65W USB-C laptop charger", "red roses bouquet".
 If it is not specific enough, ask ONE short, friendly question (under 12 words) about the most important missing detail: what type, what size, what it must fit or work with, or who it is for. Give 2 to 5 short answer options (each under 25 characters) that a person can tap. Do not ask about price, colour or brand unless it truly decides the product.
