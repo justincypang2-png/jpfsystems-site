@@ -703,6 +703,8 @@
     // activation email there: click it, then send the test again.
     // Search memory (Cloudflare Worker). Leave empty to switch recording off.
     API_URL: 'https://nolag-api.justincypang2.workers.dev',
+    // Before launch: show labelled sample products when the engine has no real ones yet. Set to false before posting publicly.
+    SAMPLE_PRODUCTS: true,
     FORM_ENDPOINT: 'https://formsubmit.co/ajax/enquiries@jpfsystems.co',
     CONTACT_LINE: 'enquiries@jpfsystems.co',
     BOROUGHS: 'Southwark and Lambeth'
@@ -1373,6 +1375,7 @@
           const r=await fetch(CONFIG.API_URL.replace(/\/$/,'')+'/search?q='+encodeURIComponent(label)+(area?'&area='+area:''),{signal:ac.signal}); clearTimeout(t);
           list=r.ok ? ((await r.json()).products||[]) : []; }catch(e){ list=[]; } }
       else list=[];
+      if(!list.length && !DEMO && CONFIG.SAMPLE_PRODUCTS && spec.w) list=sampleProducts(label);
       PCACHE[key]=list;
     }
     if(seq!==pSeq || !list.length) return;
@@ -1456,7 +1459,7 @@
     $('pgroups').querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{ i.src=phImg('No photo'); },{once:true}));
     const sample=prodList.some(p=>p.sample);
     $('pbanner').hidden=!sample;
-    if(sample) $('pbanner').textContent='Preview with made-up sample products, to show the layout. On the live site these are the shops’ real photos, prices and stock, once their product lists are connected.';
+    if(sample) $('pbanner').textContent= DEMO ? 'Preview with made-up sample products, to show the layout. On the live site these are the shops’ real photos, prices and stock, once their product lists are connected.' : 'Sample products while NoLag is being set up. Real photos, prices and stock from the shops appear here soon.';
     $('prods').hidden=false;
     $('shopshead').hidden=!$('rlist').children.length;
   }
@@ -1502,7 +1505,7 @@
   let lastSearch=null;
   document.addEventListener('click',e=>{
     const pb=e.target.closest('a.pbuy');
-    if(pb){ if(pb.classList.contains('sample')){ e.preventDefault(); toast('This is a sample product. On the live site this button opens the shop to pay.'); return; } track('click',{shop:pb.dataset.shop, understood:lastSearch&&lastSearch.q, area:lastSearch&&lastSearch.pc||null, position:+pb.dataset.pos, sort:'product'}); }
+    if(pb){ if(pb.classList.contains('sample')){ e.preventDefault(); toast('This is a sample product. Real products open the shop so you can pay.'); return; } track('click',{shop:pb.dataset.shop, understood:lastSearch&&lastSearch.q, area:lastSearch&&lastSearch.pc||null, position:+pb.dataset.pos, sort:'product'}); }
     const a=e.target.closest('a.shop');
     if(a && lastSearch){ const li=a.closest('li'), pos=[...$('rlist').children].indexOf(li)+1; track('click',{shop:a.dataset.shop, understood:lastSearch.q, area:lastSearch.pc||null, position:pos, sort:lastSearch.sort}); }
     if(e.target.closest('#toask')){ e.preventDefault(); $('ask').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(()=>$('item').focus({preventScroll:true}),350); }
