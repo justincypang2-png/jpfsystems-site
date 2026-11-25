@@ -702,7 +702,8 @@
   document.querySelectorAll('.borough').forEach(e=>e.textContent=CONFIG.BOROUGHS);
 
   const form=$('f'), feeEl=$('fee');
-  const DEMO = !/(^|\.)jpfsystems\.co$/.test(location.hostname);
+  const PREVIEW_FLAG = new URLSearchParams(location.search).has('preview'); // jpfsystems.co/?preview=1 shows sample products and sends nothing
+  const DEMO = PREVIEW_FLAG || !/(^|\.)jpfsystems\.co$/.test(location.hostname);
   // Anonymous event recording: no names, emails or cookies; postcode trimmed to its area by the server.
   const SESSION = Math.random().toString(36).slice(2,10);
   function track(type, data){
@@ -995,6 +996,10 @@
     {n:'pet supplies', w:{ubereats:2,deliveroo:2,amznow:2,amazon:2,argos:1}, k:'cat food, dog food, cat litter, litter, pet food, dog treats, cat treats, flea treatment, poo bags, dog bed'},
     {n:'clothes and accessories', w:{johnlewis:2,amazon:2,ubereats:1,deliveroo:1,argos:1}, k:'socks, tights, gloves, scarf, hat, beanie, slippers, pyjamas, pajamas, dressing gown, underwear, t shirt, hoodie, jumper, coat, trainers, shoes, sunglasses, reading glasses, backpack, rucksack, suitcase, luggage, tie'},
     {n:'sports and fitness', w:{argos:2,amazon:2,johnlewis:1,ubereats:1}, k:'dumbbells, weights, kettlebell, yoga mat, resistance bands, football, basketball, tennis racket, bike, bike lock, bike light, helmet, scooter, skipping rope, foam roller, protein powder'},
+    {n:'phones and tech', w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:'samsung, samsung galaxy, galaxy, google pixel, pixel, xiaomi, oneplus, motorola, sony, bose, jbl, beats, sennheiser, lenovo, hp, dell, asus, acer, microsoft surface, surface, logitech, anker, belkin, canon, nikon, gopro, tp link, ring, alexa, echo dot'},
+    {n:'kitchen appliances', w:{argos:2,currys:2,johnlewis:2,amazon:2}, k:'ninja, tefal, breville, delonghi, de longhi, smeg, russell hobbs, morphy richards, kenwood, kitchenaid, salter, sage, nutribullet, instant pot'},
+    {n:'clothes and shoes', w:{johnlewis:2,amazon:2,ubereats:1,deliveroo:1,argos:1}, k:'nike, adidas, puma, new balance, vans, converse, ugg, uggs, ugg boots, north face, the north face, levis, crocs, skechers, wellies, wellington boots, snow boots'},
+    {n:'toys', w:{argos:2,johnlewis:2,amazon:2,ubereats:1}, k:'pokemon, pokemon cards, paw patrol, peppa pig, squishmallow, squishmallows, sylvanian families, lol surprise, minecraft, fortnite, roblox gift card, harry potter'},
     {n:'car accessories', w:{argos:2,amazon:2,currys:1,deliveroo:1}, k:'jump starter, jump leads, de icer, deicer, screenwash, ice scraper, tyre inflator, car phone holder, dash cam, dashcam'}
   ];
   // Each item is a whole name ("frying pan", "baby wipes"); a search matches the longest item it contains.
@@ -1187,6 +1192,8 @@
     if(td.pc && !q){ $('qpc').value=td.pc; $('q').value=''; err.textContent='That looks like a postcode, so we put it in the postcode box. Now type what you need.'; err.classList.add('show'); $('q').focus(); return; }
     if(td.pc && !pc){ pc=td.pc; $('qpc').value=pc; }
     if(q!==raw && q.length>=2) $('q').value=q;   // "kettle SE5" -> item "kettle", postcode SE5
+    if(/^(tesco|sainsbury'?s?|asda|morrisons|waitrose|aldi|lidl|co ?op|primark|ikea|b ?& ?q|b and q|screwfix|next|m ?& ?s|marks and spencer|h ?& ?m|zara|argos|currys|john lewis|amazon|boots|superdrug|ebay|uber ?eats|deliveroo|just ?eat)$/i.test(q)){
+      err.textContent='NoLag searches all the shops for you, so type the item you need, for example “kettle” or “phone charger”.'; err.classList.add('show'); $('q').select(); return; }
     if(q.length<2){ err.textContent='Type what you need, for example "USB-C laptop charger".'; err.classList.add('show'); $('q').focus(); return; }
     if(pc && !/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i.test(pc) && !/^[A-Z]{1,2}\d[A-Z\d]?$/i.test(pc)){ err.textContent='That postcode doesn\'t look right. Try one like SE15 4AB, or leave it blank.'; err.classList.add('show'); $('qpc').focus(); return; }
     closeSugg();
@@ -1212,8 +1219,11 @@
         const m=interpret(q);
         if(m){ spec={...m, typed:q}; fam=m.fam; }
         else {
+          const nq=' '+norm(q)+' ';
+          const anc=FAMILIES.map(f=>({f,k:f.k.filter(k=>nq.includes(' '+k+' ')).sort((a,b)=>b.length-a.length)[0]})).filter(x=>x.k).sort((a,b)=>b.k.length-a.k.length)[0];
           const kd=kindFor(q), idea=IDEAS.find(i=>i.k.some(k=>(' '+norm(q)+' ').includes(' '+k+' ')));
-          if(kd) spec={l:q, q, w:kd.w, kind:kd.n, cats:[]};
+          if(anc){ const best=smartRank(q).find(x=>x.opt.fam===anc.f), o=best?best.opt:{...anc.f.opts[0],w:anc.f.opts[0].w||anc.f.w}; spec={l:q, q, w:o.w||anc.f.w, cats:o.cats||[]}; }
+          else if(kd) spec={l:q, q, w:kd.w, kind:kd.n, cats:[]};
           else if(idea){ const w={}; idea.items.forEach(l=>{ const o=ALLOPTS[l.toLowerCase()]; if(o&&o.w) Object.entries(o.w).forEach(([k,v])=>w[k]=Math.max(w[k]||0,v)); }); const short=q.replace(/^(i need |i want |need |want |looking for )?(something |anything |stuff )?(for |to )?(a |an |the |my )?/i,'').trim()||q; spec={l:short, q:short, w, idea, cats:[], typed: short!==q?q:undefined}; }
           else spec=optFor(q);
         }
@@ -1310,7 +1320,7 @@
     }
     lastSearch={q:label,sent:q,pc,sort:sortMode,shown:open.map(s=>s.id)};
     if(jump && !fromHistory) track('search',{typed:spec.typed||label, understood:label, matched:!!spec.w, area:pc||null, results:banned?0:n});
-    if(jump && !fromHistory){ try{ const u=location.pathname+'?q='+encodeURIComponent(label)+location.hash.replace(/^#.*/,''); if(location.search!=='?q='+encodeURIComponent(label)) history.pushState({q:label},'',u); }catch(e){} }
+    if(jump && !fromHistory){ try{ const qs='?'+(PREVIEW_FLAG?'preview=1&':'')+'q='+encodeURIComponent(label); if(location.search!==qs) history.pushState({q:label},'',location.pathname+qs); }catch(e){} }
     $('mbar').hidden=false; document.body.classList.add('has-mbar');
     if(jump) loadProducts(spec);
   }
@@ -1344,7 +1354,7 @@
     if(BANNED.test(spec.q)) return;
     let list=PCACHE[key];
     if(!list){
-      if(DEMO) list=spec.w && !spec.idea ? sampleProducts(label) : [];
+      if(DEMO) list=spec.w ? sampleProducts(label) : [];
       else if(CONFIG.API_URL){ try{ const ac=new AbortController(), t=setTimeout(()=>ac.abort(),3500);
           const r=await fetch(CONFIG.API_URL.replace(/\/$/,'')+'/search?q='+encodeURIComponent(label)+(area?'&area='+area:''),{signal:ac.signal}); clearTimeout(t);
           list=r.ok ? ((await r.json()).products||[]) : []; }catch(e){ list=[]; } }
