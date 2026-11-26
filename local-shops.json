@@ -1,0 +1,5 @@
+{
+  "updated": "2026-11-26",
+  "note": "Shops are added here by hand after their listing is checked. Fields: id, name, areas (postcode districts like SE15, or a whole area like SE), cats (tech, home, gift, health, beauty, grocery), sells, how (own, courier, apps, collect), opens and cutoff (hours, 17.5 = 5:30pm), days (0 Sun to 6 Sat), fee, phone, url.",
+  "shops": []
+}

@@ -501,3 +501,25 @@ t56|Idioma: {0}
 443|Entrega da Amazon em 30 minutos, por agora só em algumas zonas de Southwark.
 444|Pesquisar para amanhã
 445|Menu
+446|Lojas locais perto de
+447|Tem uma loja local?
+448|Registe-a grátis
+449|Loja local
+450|Exemplo
+451|Entrega própria
+452|Entrega por estafeta
+453|Nas apps de entrega
+454|Levantamento hoje
+455|Fechado por hoje
+456|Site
+457|Ligar
+458|Registar a sua loja
+459|A sua loja aqui
+460|Uma loja independente perto de si
+461|definida pela loja
+462|Entrega:
+463|Para lojas locais
+464|Tem uma loja independente que entrega hoje?
+465|Registe-a grátis na NoLag
+466|Por agora, esta página só está em inglês.
+t57|Tem uma loja perto de {0}?

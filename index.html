@@ -60,7 +60,7 @@
   .field>label,legend{display:block;font-weight:700;font-size:calc((18px) * var(--fs,1));margin:0 0 4px;padding:0}
   .help{display:block;color:var(--muted);font-size:calc((16px) * var(--fs,1));margin:0 0 8px;font-weight:400}
   fieldset{border:0;margin:22px 0 0;padding:0;min-width:0}
-  input[type=text],textarea{width:100%;font:inherit;font-size:calc((18px) * var(--fs,1));color:var(--ink);background:var(--paper);border:2px solid #8A93A3;border-radius:12px;padding:12px 14px;min-height:52px}
+  input[type=text],input[type=email],input[type=tel],input[type=url],textarea{width:100%;font:inherit;font-size:calc((18px) * var(--fs,1));color:var(--ink);background:var(--paper);border:2px solid #8A93A3;border-radius:12px;padding:12px 14px;min-height:52px}
   textarea{min-height:96px;resize:vertical}
   input::placeholder,textarea::placeholder{color:#6B7483}
   input:hover,textarea:hover{border-color:var(--ink)}
@@ -90,7 +90,7 @@
 
   .error-msg{display:none;color:var(--err);font-weight:600;font-size:calc((16px) * var(--fs,1));margin:6px 0 0}
   .invalid .error-msg{display:block}
-  .invalid input[type=text],.invalid textarea{border-color:var(--err)}
+  .invalid input[type=text],.invalid input[type=email],.invalid input[type=tel],.invalid textarea{border-color:var(--err)}
   .invalid .choice>span{border-color:var(--err)}
   .summary{display:none;margin-top:18px;padding:14px 16px;border-left:5px solid var(--err);background:var(--err-tint);border-radius:8px}
   .summary h3{margin:0 0 6px;font-size:calc((18px) * var(--fs,1))}
@@ -98,6 +98,7 @@
   .summary a{color:var(--err);font-weight:600}
 
   .done{display:none}
+  #ldone:not([hidden]){display:block}
   .done .tick{width:52px;height:52px;border-radius:50%;background:var(--ok);display:grid;place-items:center;margin-bottom:12px}
   .done h2{margin-bottom:8px}
   .done ol{padding-left:22px;margin:12px 0 0}
@@ -145,7 +146,7 @@
   html.a11y-dark .holinote{background:#33290F;border-color:#8A6D1E}
   html.a11y-dark .pskel i{background:linear-gradient(90deg,#1A2230 25%,#232D3D 50%,#1A2230 75%);background-size:200% 100%}
   html.a11y-dark input::placeholder,html.a11y-dark textarea::placeholder{color:#9AA3B2}
-  html.a11y-dark input[type=text],html.a11y-dark textarea,html.a11y-dark .aform input{border-color:#6B7483}
+  html.a11y-dark input[type=text],html.a11y-dark input[type=email],html.a11y-dark input[type=tel],html.a11y-dark input[type=url],html.a11y-dark textarea,html.a11y-dark .aform input{border-color:#6B7483}
   html.a11y-dark .pimg{background:#FFFFFF}
   html.a11y-dark header{background:rgba(15,20,28,.96)}
   html.a11y-dark .demobar{background:#1A2230;color:#E9EDF3;border-bottom:1px solid #3B4554}
@@ -212,6 +213,29 @@
   .pagebar{padding:18px 0 0}
   body[data-page=board] #board, body[data-page=doit] #doit, body[data-page=help] #how, body[data-page=about] #about{padding-top:20px}
   .aboutwrap p{max-width:64ch;margin:0 0 16px}
+  body[data-page=shops] .pg-shops{display:block} body[data-page=shops] #shops{padding-top:20px}
+  .lsub{font-size:calc((22px) * var(--fs,1));margin:30px 0 8px}
+  .lterms{color:var(--ink);max-width:64ch;margin:0 0 10px} ul.lterms{padding-left:1.2em} ul.lterms li{margin:0 0 8px}
+  .ticks{display:grid;gap:8px;margin:4px 0 6px}
+  .ticks label{display:flex;gap:12px;align-items:flex-start;min-height:44px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;cursor:pointer;background:var(--paper)}
+  .ticks input{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:var(--blue)}
+  .ticks label:has(input:checked){border-color:var(--blue);background:var(--blue-tint)}
+  .invalid .ticks label{border-color:var(--err)}
+  .sublabel{display:block;font-weight:700;margin:12px 0 6px}
+  .opt-tag{font-weight:400;color:var(--muted)}
+  #lf fieldset{border:0;padding:0;margin:22px 0 0} #lf legend{font-weight:700;font-size:calc((18px) * var(--fs,1));padding:0;margin:0 0 6px}
+  #lf input[type=email],#lf input[type=tel],#lf input[type=url]{width:100%}
+  .lsum{margin-top:10px}
+  .lsum.show,#l-senderr.show{display:block}
+  .local{margin:0 0 8px}
+  .srow.lshop .lbadge{display:inline-block;font-size:calc((13px) * var(--fs,1));font-weight:700;color:var(--ok);background:var(--ok-tint);border-radius:6px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+  .srow.lshop .sample-tag{background:var(--ink);color:var(--on-fill)}
+  .srow .sacts{display:flex;flex-direction:column;gap:8px}
+  .localcta,.doorsnote{color:var(--muted);margin:4px 0 22px}
+  @media(max-width:520px){ .srow.lshop{grid-template-columns:auto minmax(0,1fr)} .srow.lshop .sacts{grid-column:1/-1;flex-direction:row} .srow.lshop .sacts a{flex:1;white-space:normal;text-align:center} }
+  .doorsnote{margin:18px 0 0;text-align:center}
+  .enonly-note{display:none;margin:0 0 10px;padding:8px 12px;border-radius:10px;background:var(--soft);color:var(--ink);font-size:calc((15px) * var(--fs,1))} html:not([lang=en]) .enonly-note{display:block}
+  .ltags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 6px} .ltag{font-size:calc((14px) * var(--fs,1));border:1px solid var(--line);border-radius:999px;padding:1px 10px;color:var(--ink)}
   .aboutwrap h2{font-size:calc((24px) * var(--fs,1));margin:32px 0 10px}
   .motto{font-size:calc((24px) * var(--fs,1));font-weight:700;color:var(--blue);margin:-12px 0 22px !important}
   .pagebar a{display:inline-flex;align-items:center;min-height:44px;font-weight:700;color:var(--blue)}
@@ -662,6 +686,11 @@
     <div id="pgroups"></div>
     <p class="pnote">Photos, prices and stock come from each shop's own product list, updated every night. eBay listings are live, and their delivery dates are the seller's estimate. The shop's site shows the final price before you pay.</p>
   </section>
+  <section class="local" id="local" aria-labelledby="localhead" hidden>
+    <h3 class="shopshead" id="localhead">Local shops near <span class="notr" id="localpc"></span></h3>
+    <ol class="rlist" id="locallist"></ol>
+  </section>
+  <p class="localcta" id="localcta" hidden><span id="localctatext">Run a local shop?</span> <a href="#shops">List it free</a></p>
   <h3 class="shopshead" id="shopshead" hidden>Or search these shops yourself</h3>
   <div class="sorts" id="sorts" role="group" aria-label="Sort results" hidden></div>
   <ol class="rlist" id="rlist"></ol>
@@ -682,6 +711,7 @@
     <li><a class="door" href="#doit"><b>Do it for me</b><span>We find it, order it and track it. £2 to £10, paid only once it arrives.</span></a></li>
     <li><a class="door" href="#help"><b>How it works</b><span>How searching works, what it costs and answers to common questions.</span></a></li>
   </ul>
+  <p class="doorsnote">Run a local shop? <a href="#shops">List it free</a></p>
 </div></section>
 
 <section id="board" class="board pg pg-board" aria-labelledby="b-title"><div class="wrap">
@@ -850,6 +880,94 @@
   </div>
 </div></section>
 
+<section id="shops" class="pg pg-shops"><div class="wrap doit">
+  <div class="shopsintro">
+    <p class="enonly-note">This page is only in English for now.</p>
+    <div translate="no" lang="en">
+    <h1 class="s" tabindex="-1">List your shop on NoLag</h1>
+    <p class="lead" style="font-size:calc((19px) * var(--fs,1))">Get found by people near you who need something today. For independent shops that can deliver today, or have it ready to collect.</p>
+    <ul class="promises">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Free to list while we launch</b> We'll give you 30 days' notice by email before any fees start, and you can leave at any time.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>You keep the sale</b> Customers order and pay you directly. We don't take a cut.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Checked before it goes live</b> We review every listing and only show it to postcodes you deliver to.</span></li>
+    </ul>
+    <h2 class="lsub">How listings are shown</h2>
+    <p class="lterms">Your shop appears when someone searches for something in your categories from a postcode you cover. Shops that can still deliver today come first, then the ones with the latest order time. No shop can pay to rank higher. If we ever offer paid placement, it will be clearly marked as Sponsored, and we'll update these terms first.</p>
+    <h2 class="lsub" id="lterms">Listing terms</h2>
+    <ul class="lterms">
+      <li>You must own the shop or be allowed to list it, and keep your details accurate.</li>
+      <li>No alcohol, tobacco, vapes, medicines, weapons or adult products.</li>
+      <li>We may pause or remove a listing that breaks these terms or gets repeated complaints. We'll email you the reason, and you can reply to ask us to look again.</li>
+      <li>We'll email you at least 15 days before we change these terms, and 30 days before we end a listing, unless the law or a serious breach means we must act sooner.</li>
+      <li>We only use your details to run your listing and to contact you about it.</li>
+      <li>Questions or complaints: email <span class="contactline"></span>. We aim to reply within 2 working days.</li>
+    </ul>
+    </div>
+  </div>
+  <div class="card" id="listcard" tabindex="-1" translate="no" lang="en">
+    <form id="lf" novalidate>
+      <h2>Tell us about your shop</h2>
+      <p class="hint">It takes about two minutes. Questions marked optional can be left blank.</p>
+      <p class="error-msg lsum" id="lf-sum" role="alert" tabindex="-1">Please check the questions marked in red.</p>
+      <div class="field" id="lf-name"><label for="l-name">Shop name</label>
+        <input type="text" id="l-name" autocomplete="organization" aria-describedby="l-name-err"><p class="error-msg" id="l-name-err">Enter your shop's name.</p></div>
+      <div class="field" id="lf-person"><label for="l-person">Your name</label>
+        <input type="text" id="l-person" autocomplete="name" aria-describedby="l-person-err"><p class="error-msg" id="l-person-err">Enter your name.</p></div>
+      <div class="field" id="lf-email"><label for="l-email">Email</label>
+        <span class="help" id="l-email-help">We'll send your listing details and any updates here.</span>
+        <input type="email" id="l-email" autocomplete="email" aria-describedby="l-email-help l-email-err"><p class="error-msg" id="l-email-err">Enter an email address, like name@example.com.</p></div>
+      <div class="field" id="lf-phone"><label for="l-phone">Shop phone</label>
+        <span class="help" id="l-phone-help">Shown to customers so they can call you.</span>
+        <input type="tel" id="l-phone" autocomplete="tel" aria-describedby="l-phone-help l-phone-err" style="max-width:260px"><p class="error-msg" id="l-phone-err">Enter a phone number customers can call.</p></div>
+      <div class="field" id="lf-pc"><label for="l-pc">Shop postcode</label>
+        <input type="text" id="l-pc" autocomplete="postal-code" autocapitalize="characters" placeholder="SE15 4AB" aria-describedby="l-pc-err" style="max-width:220px"><p class="error-msg" id="l-pc-err">Enter a UK postcode, like SE15 4AB.</p></div>
+      <div class="field" id="lf-url"><label for="l-url">Website or social page <span class="opt-tag">(optional)</span></label>
+        <input type="url" id="l-url" inputmode="url" placeholder="https://"></div>
+      <fieldset id="lf-cats" aria-describedby="l-cats-err"><legend>What do you sell?</legend>
+        <div class="ticks">
+          <label><input type="checkbox" name="lcat" value="tech"> Phones and tech</label>
+          <label><input type="checkbox" name="lcat" value="home"> Home and DIY</label>
+          <label><input type="checkbox" name="lcat" value="gift"> Gifts, flowers and toys</label>
+          <label><input type="checkbox" name="lcat" value="health"> Health and baby</label>
+          <label><input type="checkbox" name="lcat" value="beauty"> Beauty and personal care</label>
+          <label><input type="checkbox" name="lcat" value="grocery"> Food and groceries</label>
+        </div>
+        <label for="l-sells" class="sublabel">Your main products <span class="opt-tag">(optional)</span></label>
+        <input type="text" id="l-sells" placeholder="For example: flowers, plants, balloons">
+        <p class="error-msg" id="l-cats-err">Choose at least one.</p></fieldset>
+      <fieldset id="lf-how" aria-describedby="l-how-err"><legend>How can customers get things from you today?</legend>
+        <div class="ticks">
+          <label><input type="checkbox" name="lhow" value="own"> We deliver ourselves</label>
+          <label><input type="checkbox" name="lhow" value="courier"> By courier</label>
+          <label><input type="checkbox" name="lhow" value="apps"> On Deliveroo, Uber Eats or Just Eat</label>
+          <label><input type="checkbox" name="lhow" value="collect"> Ready to collect today</label>
+        </div>
+        <p class="error-msg" id="l-how-err">Choose at least one.</p></fieldset>
+      <div class="field" id="lf-areas"><label for="l-areas">Where do you deliver?</label>
+        <span class="help" id="l-areas-help">Postcode areas, or a distance from the shop.</span>
+        <input type="text" id="l-areas" placeholder="For example: SE15, SE5, SE22, or within 3 miles" aria-describedby="l-areas-help l-areas-err"><p class="error-msg" id="l-areas-err">Tell us where you deliver, or write "collection only".</p></div>
+      <div class="field" id="lf-cutoff"><label for="l-cutoff">Latest order time for same-day delivery or collection</label>
+        <input type="text" id="l-cutoff" placeholder="For example: 5pm" aria-describedby="l-cutoff-err" style="max-width:260px"><p class="error-msg" id="l-cutoff-err">Enter your latest order time.</p></div>
+      <div class="field" id="lf-hours"><label for="l-hours">Opening days and hours</label>
+        <input type="text" id="l-hours" placeholder="For example: Mon to Sat, 9am to 6pm" aria-describedby="l-hours-err"><p class="error-msg" id="l-hours-err">Enter your opening days and hours.</p></div>
+      <div class="field" id="lf-fee"><label for="l-fee">Delivery charge <span class="opt-tag">(optional)</span></label>
+        <input type="text" id="l-fee" placeholder="For example: £4.95, free over £40"></div>
+      <fieldset id="lf-agree" aria-describedby="l-agree-err"><legend class="sr">Confirm</legend>
+        <div class="ticks">
+          <label><input type="checkbox" id="l-owner"> I own this shop or I'm allowed to list it</label>
+          <label><input type="checkbox" id="l-terms"> I agree to the <a href="#lterms">listing terms</a></label>
+        </div>
+        <p class="error-msg" id="l-agree-err">Tick both boxes to continue.</p></fieldset>
+      <button class="go" type="submit">Send my listing</button>
+      <p class="error-msg" id="l-senderr" role="alert">Your listing didn't send. Check your connection and press Send my listing again, or email <span class="contactline"></span>.</p>
+    </form>
+    <div class="done" id="ldone" tabindex="-1" hidden>
+      <h2>Thanks, we've got your listing</h2>
+      <p>We'll check it and email you within 2 working days. Once it's live, it shows to people searching near you.</p>
+    </div>
+  </div>
+</div></section>
+
 <section id="about" class="pg pg-about"><div class="wrap aboutwrap">
   <h1 class="s" tabindex="-1">About NoLag</h1>
   <p class="motto">Your 25th hour.</p>
@@ -858,6 +976,8 @@
   <p>Less searching, less waiting, more of your day for the things that matter.</p>
   <h2>Who we are</h2>
   <p>We're a small team based in London. NoLag is part of <a href="/jpf/">J.P. Freglien Systems</a>, the parent company that builds and runs it.</p>
+  <h2>For local shops</h2>
+  <p>Run an independent shop that can deliver today? <a href="#shops">List it on NoLag for free</a>.</p>
   <h2>Get in touch</h2>
   <p>Email <a href="mailto:enquiries@jpfsystems.co">enquiries@jpfsystems.co</a>. We read every message.</p>
 </div></section>
@@ -871,7 +991,7 @@
 
 <footer><div class="wrap">
   <div><b style="color:var(--ink)">NoLag</b>. Your 25th hour. Part of <a href="/jpf/">J.P. Freglien Systems</a>, London. <span class="contactline"></span></div>
-  <ul class="flinks"><li><a href="#board">Open now</a></li><li><a href="#doit">Do it for me</a></li><li><a href="#help">How it works</a></li><li><a href="#faq">Questions</a></li><li><a href="#about">About</a></li><li><button type="button" id="a11yfoot" aria-haspopup="dialog" aria-controls="a11y">Accessibility</button></li><li><button type="button" id="langfoot" aria-haspopup="dialog" aria-controls="langdlg">Language</button></li></ul>
+  <ul class="flinks"><li><a href="#board">Open now</a></li><li><a href="#doit">Do it for me</a></li><li><a href="#help">How it works</a></li><li><a href="#faq">Questions</a></li><li><a href="#about">About</a></li><li><a href="#shops">List your shop</a></li><li><button type="button" id="a11yfoot" aria-haspopup="dialog" aria-controls="a11y">Accessibility</button></li><li><button type="button" id="langfoot" aria-haspopup="dialog" aria-controls="langdlg">Language</button></li></ul>
 </div></footer>
 
 <dialog class="a11y" id="langdlg" aria-labelledby="lang-t"><div class="a11yin">
@@ -1557,6 +1677,7 @@
     $('mbar').hidden=false; document.body.classList.add('has-mbar');
     if(jump) loadProducts(spec);
     if(jump && !fromAssist && !fromHistory){ if(!banned && isVague(spec,unknown)) startAssist(spec,unknown); else if(AS || !$('assist').hidden){ asSeq++; AS=null; $('assist').hidden=true; } }
+    current.banned=banned; drawLocal();
   }
   // Amazon-style live countdown: refresh every 30 seconds, redraw when a shop closes
   setInterval(()=>{
@@ -1795,6 +1916,7 @@
     $('prods').hidden=false;
     $('shopshead').hidden=!$('rlist').children.length;
   }
+  // local shops are drawn with the shop list (see drawLocal)
   setInterval(()=>{ if(!prodList || $('prods').hidden) return; const now=londonHours(); let closed=false;
     document.querySelectorAll('.pcd').forEach(el=>{ const d=+el.dataset.cut-now; if(d<=0) closed=true; else el.textContent=left(d); });
     if(closed) drawProducts(); },30000);
@@ -1824,7 +1946,7 @@
   // Shareable searches: jpfsystems.co/?q=ps5 opens the results; Back returns to the previous search.
   let fromHistory=false;
   // Separate pages (#board, #doit, #help) so the home page stays short. Old links like #how, #faq and #ask still work.
-  const PAGES={board:'Open now',doit:'Do it for me',help:'How it works',about:'About'}, ALIAS={how:'help',faq:'help',fees:'doit',cover:'doit',ask:'doit'};
+  const PAGES={board:'Open now',doit:'Do it for me',help:'How it works',about:'About',shops:'List your shop'}, ALIAS={how:'help',faq:'help',fees:'doit',cover:'doit',ask:'doit',lterms:'shops',listcard:'shops'};
   function showPage(p,anchor){
     const was=document.body.dataset.page;
     if(p) document.body.dataset.page=p; else delete document.body.dataset.page;
@@ -2052,13 +2174,90 @@
       if(e.shiftKey && i<=0){e.preventDefault();f[f.length-1].focus();} else if(!e.shiftKey && i===f.length-1){e.preventDefault();f[0].focus();}
     }
   });
+
+  // ---------- Local shops (independents that list themselves; checked by hand, then added to local-shops.json) ----------
+  let LOCAL_SHOPS=null;
+  const loadLocal=()=> LOCAL_SHOPS ? Promise.resolve(LOCAL_SHOPS)
+    : fetch('local-shops.json?v='+Math.floor(Date.now()/36e5)).then(r=>r.ok?r.json():{shops:[]}).then(d=>LOCAL_SHOPS=(d.shops||[])).catch(()=>LOCAL_SHOPS=[]);
+  const district=pc=>{ const m=String(pc||'').toUpperCase().replace(/\s+/g,'').match(/^([A-Z]{1,2}\d[A-Z\d]?)(\d[A-Z]{2})?$/); return m?m[1]:null; };
+  const covers=(areas,d)=> (areas||[]).some(a=>{ a=String(a).toUpperCase().replace(/\s+/g,''); return a===d || (/^[A-Z]{1,2}$/.test(a) && d.replace(/\d.*$/,'')===a); });
+  const HOW_LABEL={own:'Delivers itself',courier:'Courier delivery',apps:'On delivery apps',collect:'Collect today'};
+  function localRow(s,now,sample){
+    const today=new Date().toLocaleDateString('en-GB',{timeZone:'Europe/London',weekday:'short'});
+    const openDay=!s.days || s.days.includes(['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(today));
+    const live=openDay && now<s.cutoff && !(s.opens && now<s.opens-3);
+    const how=(s.how||[]).map(h=>HOW_LABEL[h]).filter(Boolean).map(t=>`<span class="ltag">${t}</span>`).join(' ');
+    const tag=sample?'<span class="lbadge sample-tag">Example</span>':'<span class="lbadge">Local shop</span>';
+    const tel=s.phone?`<a class="shop" href="tel:${esc(s.phone.replace(/[^\d+]/g,''))}" data-local="${esc(s.id)}" data-act="call">Call</a>`:'';
+    const web=s.url?`<a class="shop" href="${esc(s.url)}" target="_blank" rel="noopener" data-local="${esc(s.id)}" data-act="web">${sample?'List your shop':'Website'}</a>`:'';
+    return `<li class="srow lshop${live?'':' closed'}">
+      <span class="sbadge" style="background:var(--ok-tint);color:var(--ok)" aria-hidden="true">${esc((s.name||'?').replace(/[^A-Za-z ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'L')}</span>
+      <div class="sinfo"><h3><span class="${sample?'':'notr'}">${esc(s.name)}</span>${tag}</h3>
+        ${s.sells?`<p class="show${sample?'':' notr'}">${esc(s.sells)}</p>`:''}<p class="ltags">${how}</p>
+        <p class="smeta">${live?`<span class="promise">Order by ${clock(s.cutoff)}: <b class="cd" data-cut="${s.cutoff}">${left(s.cutoff-now)}</b> left</span>`:`<span>Closed for today</span>`}
+          ${s.fee?`<span>Delivery: <span class="${sample?'':'notr'}">${esc(s.fee)}</span></span>`:''}</p></div>
+      <div class="sacts">${web}${tel}</div></li>`;
+  }
+  async function drawLocal(){
+    const sec=$('local'), cta=$('localcta'); sec.hidden=true; cta.hidden=true;
+    if(!current || current.banned) return;
+    const {spec,pc}=current, d=district(pc), q=spec.q;
+    const cats=spec.cats || Object.keys(CATS).filter(c=>CATS[c].test(q));
+    const shops=await loadLocal(); if(current.spec!==spec) return;
+    const now=londonHours();
+    let list=d ? shops.filter(s=>covers(s.areas,d) && (!cats.length || (s.cats||[]).some(c=>cats.includes(c)))) : [];
+    list.sort((a,b)=> (b.cutoff>now)-(a.cutoff>now) || b.cutoff-a.cutoff);
+    let sample=false;
+    if(!list.length && d && CONFIG.SAMPLE_PRODUCTS){ sample=true;
+      list=[{id:'example',name:'Your shop here',sells:'An independent shop near you',how:['own','collect'],cutoff:18,fee:'set by the shop',url:'#shops'}]; }
+    if(list.length){
+      $('localpc').textContent=d; $('locallist').innerHTML=list.slice(0,4).map(s=>localRow(s,now,sample)).join(''); sec.hidden=false;
+      $('locallist').querySelectorAll('a[href="#shops"]').forEach(a=>a.removeAttribute('target'));
+    }
+    if(!list.length){ $('localctatext').textContent= d ? `Run a local shop near ${d}?` : 'Run a local shop?'; cta.hidden=false; }
+  }
+  document.addEventListener('click',e=>{ const a=e.target.closest('[data-local]'); if(a && a.dataset.local!=='example' && current) track('local',{shop:a.dataset.local, act:a.dataset.act, understood:current.spec.l, area:current.pc}); });
+
+  // ---------- "List your shop" form ----------
+  const lf=$('lf');
+  const LPC=/^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i;
+  const lrules={ 'lf-name':()=>$('l-name').value.trim().length>1, 'lf-person':()=>$('l-person').value.trim().length>1,
+    'lf-email':()=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('l-email').value.trim()), 'lf-phone':()=>$('l-phone').value.replace(/\D/g,'').length>=10,
+    'lf-pc':()=>LPC.test($('l-pc').value.trim()), 'lf-cats':()=>!!lf.querySelector('[name=lcat]:checked'), 'lf-how':()=>!!lf.querySelector('[name=lhow]:checked'),
+    'lf-areas':()=>$('l-areas').value.trim().length>1, 'lf-cutoff':()=>$('l-cutoff').value.trim().length>0, 'lf-hours':()=>$('l-hours').value.trim().length>2,
+    'lf-agree':()=>$('l-owner').checked && $('l-terms').checked };
+  const lcheck=id=>{ const ok=lrules[id](); $(id).classList.toggle('invalid',!ok); return ok; };
+  lf.addEventListener('input',e=>{ const f=e.target.closest('.field,fieldset'); if(f && f.classList.contains('invalid')) lcheck(f.id); });
+  lf.addEventListener('change',e=>{ const f=e.target.closest('fieldset'); if(f && f.classList.contains('invalid')) lcheck(f.id); });
+  lf.addEventListener('submit', async ev=>{
+    ev.preventDefault(); $('l-senderr').classList.remove('show');
+    const bad=Object.keys(lrules).filter(id=>!lcheck(id));
+    if(bad.length){ $('lf-sum').classList.add('show'); const f=$(bad[0]); (f.querySelector('input,textarea')||f).focus(); return; }
+    $('lf-sum').classList.remove('show');
+    const vals=n=>[...lf.querySelectorAll(`[name=${n}]:checked`)].map(i=>i.value).join(', ');
+    const data={shop:$('l-name').value.trim(), contact_name:$('l-person').value.trim(), email:$('l-email').value.trim(), phone:$('l-phone').value.trim(),
+      postcode:$('l-pc').value.trim().toUpperCase(), website:$('l-url').value.trim(), sells:vals('lcat'), main_products:$('l-sells').value.trim(),
+      how:vals('lhow'), delivers_to:$('l-areas').value.trim(), latest_order:$('l-cutoff').value.trim(), hours:$('l-hours').value.trim(),
+      delivery_charge:$('l-fee').value.trim(), agreed_terms:'yes', language:(LANGS.find(l=>l[0]===I18N.lang)||LANGS[0])[2], submitted:new Date().toISOString()};
+    const btn=lf.querySelector('button.go'); btn.disabled=true; btn.textContent='Sending…';
+    try{
+      if(!DEMO){
+        const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},
+          body:JSON.stringify({...data,_subject:`NoLag shop listing: ${data.shop.slice(0,60)} (${data.postcode})`,_replyto:data.email,_template:'table',_captcha:'false'})});
+        const j=await r.json().catch(()=>({})); if(!r.ok || String(j.success)==='false') throw new Error('send failed');
+      }
+      lf.hidden=true; const d=$('ldone'); d.hidden=false; d.focus();
+      track('listing',{area:data.postcode});
+    }catch(e){ $('l-senderr').classList.add('show'); btn.disabled=false; btn.textContent='Send my listing'; }
+  });
+
   // ---------- Languages ----------
   // English is written into the page. Other languages load from i18n/xx.json only when chosen.
   // Fixed text is matched exactly; generated text ("2 ways to get “Kettle” today") uses patterns with slots.
   // Dates and times are re-written the way each language writes them. Shop and product names stay in English.
   const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['yue','廣東話（繁體）','Cantonese'],['ja','日本語','Japanese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
   const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',yue:'zh-HK',ja:'ja-JP',ar:'ar-u-nu-latn',hi:'hi-IN'};
-  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='1';
+  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='2';
   const TXT=new WeakMap(), ATT=new WeakMap(), I18N_ATTRS=['placeholder','aria-label','title','alt'];
   const splitSent=s=>s.split(/(?<![A-Z]\.[A-Z]\.)(?<=[.!?])\s+(?=[A-Z“])/);
   const tplRe=en=>new RegExp('^'+en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\\\{#\d\\\}/g,'([\\d.,]+)').replace(/\\\{\d\\\}/g,'(.+?)')+'$');

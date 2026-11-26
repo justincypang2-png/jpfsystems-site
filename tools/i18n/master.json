@@ -445,7 +445,28 @@
 "between 8 and 10pm tonight",
 "Amazon's 30-minute delivery, only in parts of Southwark so far",
 "Search for tomorrow",
-"Menu"
+"Menu",
+"Local shops near",
+"Run a local shop?",
+"List it free",
+"Local shop",
+"Example",
+"Delivers itself",
+"Courier delivery",
+"On delivery apps",
+"Collect today",
+"Closed for today",
+"Website",
+"Call",
+"List your shop",
+"Your shop here",
+"An independent shop near you",
+"set by the shop",
+"Delivery:",
+"For local shops",
+"Run an independent shop that can deliver today?",
+"List it on NoLag for free",
+"This page is only in English for now."
 ],
 "t": [
 "1 way to get “{0}” today",
@@ -504,6 +525,7 @@
 "Same-day delivery is open. {0} takes orders until",
 "Same-day: {0} closes in",
 "What kind of {0} are you after?",
-"Language: {0}"
+"Language: {0}",
+"Run a local shop near {0}?"
 ]
 }

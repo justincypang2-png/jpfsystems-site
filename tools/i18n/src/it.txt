@@ -501,3 +501,25 @@ t56|Lingua: {0}
 443|Consegna Amazon in 30 minuti, per ora solo in alcune zone di Southwark.
 444|Cerca per domani
 445|Menu
+446|Negozi di quartiere vicino a
+447|Hai un negozio di quartiere?
+448|Inseriscilo gratis
+449|Negozio di quartiere
+450|Esempio
+451|Consegna in proprio
+452|Consegna con corriere
+453|Sulle app di consegna
+454|Ritiro oggi
+455|Chiuso per oggi
+456|Sito web
+457|Chiama
+458|Inserisci il tuo negozio
+459|Il tuo negozio qui
+460|Un negozio indipendente vicino a te
+461|decisa dal negozio
+462|Consegna:
+463|Per i negozi di quartiere
+464|Hai un negozio indipendente che può consegnare oggi?
+465|Inseriscilo gratis su NoLag
+466|Per ora questa pagina è solo in inglese.
+t57|Hai un negozio vicino a {0}?
