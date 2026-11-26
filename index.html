@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script>(function(){try{var R=document.documentElement,L=new URLSearchParams(location.search).get('lang')||localStorage.getItem('nolag-lang');if(L&&/^(fr|es|de|it|pt|pl|zh|ar|hi)$/.test(L)){R.lang=L==='zh'?'zh-Hans':L;R.dir=L==='ar'?'rtl':'ltr';R.classList.add('i18n-wait');setTimeout(function(){R.classList.remove('i18n-wait')},2500);}}catch(e){}})();(function(){try{var A=JSON.parse(localStorage.getItem('nolag-a11y')||'{}'),R=document.documentElement;if(A.fs)R.dataset.fs=A.fs;['contrast','spacing','links','still','cursor'].forEach(function(k){if(A[k])R.classList.add('a11y-'+k)});if(A.theme==='dark'||(A.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))R.classList.add('a11y-dark');}catch(e){}})();</script>
+<script>(function(){try{var R=document.documentElement,L=new URLSearchParams(location.search).get('lang')||localStorage.getItem('nolag-lang');if(L&&/^(fr|es|de|it|pt|pl|zh|yue|ja|ar|hi)$/.test(L)){R.lang={zh:'zh-Hans',yue:'zh-HK'}[L]||L;R.dir=L==='ar'?'rtl':'ltr';R.classList.add('i18n-wait');setTimeout(function(){R.classList.remove('i18n-wait')},2500);}}catch(e){}})();(function(){try{var A=JSON.parse(localStorage.getItem('nolag-a11y')||'{}'),R=document.documentElement;if(A.fs)R.dataset.fs=A.fs;['contrast','spacing','links','still','cursor'].forEach(function(k){if(A[k])R.classList.add('a11y-'+k)});if(A.theme==='dark'||(A.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))R.classList.add('a11y-dark');}catch(e){}})();</script>
 <style>
   /* Design notes
      - One typeface: Atkinson Hyperlegible Next (built for legibility).
@@ -2056,8 +2056,8 @@
   // English is written into the page. Other languages load from i18n/xx.json only when chosen.
   // Fixed text is matched exactly; generated text ("2 ways to get “Kettle” today") uses patterns with slots.
   // Dates and times are re-written the way each language writes them. Shop and product names stay in English.
-  const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
-  const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',ar:'ar-u-nu-latn',hi:'hi-IN'};
+  const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['yue','廣東話（繁體）','Cantonese'],['ja','日本語','Japanese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
+  const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',yue:'zh-HK',ja:'ja-JP',ar:'ar-u-nu-latn',hi:'hi-IN'};
   const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='1';
   const TXT=new WeakMap(), ATT=new WeakMap(), I18N_ATTRS=['placeholder','aria-label','title','alt'];
   const splitSent=s=>s.split(/(?<![A-Z]\.[A-Z]\.)(?<=[.!?])\s+(?=[A-Z“])/);
@@ -2085,7 +2085,7 @@
     const r=tr1(s); if(r!=null) return r;
     const parts=splitSent(s); if(parts.length<2) return null;
     let any=false; const out=parts.map(p=>{ const q=tr1(p); if(q!=null){ any=true; return q; } return p; });
-    return any ? out.join(I18N.lang==='zh'?'':' ') : null;
+    return any ? out.join(/^(zh|yue|ja)$/.test(I18N.lang)?'':' ') : null;
   }
   function trText(n){
     const p=n.parentElement; if(!p || p.closest('script,style,.notr,[translate=no]')) return;
@@ -2121,9 +2121,9 @@
   addEventListener('resize',()=>{ clearTimeout(fitHeader._t); fitHeader._t=setTimeout(fitHeader,120); });
   new MutationObserver(()=>{ clearTimeout(fitHeader._t); fitHeader._t=setTimeout(fitHeader,60); }).observe($('hsearch'),{attributes:true,attributeFilter:['hidden']});
   function drawLangList(){
-    $('langlist').innerHTML=LANGS.map(([c,native,en])=>`<li><button type="button" data-lang="${c}" lang="${c==='zh'?'zh-Hans':c}" aria-pressed="${c===I18N.lang}"><span>${native}</span>${c!=='en'?`<small class="notr" lang="en">${en}</small>`:''}</button></li>`).join('');
+    $('langlist').innerHTML=LANGS.map(([c,native,en])=>`<li><button type="button" data-lang="${c}" lang="${({zh:'zh-Hans',yue:'zh-HK'})[c]||c}" aria-pressed="${c===I18N.lang}"><span>${native}</span>${c!=='en'?`<small class="notr" lang="en">${en}</small>`:''}</button></li>`).join('');
     const cur=LANGS.find(l=>l[0]===I18N.lang)||LANGS[0];
-    $('langbtn').querySelector('.langcode').textContent=cur[0].toUpperCase();
+    $('langbtn').querySelector('.langcode').textContent=({yue:'粵',zh:'中',ja:'日'})[cur[0]]||cur[0].toUpperCase();
     $('langsr').textContent='Language: '+cur[1];
   }
   async function setLang(code,save=true){
@@ -2134,7 +2134,7 @@
     }
     const R=document.documentElement;
     I18N.lang=code; I18N.x=code==='en'?null:I18N_CACHE[code].x; I18N.t=code==='en'?[]:I18N_CACHE[code].t;
-    R.lang=code==='zh'?'zh-Hans':code; R.dir=code==='ar'?'rtl':'ltr';
+    R.lang={zh:'zh-Hans',yue:'zh-HK'}[code]||code; R.dir=code==='ar'?'rtl':'ltr';
     if(save){ try{ localStorage.setItem('nolag-lang',code); }catch(e){} }
     drawLangList(); trTree(R); fitHeader(); R.classList.remove('i18n-wait');
   }
