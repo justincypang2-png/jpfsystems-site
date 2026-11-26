@@ -213,7 +213,11 @@
   .pagebar{padding:18px 0 0}
   body[data-page=board] #board, body[data-page=doit] #doit, body[data-page=help] #how, body[data-page=about] #about{padding-top:20px}
   .aboutwrap p{max-width:64ch;margin:0 0 16px}
-  body[data-page=shops] .pg-shops{display:block} body[data-page=shops] #shops{padding-top:20px}
+  body[data-page=shops] .pg-shops,body[data-page=apply] .pg-apply{display:block} body[data-page=shops] #shops,body[data-page=apply] #apply{padding-top:20px}
+  .applywrap{max-width:760px}
+  .applycta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:26px 0 8px} .applycta span{color:var(--muted)}
+  .applyback{margin:0 0 6px} .applyback a{font-weight:700}
+  .applycard{margin-top:18px}
   .lsub{font-size:calc((22px) * var(--fs,1));margin:30px 0 8px}
   .lterms{color:var(--ink);max-width:64ch;margin:0 0 10px} ul.lterms{padding-left:1.2em} ul.lterms li{margin:0 0 8px}
   .ticks{display:grid;gap:8px;margin:4px 0 6px}
@@ -234,7 +238,8 @@
   .localcta,.doorsnote{color:var(--muted);margin:4px 0 22px}
   @media(max-width:520px){ .srow.lshop{grid-template-columns:auto minmax(0,1fr)} .srow.lshop .sacts{grid-column:1/-1;flex-direction:row} .srow.lshop .sacts a{flex:1;white-space:normal;text-align:center} }
   .doorsnote{margin:18px 0 0;text-align:center}
-  .enonly-note{display:none;margin:0 0 10px;padding:8px 12px;border-radius:10px;background:var(--soft);color:var(--ink);font-size:calc((15px) * var(--fs,1))} html:not([lang=en]) .enonly-note{display:block}
+  .enonly-note{display:none;margin:0 0 10px;padding:8px 12px;border-radius:10px;background:var(--soft);color:var(--ink);font-size:calc((15px) * var(--fs,1))} html:not([lang|=en]) .enonly-note{display:block}
+  body[data-page=apply] .pagebar{display:none}
   .ltags{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 6px} .ltag{font-size:calc((14px) * var(--fs,1));border:1px solid var(--line);border-radius:999px;padding:1px 10px;color:var(--ink)}
   .aboutwrap h2{font-size:calc((24px) * var(--fs,1));margin:32px 0 10px}
   .motto{font-size:calc((24px) * var(--fs,1));font-weight:700;color:var(--blue);margin:-12px 0 22px !important}
@@ -414,7 +419,12 @@
   .search{display:flex;gap:10px;align-items:flex-end;background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:12px;box-shadow:0 12px 40px rgba(18,24,38,.10)}
   .sfield{display:flex;flex-direction:column;gap:2px}
   .sfield.grow{flex:1}
-  .sfield.pc{width:150px}
+  .sfield.pc{width:180px;position:relative}
+  .sfield.pc input{padding-right:42px}
+  .geobtn{position:absolute;right:0;bottom:4px;width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:10px;background:none;color:var(--blue);cursor:pointer}
+  .geobtn:hover{background:var(--blue-tint)} .geobtn svg{width:22px;height:22px} .geobtn[aria-busy=true] svg{animation:geospin 1s linear infinite}
+  @keyframes geospin{to{transform:rotate(360deg)}}
+  html.a11y-still .geobtn[aria-busy=true] svg{animation:none}
   .sfield label{font-size:calc((15px) * var(--fs,1));font-weight:700;padding-left:4px}
   .sfield input{border:0 !important;min-height:48px;font-size:calc((20px) * var(--fs,1));padding:6px 4px;outline-offset:2px}
   .sfield.grow{border-right:2px solid var(--line);padding-right:10px}
@@ -643,6 +653,7 @@
     <div class="sfield pc">
       <label for="qpc">Postcode</label>
       <input type="text" id="qpc" name="qpc" autocomplete="postal-code" autocapitalize="characters" placeholder="SE15 4AB">
+      <button type="button" class="geobtn" id="geobtn" aria-label="Use my location" title="Use my location"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12H5M19 12h3.5"/></svg></button>
     </div>
     <button class="sgo" type="submit">Search</button>
   </form>
@@ -880,7 +891,7 @@
   </div>
 </div></section>
 
-<section id="shops" class="pg pg-shops"><div class="wrap doit">
+<section id="shops" class="pg pg-shops"><div class="wrap applywrap">
   <div class="shopsintro">
     <p class="enonly-note">This page is only in English for now.</p>
     <div translate="no" lang="en">
@@ -891,6 +902,7 @@
       <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>You keep the sale</b> Customers order and pay you directly. We don't take a cut.</span></li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Checked before it goes live</b> We review every listing and only show it to postcodes you deliver to.</span></li>
     </ul>
+    <p class="applycta"><a class="btn" href="#apply">Apply here</a> <span>Free, and takes about two minutes.</span></p>
     <h2 class="lsub">How listings are shown</h2>
     <p class="lterms">Your shop appears when someone searches for something in your categories from a postcode you cover. Shops that can still deliver today come first, then the ones with the latest order time. No shop can pay to rank higher. If we ever offer paid placement, it will be clearly marked as Sponsored, and we'll update these terms first.</p>
     <h2 class="lsub" id="lterms">Listing terms</h2>
@@ -902,11 +914,19 @@
       <li>We only use your details to run your listing and to contact you about it.</li>
       <li>Questions or complaints: email <span class="contactline"></span>. We aim to reply within 2 working days.</li>
     </ul>
+    <p class="applycta"><a class="btn" href="#apply">Apply here</a> <span>Free, and takes about two minutes.</span></p>
     </div>
   </div>
-  <div class="card" id="listcard" tabindex="-1" translate="no" lang="en">
+</div></section>
+
+<section id="apply" class="pg pg-apply"><div class="wrap applywrap">
+  <p class="enonly-note">This page is only in English for now.</p>
+  <div translate="no" lang="en">
+  <p class="applyback"><a href="#shops">← About listing your shop</a></p>
+  <h1 class="s" tabindex="-1">Apply to list your shop</h1>
+  <p class="lead" style="font-size:calc((19px) * var(--fs,1))">We check every application and email you within 2 working days.</p>
+  <div class="card applycard" id="listcard" tabindex="-1">
     <form id="lf" novalidate>
-      <h2>Tell us about your shop</h2>
       <p class="hint">It takes about two minutes. Questions marked optional can be left blank.</p>
       <p class="error-msg lsum" id="lf-sum" role="alert" tabindex="-1">Please check the questions marked in red.</p>
       <div class="field" id="lf-name"><label for="l-name">Shop name</label>
@@ -965,6 +985,7 @@
       <h2>Thanks, we've got your listing</h2>
       <p>We'll check it and email you within 2 working days. Once it's live, it shows to people searching near you.</p>
     </div>
+  </div>
   </div>
 </div></section>
 
@@ -1946,7 +1967,7 @@
   // Shareable searches: jpfsystems.co/?q=ps5 opens the results; Back returns to the previous search.
   let fromHistory=false;
   // Separate pages (#board, #doit, #help) so the home page stays short. Old links like #how, #faq and #ask still work.
-  const PAGES={board:'Open now',doit:'Do it for me',help:'How it works',about:'About',shops:'List your shop'}, ALIAS={how:'help',faq:'help',fees:'doit',cover:'doit',ask:'doit',lterms:'shops',listcard:'shops'};
+  const PAGES={board:'Open now',doit:'Do it for me',help:'How it works',about:'About',shops:'List your shop',apply:'Apply to list your shop'}, ALIAS={how:'help',faq:'help',fees:'doit',cover:'doit',ask:'doit',lterms:'shops',listcard:'apply'};
   function showPage(p,anchor){
     const was=document.body.dataset.page;
     if(p) document.body.dataset.page=p; else delete document.body.dataset.page;
@@ -2175,6 +2196,30 @@
     }
   });
 
+    // ---------- "Use my location": only asks when tapped; the browser shows its own permission prompt ----------
+  // The position goes from the visitor's browser to postcodes.io (free, open data) to find the nearest postcode. NoLag never stores it.
+  $('geobtn').addEventListener('click',()=>{
+    const b=$('geobtn');
+    if(!('geolocation' in navigator)) return toast('We couldn\'t get your location. Type your postcode instead.');
+    b.setAttribute('aria-busy','true'); toast('Finding your location…');
+    navigator.geolocation.getCurrentPosition(async pos=>{
+      try{
+        const {latitude:lat, longitude:lon}=pos.coords;
+        let r=await fetch(`https://api.postcodes.io/postcodes?lon=${lon}&lat=${lat}&limit=1&radius=2000`).then(x=>x.json());
+        if(!r.result) r=await fetch(`https://api.postcodes.io/postcodes?lon=${lon}&lat=${lat}&limit=1&widesearch=true`).then(x=>x.json());
+        const pc=r.result && r.result[0] && r.result[0].postcode;
+        if(!pc){ toast('We couldn\'t find a UK postcode near you. Type it instead.'); return; }
+        $('qpc').value=pc; try{ localStorage.setItem(PKEY,pc); }catch(e){}
+        toast(`Postcode set to ${pc}.`);
+        if(qIn.value.trim() && !$('results').hidden) $('sf').requestSubmit();
+      }catch(e){ toast('We couldn\'t get your location. Type your postcode instead.'); }
+      finally{ b.removeAttribute('aria-busy'); }
+    }, err=>{
+      b.removeAttribute('aria-busy');
+      toast(err.code===1 ? 'Location is off for this site. Type your postcode instead.' : 'We couldn\'t get your location. Type your postcode instead.');
+    }, {enableHighAccuracy:false, timeout:12000, maximumAge:600000});
+  });
+
   // ---------- Local shops (independents that list themselves; checked by hand, then added to local-shops.json) ----------
   let LOCAL_SHOPS=null;
   const loadLocal=()=> LOCAL_SHOPS ? Promise.resolve(LOCAL_SHOPS)
@@ -2257,7 +2302,7 @@
   // Dates and times are re-written the way each language writes them. Shop and product names stay in English.
   const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['yue','廣東話（繁體）','Cantonese'],['ja','日本語','Japanese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
   const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',yue:'zh-HK',ja:'ja-JP',ar:'ar-u-nu-latn',hi:'hi-IN'};
-  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='2';
+  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='3';
   const TXT=new WeakMap(), ATT=new WeakMap(), I18N_ATTRS=['placeholder','aria-label','title','alt'];
   const splitSent=s=>s.split(/(?<![A-Z]\.[A-Z]\.)(?<=[.!?])\s+(?=[A-Z“])/);
   const tplRe=en=>new RegExp('^'+en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\\\{#\d\\\}/g,'([\\d.,]+)').replace(/\\\{\d\\\}/g,'(.+?)')+'$');

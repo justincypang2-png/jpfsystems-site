@@ -14,7 +14,7 @@ T=[
  "Delivering to {0}.","We don't recognise “{0}” yet, so these are general shops that might have it.","Showing shops that sell {0}.","Prices vary; filter by up to £{#0} on the shop's site.",
  "Closed for today: orders stopped at {0}.","today's orders closed at {0}","orders closed at {0}","Order by {0}:","then order by {0}, arrives {1}","order by {0}, arrives {1}",
  "Updated {0}.","1 product","{#0} products","{#0} from {1}",": {0}, £{#1} (opens in a new tab)","for {0} (opens in a new tab)","on {0} (opens in a new tab)",", sold by {0}","Ideas: {0}","Copy this link: {0}","Today by {0}",
- "Need it today? {0} stops taking same-day orders in","Same-day delivery is open. {0} takes orders until","Same-day: {0} closes in","What kind of {0} are you after?","Language: {0}","Run a local shop near {0}?",
+ "Need it today? {0} stops taking same-day orders in","Same-day delivery is open. {0} takes orders until","Same-day: {0} closes in","What kind of {0} are you after?","Language: {0}","Run a local shop near {0}?","Postcode set to {0}.",
 ]
 def rx(t):
     e=re.escape(t)
@@ -52,7 +52,7 @@ for m in re.findall(r"(?:promise|eta|fee|how|via|note|areaNote|etaBig|etaSmall):
 for m in re.findall(r'(?:promise|eta|fee|how|via|note):"([^"]+)"',src):
     for p in split_sent(m): add(p)
 X=[x for x in X if x not in names and x not in ('doit','help','Amazon takes orders until')]
-for late in ['Search for tomorrow','Menu',"Local shops near","Run a local shop?","List it free","Local shop","Example","Delivers itself","Courier delivery","On delivery apps","Collect today","Closed for today","Website","Call","List your shop","Your shop here","An independent shop near you","set by the shop","Delivery:","For local shops","Run an independent shop that can deliver today?","List it on NoLag for free","This page is only in English for now."]:
+for late in ['Search for tomorrow','Menu',"Local shops near","Run a local shop?","List it free","Local shop","Example","Delivers itself","Courier delivery","On delivery apps","Collect today","Closed for today","Website","Call","List your shop","Your shop here","An independent shop near you","set by the shop","Delivery:","For local shops","Run an independent shop that can deliver today?","List it on NoLag for free","This page is only in English for now.","Use my location","Finding your location…","Location is off for this site. Type your postcode instead.","We couldn't find a UK postcode near you. Type it instead.","We couldn't get your location. Type your postcode instead."]:
     if late not in X: X.append(late)
 json.dump({'x':X,'t':T},open('master.json','w'),indent=0,ensure_ascii=False)
 print(len(X),'exact,',len(T),'templates,', sum(len(x.split()) for x in X)+sum(len(t.split()) for t in T),'words')

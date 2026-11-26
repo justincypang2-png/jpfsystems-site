@@ -523,3 +523,9 @@ t56|Idioma: {0}
 465|Inscríbela gratis en NoLag
 466|Por ahora esta página solo está en inglés.
 t57|¿Tienes una tienda cerca de {0}?
+467|Usar mi ubicación
+468|Buscando tu ubicación…
+469|La ubicación está desactivada para este sitio. Escribe tu código postal.
+470|No encontramos un código postal del Reino Unido cerca de ti. Escríbelo tú.
+471|No pudimos obtener tu ubicación. Escribe tu código postal.
+t58|Código postal: {0}.

@@ -523,3 +523,9 @@ t56|Sprache: {0}
 465|Trag ihn kostenlos bei NoLag ein
 466|Diese Seite gibt es vorerst nur auf Englisch.
 t57|Du hast einen Laden in der Nähe von {0}?
+467|Meinen Standort verwenden
+468|Standort wird ermittelt…
+469|Der Standort ist für diese Seite deaktiviert. Gib stattdessen deine Postleitzahl ein.
+470|Wir haben keine britische Postleitzahl in deiner Nähe gefunden. Gib sie bitte ein.
+471|Wir konnten deinen Standort nicht ermitteln. Gib stattdessen deine Postleitzahl ein.
+t58|Postleitzahl gesetzt: {0}.

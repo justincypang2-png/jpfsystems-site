@@ -523,3 +523,9 @@ t56|Lingua: {0}
 465|Inseriscilo gratis su NoLag
 466|Per ora questa pagina è solo in inglese.
 t57|Hai un negozio vicino a {0}?
+467|Usa la mia posizione
+468|Ricerca della posizione…
+469|La posizione è disattivata per questo sito. Scrivi invece il tuo CAP.
+470|Non abbiamo trovato un CAP britannico vicino a te. Scrivilo tu.
+471|Non siamo riusciti a ottenere la tua posizione. Scrivi invece il tuo CAP.
+t58|CAP impostato: {0}.

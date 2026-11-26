@@ -466,7 +466,12 @@
 "For local shops",
 "Run an independent shop that can deliver today?",
 "List it on NoLag for free",
-"This page is only in English for now."
+"This page is only in English for now.",
+"Use my location",
+"Finding your location…",
+"Location is off for this site. Type your postcode instead.",
+"We couldn't find a UK postcode near you. Type it instead.",
+"We couldn't get your location. Type your postcode instead."
 ],
 "t": [
 "1 way to get “{0}” today",
@@ -526,6 +531,7 @@
 "Same-day: {0} closes in",
 "What kind of {0} are you after?",
 "Language: {0}",
-"Run a local shop near {0}?"
+"Run a local shop near {0}?",
+"Postcode set to {0}."
 ]
 }
