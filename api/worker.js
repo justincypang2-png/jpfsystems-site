@@ -9,7 +9,7 @@
 // Stores no names, emails, IP addresses or cookies. Postcodes are cut to the area (e.g. "SE15").
 
 const ALLOWED_ORIGINS = ['https://www.jpfsystems.co', 'https://jpfsystems.co'];
-const TYPES = ['search', 'click', 'sort', 'doit'];
+const TYPES = ['search', 'click', 'sort', 'doit', 'local', 'listing']; // local = Call/Website on a local shop, listing = a shop sent its details
 // Keep only the postcode area: "SE15 4AB" -> "SE15", "SE5 4AB" -> "SE5", "SE5" -> "SE5".
 const outward = pc => {
   if (!pc) return null;
@@ -132,7 +132,7 @@ export default {
         outward(area),
         text(e.shop, 20),
         Number.isInteger(e.position) ? e.position : null,
-        text(e.sort, 10),
+        text(e.sort || e.act, 10),
         Number.isInteger(e.results) ? e.results : null,
         text(e.session, 16),
       ).run();
@@ -154,7 +154,7 @@ export default {
       }
 
       const q = (sql, ...args) => env.DB.prepare(sql).bind(since, ...args).all().then(r => r.results);
-      const [byType, visits, topSearches, notUnderstood, clicksByShop, clicksByProduct, doit, byHour, byArea] = await Promise.all([
+      const [byType, visits, topSearches, notUnderstood, clicksByShop, clicksByProduct, doit, byHour, byArea, localLeads] = await Promise.all([
         q('SELECT type, COUNT(*) AS n FROM events WHERE ts >= ? GROUP BY type'),
         q("SELECT COUNT(DISTINCT session) AS visits_that_searched FROM events WHERE ts >= ? AND type = 'search'"),
         q("SELECT COALESCE(understood, typed) AS search, COUNT(*) AS n FROM events WHERE ts >= ? AND type = 'search' GROUP BY 1 ORDER BY n DESC LIMIT 25"),
@@ -164,6 +164,7 @@ export default {
         q("SELECT understood AS product, COUNT(*) AS n FROM events WHERE ts >= ? AND type = 'doit' GROUP BY 1 ORDER BY n DESC"),
         q("SELECT CAST(strftime('%H', ts) AS INTEGER) AS hour_utc, COUNT(*) AS searches FROM events WHERE ts >= ? AND type = 'search' GROUP BY 1 ORDER BY 1"),
         q("SELECT area, COUNT(*) AS searches FROM events WHERE ts >= ? AND type = 'search' AND area IS NOT NULL GROUP BY area ORDER BY searches DESC LIMIT 20"),
+        q("SELECT shop, SUM(sort = 'call') AS calls, SUM(sort = 'web') AS website_visits, COUNT(*) AS leads FROM events WHERE ts >= ? AND type = 'local' GROUP BY shop ORDER BY leads DESC"),
       ]);
       const count = t => (byType.find(r => r.type === t) || {}).n || 0;
       const searches = count('search'), clicks = count('click');
@@ -176,6 +177,8 @@ export default {
           click_rate: searches ? Math.round((100 * clicks) / searches) + '%' : '0%',
           do_it_for_me: count('doit'),
           sort_changes: count('sort'),
+          local_shop_leads: count('local'),
+          shop_listings_sent: count('listing'),
         },
         top_searches: topSearches,
         searches_we_did_not_understand: notUnderstood,
@@ -183,6 +186,7 @@ export default {
         clicks_by_product_and_shop: clicksByProduct,
         do_it_for_me_by_product: doit,
         searches_by_hour_utc: byHour,
+        leads_by_local_shop: localLeads,
         searches_by_area: byArea,
       };
       return new Response(JSON.stringify(report, null, 2), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
