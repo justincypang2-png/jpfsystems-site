@@ -529,3 +529,24 @@ t57|Hai un negozio vicino a {0}?
 470|Non abbiamo trovato un CAP britannico vicino a te. Scrivilo tu.
 471|Non siamo riusciti a ottenere la tua posizione. Scrivi invece il tuo CAP.
 t58|CAP impostato: {0}.
+472|La nostra scelta per te
+473|Scelta migliore
+474|Scelta migliore, anche la più veloce
+475|Scelta migliore, anche la più economica
+476|Scelta migliore, la più veloce e la più economica
+477|La scelta migliore bilancia prezzo e attesa: ogni giorno in più vale circa il 10% del prezzo.
+478|Ho Amazon Prime
+479|(la consegna gratuita Prime è inclusa nei prezzi)
+480|Consegna gratuita con Prime
+481|Consegna gratuita con Prime (senza Prime, Amazon mostra il costo)
+482|Consegna Prime: Amazon mostra la data esatta prima del pagamento
+483|Ogni ricerca controlla tutti i negozi insieme.
+484|Foto, prezzi e disponibilità arrivano da ogni negozio: gli elenchi prodotti si aggiornano ogni notte, Amazon ed eBay sono in tempo reale.
+485|Le date di consegna di eBay sono una stima del venditore.
+486|Possiamo ricevere una commissione quando acquisti, ma non cambia mai il prezzo né la nostra scelta.
+487|Migliore, più veloce e più economica
+488|più spedizione
+t59|{0}, spedizione inclusa
+t60|{0}, più spedizione
+t61|Abbiamo confrontato {#0} opzioni di {#1} negozi che consegnano entro 3 giorni.
+t62|Abbiamo confrontato {#0} opzioni di 1 negozio che consegnano entro 3 giorni.

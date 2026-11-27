@@ -1,6 +1,7 @@
-# Puts the NoLag API (api/worker.js) live on Cloudflare whenever it changes, and stores the eBay keys as Worker secrets.
+# Puts the NoLag API (api/worker.js) live on Cloudflare whenever it changes, and stores the eBay and Amazon keys as Worker secrets.
 # Needs repository secrets: CLOUDFLARE_API_TOKEN (permissions: Workers Scripts Edit, D1 Edit), CLOUDFLARE_ACCOUNT_ID.
-# Optional: EBAY_CLIENT_ID, EBAY_CLIENT_SECRET (live eBay listings), EPN_CAMPAIGN_ID (eBay Partner Network commission).
+# Optional: EBAY_CLIENT_ID, EBAY_CLIENT_SECRET (live eBay listings), EPN_CAMPAIGN_ID (eBay Partner Network commission),
+# AMAZON_CREDENTIAL_ID, AMAZON_CREDENTIAL_SECRET, AMAZON_PARTNER_TAG (live Amazon Prime items, Creators API; needs 10 Amazon sales in 30 days).
 name: Deploy API
 on:
   push:
@@ -16,6 +17,9 @@ jobs:
       EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
       EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
       EPN_CAMPAIGN_ID: ${{ secrets.EPN_CAMPAIGN_ID }}
+      AMAZON_CREDENTIAL_ID: ${{ secrets.AMAZON_CREDENTIAL_ID }}
+      AMAZON_CREDENTIAL_SECRET: ${{ secrets.AMAZON_CREDENTIAL_SECRET }}
+      AMAZON_PARTNER_TAG: ${{ secrets.AMAZON_PARTNER_TAG }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,10 +32,10 @@ jobs:
         if: env.SKIP != '1'
         working-directory: api
         run: npx --yes wrangler@4 deploy
-      - name: Save eBay keys as Worker secrets
+      - name: Save eBay and Amazon keys as Worker secrets
         if: env.SKIP != '1'
         working-directory: api
         run: |
-          for k in EBAY_CLIENT_ID EBAY_CLIENT_SECRET EPN_CAMPAIGN_ID; do
+          for k in EBAY_CLIENT_ID EBAY_CLIENT_SECRET EPN_CAMPAIGN_ID AMAZON_CREDENTIAL_ID AMAZON_CREDENTIAL_SECRET AMAZON_PARTNER_TAG; do
             v="${!k}"; if [ -n "$v" ]; then printf %s "$v" | npx --yes wrangler@4 secret put "$k"; fi
           done

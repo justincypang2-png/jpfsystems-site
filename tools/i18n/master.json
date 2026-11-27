@@ -471,7 +471,24 @@
 "Finding your location…",
 "Location is off for this site. Type your postcode instead.",
 "We couldn't find a UK postcode near you. Type it instead.",
-"We couldn't get your location. Type your postcode instead."
+"We couldn't get your location. Type your postcode instead.",
+"Our pick for you",
+"Best pick",
+"Best pick, also fastest",
+"Best pick, also cheapest",
+"Best pick, also fastest and cheapest",
+"Best pick weighs price against waiting: each extra day counts as about 10% of the price.",
+"I have Amazon Prime",
+"(free Prime delivery counts in the prices)",
+"Free delivery with Prime",
+"Free delivery with Prime (without Prime, Amazon shows the charge)",
+"Prime delivery: Amazon shows your exact date before you pay",
+"Every search checks all the shops at once.",
+"Photos, prices and stock come from each shop: product lists are updated every night, Amazon and eBay are live.",
+"Delivery dates on eBay are the seller's estimate.",
+"We may earn a commission when you buy, which never changes the price or our pick.",
+"Best, fastest and cheapest",
+"plus delivery"
 ],
 "t": [
 "1 way to get “{0}” today",
@@ -532,6 +549,10 @@
 "What kind of {0} are you after?",
 "Language: {0}",
 "Run a local shop near {0}?",
-"Postcode set to {0}."
+"Postcode set to {0}.",
+"{0}, with delivery",
+"{0}, plus delivery",
+"We checked {#0} options from {#1} shops that arrive within 3 days.",
+"We checked {#0} options from 1 shop that arrive within 3 days."
 ]
 }

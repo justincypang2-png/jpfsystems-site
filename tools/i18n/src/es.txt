@@ -529,3 +529,24 @@ t57|¿Tienes una tienda cerca de {0}?
 470|No encontramos un código postal del Reino Unido cerca de ti. Escríbelo tú.
 471|No pudimos obtener tu ubicación. Escribe tu código postal.
 t58|Código postal: {0}.
+472|Nuestra elección para ti
+473|Mejor opción
+474|Mejor opción, y la más rápida
+475|Mejor opción, y la más barata
+476|Mejor opción, la más rápida y la más barata
+477|La mejor opción equilibra precio y espera: cada día extra cuenta como un 10 % del precio, más o menos.
+478|Tengo Amazon Prime
+479|(el envío gratis de Prime se incluye en los precios)
+480|Envío gratis con Prime
+481|Envío gratis con Prime (sin Prime, Amazon muestra el coste)
+482|Envío Prime: Amazon muestra tu fecha exacta antes de pagar
+483|Cada búsqueda consulta todas las tiendas a la vez.
+484|Las fotos, los precios y el stock vienen de cada tienda: las listas de productos se actualizan cada noche y Amazon y eBay están en directo.
+485|Las fechas de entrega de eBay son una estimación del vendedor.
+486|Podemos ganar una comisión cuando compras, pero nunca cambia el precio ni nuestra elección.
+487|Mejor, más rápida y más barata
+488|más envío
+t59|{0}, con envío
+t60|{0}, más envío
+t61|Hemos comparado {#0} opciones de {#1} tiendas que llegan en 3 días o menos.
+t62|Hemos comparado {#0} opciones de 1 tienda que llegan en 3 días o menos.

@@ -3,7 +3,7 @@
 // 2) GET  /report?key=… : a summary for you (top searches, searches we didn't understand, clicks by shop…)
 // 3) GET  /export.csv?key=… : every event as a spreadsheet file
 // 4) GET  /search?q=…&area=SE15 : real products (photo, price, stock, delivery) from the shops' own feeds (loaded nightly by
-//    engine/import.mjs) plus live eBay listings you can pay for now, grouped by when they arrive
+//    engine/import.mjs) plus live Amazon Prime items and eBay listings you can pay for now, grouped by when they arrive
 // 5) POST /ask          : the search assistant. Reads a vague search ("tv", "present for dad") and asks one short
 //    question with tap-able answers, or returns precise search words. Uses Cloudflare Workers AI (free daily allowance).
 // Stores no names, emails, IP addresses or cookies. Postcodes are cut to the area (e.g. "SE15").
@@ -66,11 +66,12 @@ export default {
       const words = q.split(/\s+/).filter(w => w.length > 1).slice(0, 6);
       if (!words.length) return out({ products: [] });
       // Shops write "PlayStation 5" where people type "ps5", so each word also matches what shops call it.
-      const SYN = { ps5: ['playstation 5'], ps4: ['playstation 4'], airpod: ['airpods'], telly: ['tv', 'television'], tv: ['television'], tele: ['tv'], hoover: ['vacuum'], nappies: ['nappy'], nappy: ['nappies'], phone: ['smartphone', 'mobile'], mobile: ['phone'], headphones: ['earphones', 'earbuds'], earbuds: ['earphones', 'headphones'], laptop: ['notebook', 'macbook', 'chromebook'], hairdryer: ['hair dryer'], straighteners: ['straightener'], fridge: ['refrigerator'], specs: ['glasses'] };
+      const SYN = { ps5: ['playstation 5'], ps4: ['playstation 4'], airpod: ['airpods'], telly: ['tv', 'television'], tv: ['television'], tele: ['tv'], hoover: ['vacuum'], nappies: ['nappy'], nappy: ['nappies'], phone: ['smartphone', 'mobile'], mobile: ['phone'], headphones: ['earphones', 'earbuds'], earbuds: ['earphones', 'headphones'], laptop: ['notebook', 'macbook', 'chromebook'], hairdryer: ['hair dryer'], straighteners: ['straightener'], fridge: ['refrigerator'], specs: ['glasses'], charger: ['adapter', 'plug'] };
       const term = w => '(' + [`"${w}"*`, ...(SYN[w] || []).map(s => `"${s}"`)].join(' OR ') + ')';
       const find = match => env.DB.prepare('SELECT p.*, bm25(pfts, 10.0, 4.0, 1.0) AS score FROM pfts JOIN products p ON p.rid = pfts.rowid WHERE pfts MATCH ? ORDER BY score LIMIT 120').bind(match).all().then(r => r.results);
       const area = (url.searchParams.get('area') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').match(/^[A-Z]{1,2}\d[A-Z\d]?/)?.[0] || '';
       const livePromise = ebayLive(env, q, area).catch(() => []); // runs while the database is searched
+      const amazonPromise = amazonLive(env, q).catch(() => []);
       let rows = [];
       try {
         rows = await find(words.map(term).join(' AND '));
@@ -85,10 +86,13 @@ export default {
       const ACC = /\b(case|cases|cover|covers|cable|lead|charger|charging|controller|strap|protector|skin|stand|mount|adapter|replacement|refill|sleeve|holder|bag|grip|dock|tips|decal|sticker|compatible)\b/;
       const wantsAcc = ACC.test(q);
       const seen = new Set(), groups = { today: [], tomorrow: [], unknown: [], later: [] };
-      // Live eBay listings: keep only ones that really are the thing searched for, at most 4 per arrival group.
+      // Live Amazon and eBay items: keep only ones that really are the thing searched for, at most 4 per source in each arrival group.
       const has = (name, w) => [w, ...(SYN[w] || [])].some(s => name.includes(s));
-      const live = (await livePromise).filter(p => words.every(w => has(p.name.toLowerCase(), w)));
-      const liveCount = { today: 0, tomorrow: 0, unknown: 0, later: 0 };
+      // eBay titles must have every word; Amazon's own search is sharper, so its titles need only half of them ("phone charger usb" → "Anker USB C Charger").
+      const half = Math.ceil(words.length / 2);
+      const live = [...(await amazonPromise).filter(p => words.filter(w => has(p.name.toLowerCase(), w)).length >= half),
+        ...(await livePromise).filter(p => words.every(w => has(p.name.toLowerCase(), w)))];
+      const liveCount = {};
       rows.map(r => ({ ...r, acc: !wantsAcc && ACC.test(r.name.toLowerCase()) ? 1 : 0 }))
         .sort((a, b) => a.acc - b.acc || a.score - b.score || a.price - b.price)
         .forEach(r => {
@@ -102,9 +106,9 @@ export default {
         .sort((a, b) => a.acc - b.acc || a.i - b.i)
         .forEach(p => {
           const g = groups[p.speed] || groups.unknown;
-          const key = 'ebay|' + p.name.toLowerCase();
-          if (seen.has(key) || g.length >= 8 || liveCount[p.speed] >= 4) return;
-          seen.add(key); liveCount[p.speed]++;
+          const key = p.shop.toLowerCase() + '|' + p.name.toLowerCase(), n = p.shop + '|' + p.speed;
+          if (seen.has(key) || g.length >= 8 || (liveCount[n] || 0) >= 4) return; // at most 4 per live source in each arrival group
+          seen.add(key); liveCount[n] = (liveCount[n] || 0) + 1;
           const { acc, i, ...rest } = p; g.push({ ...rest, accessory: !!acc });
         });
       return out({ products: [...groups.today, ...groups.tomorrow, ...groups.unknown, ...groups.later] });
@@ -243,6 +247,64 @@ async function ebayLive(env, q, area) {
   }).filter(p => p.price > 0 && p.url && p.name);
   if (LIVE_CACHE.size > 500) LIVE_CACHE.clear();
   LIVE_CACHE.set(key, { t: Date.now(), v });
+  return v;
+}
+
+// ---------- live products from Amazon (Creators API) ----------
+// Real Amazon photos, prices and Prime items, through Amazon's official API for Associates.
+// Switched on by three Worker secrets: AMAZON_CREDENTIAL_ID, AMAZON_CREDENTIAL_SECRET and AMAZON_PARTNER_TAG (your tag, e.g. nolag-21).
+// Amazon only gives API access once an Associates account has 10 qualifying sales in 30 days; until then this returns nothing
+// and the site's tagged "Search Amazon" links earn those first sales.
+// Amazon's rules: images are shown straight from Amazon's servers, never copied; links to them are kept at most 24 hours (we keep 15 minutes).
+// The API does not give a delivery date, so we ask only for Prime items and say "usually tomorrow, Amazon shows your date".
+let AMZ_TOKEN = null, AMZ_EXP = 0;
+const AMZ_CACHE = new Map();
+const AMZ_RESOURCES = ['images.primary.large', 'itemInfo.title', 'itemInfo.byLineInfo', 'offersV2.listings.price', 'offersV2.listings.availability',
+  'offersV2.listings.condition', 'offersV2.listings.isBuyBoxWinner', 'offersV2.listings.merchantInfo', 'offersV2.listings.dealDetails'];
+async function amazonToken(env) {
+  if (AMZ_TOKEN && Date.now() < AMZ_EXP) return AMZ_TOKEN;
+  const r = await fetch(env.AMAZON_TOKEN_URL || 'https://api.amazon.co.uk/auth/o2/token', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ grant_type: 'client_credentials', client_id: env.AMAZON_CREDENTIAL_ID, client_secret: env.AMAZON_CREDENTIAL_SECRET, scope: 'creatorsapi::default' }),
+  });
+  const j = await r.json();
+  if (!j.access_token) throw new Error('Amazon sign-in failed');
+  AMZ_TOKEN = j.access_token; AMZ_EXP = Date.now() + ((j.expires_in || 3600) - 120) * 1000;
+  return AMZ_TOKEN;
+}
+async function amazonLive(env, q) {
+  if (!env.AMAZON_CREDENTIAL_ID || !env.AMAZON_CREDENTIAL_SECRET || !env.AMAZON_PARTNER_TAG || !q) return [];
+  const hit = AMZ_CACHE.get(q);
+  if (hit && Date.now() - hit.t < 15 * 60 * 1000) return hit.v;
+  const token = await amazonToken(env);
+  const r = await fetch(env.AMAZON_API_URL || 'https://creatorsapi.amazon/catalog/v1/searchItems', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json', 'x-marketplace': 'www.amazon.co.uk' },
+    body: JSON.stringify({ partnerTag: env.AMAZON_PARTNER_TAG, marketplace: 'www.amazon.co.uk', keywords: q, itemCount: 10, condition: 'New',
+      availability: 'Available', deliveryFlags: ['Prime'], resources: AMZ_RESOURCES }),
+  });
+  if (r.status === 401) { AMZ_TOKEN = null; return []; }
+  if (!r.ok) return [];
+  const j = await r.json();
+  const v = (j.searchResult?.items || []).map(it => {
+    const ls = it.offersV2?.listings || [], l = ls.find(x => x.isBuyBoxWinner) || ls[0];
+    if (!l || l.condition?.value && l.condition.value !== 'New') return null;
+    const price = Number(l.price?.money?.amount), basis = l.price?.savingBasis;
+    const was = basis && /WAS_PRICE|LOWEST_PRICE_STRIKETHROUGH/.test(basis.savingBasisType || '') ? Number(basis.money?.amount) : null;
+    const type = l.availability?.type || '';
+    const slow = /LEADTIME|AVAILABLE_DATE|PREORDER/.test(type);
+    if (/OUT_OF_STOCK|UNAVAILABLE/.test(type) || slow) return null; // NoLag is about getting it soon: skip back-orders and pre-orders
+    const seller = l.merchantInfo?.name && !/^amazon/i.test(l.merchantInfo.name) ? l.merchantInfo.name : '';
+    return {
+      shop: 'Amazon', seller, name: String(it.itemInfo?.title?.displayValue || '').slice(0, 200), brand: it.itemInfo?.byLineInfo?.brand?.displayValue || '',
+      price, was: was > price ? was : null, img: it.images?.primary?.large?.url || it.images?.primary?.medium?.url || '', url: it.detailPageURL,
+      stock: type === 'IN_STOCK_SCARCE' ? 'low' : type === 'IN_STOCK' ? 'in' : null, speed: slow ? 'later' : 'tomorrow', cutoff: null, live: true, prime: !slow,
+      arrive: 'Prime delivery: Amazon shows your exact date before you pay',
+      fee: slow ? '' : 'Free delivery with Prime', deal: l.dealDetails?.badge || '',
+    };
+  }).filter(p => p && p.price > 0 && p.url && p.name);
+  if (AMZ_CACHE.size > 500) AMZ_CACHE.clear();
+  AMZ_CACHE.set(q, { t: Date.now(), v });
   return v;
 }
 

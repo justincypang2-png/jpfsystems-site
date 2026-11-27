@@ -529,3 +529,24 @@ t57|Du hast einen Laden in der Nähe von {0}?
 470|Wir haben keine britische Postleitzahl in deiner Nähe gefunden. Gib sie bitte ein.
 471|Wir konnten deinen Standort nicht ermitteln. Gib stattdessen deine Postleitzahl ein.
 t58|Postleitzahl gesetzt: {0}.
+472|Unsere Empfehlung für dich
+473|Beste Wahl
+474|Beste Wahl, auch am schnellsten
+475|Beste Wahl, auch am günstigsten
+476|Beste Wahl, am schnellsten und am günstigsten
+477|Die beste Wahl wägt Preis gegen Wartezeit ab: Jeder zusätzliche Tag zählt etwa 10 % des Preises.
+478|Ich habe Amazon Prime
+479|(kostenloser Prime-Versand ist in den Preisen berücksichtigt)
+480|Kostenloser Versand mit Prime
+481|Kostenloser Versand mit Prime (ohne Prime zeigt Amazon die Kosten an)
+482|Prime-Versand: Amazon zeigt dir das genaue Datum vor dem Bezahlen
+483|Jede Suche prüft alle Shops gleichzeitig.
+484|Fotos, Preise und Bestand kommen von jedem Shop: Produktlisten werden jede Nacht aktualisiert, Amazon und eBay sind live.
+485|Lieferdaten bei eBay sind Schätzungen des Verkäufers.
+486|Wir erhalten eventuell eine Provision, wenn du kaufst. Das ändert nie den Preis oder unsere Empfehlung.
+487|Beste, schnellste und günstigste Wahl
+488|zzgl. Versand
+t59|{0}, inkl. Versand
+t60|{0}, zzgl. Versand
+t61|Wir haben {#0} Angebote von {#1} Shops verglichen, die innerhalb von 3 Tagen liefern.
+t62|Wir haben {#0} Angebote von 1 Shop verglichen, die innerhalb von 3 Tagen liefern.

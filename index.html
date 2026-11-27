@@ -511,6 +511,23 @@
   .afinal{margin:2px 0 0;font-size:calc((16px) * var(--fs,1))}
   .pgroup{margin:0 0 22px}
   .pcalwrap{margin:0 0 22px}
+  .pickwrap{margin:0 0 22px}
+  .picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .pick{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);font:inherit;text-align:left;cursor:pointer;min-height:44px}
+  .pick:hover{border-color:var(--ink)}
+  .pick .k{font-size:calc((14px) * var(--fs,1));font-weight:700;color:var(--muted)}
+  .pick .v{font-size:calc((22px) * var(--fs,1));font-weight:800;line-height:1.15}
+  .pick .w{font-size:calc((15px) * var(--fs,1));line-height:1.3}
+  .pick .s{font-size:calc((14px) * var(--fs,1));color:var(--muted);line-height:1.3}
+  .pick.best{border-color:var(--blue);background:var(--blue-tint)} .pick.best .k{color:var(--blue)}
+  .pick.one{grid-column:1/-1}
+  .primechk{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:calc((15px) * var(--fs,1));cursor:pointer;min-height:44px}
+  .primechk input{width:22px;height:22px;accent-color:var(--blue)} .primechk span{color:var(--muted)}
+  .pbadge{position:absolute;top:10px;right:10px;background:var(--blue);color:var(--on-fill);font-size:calc((13px) * var(--fs,1));font-weight:700;border-radius:6px;padding:2px 8px}
+  .pbadge.fast{background:var(--ink)} .pbadge.cheap{background:var(--ok)}
+  .pdeal{display:inline-block;margin:2px 0 0;font-size:calc((13px) * var(--fs,1));font-weight:700;color:var(--warn)}
+  .pcard.flash{box-shadow:0 0 0 4px var(--blue)}
+  @media(max-width:640px){ .picks{grid-template-columns:1fr} .pick{flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:10px} .pick .k{width:100%} }
   .pcalh{font-size:calc((20px) * var(--fs,1));margin:0 0 10px}
   .pcal{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
   .pday{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:76px;padding:8px 4px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;cursor:pointer;text-align:center}
@@ -688,6 +705,12 @@
   </section>
   <section class="prods" id="prods" hidden aria-label="Products from the shops">
     <p class="pbanner" id="pbanner" hidden></p>
+    <div class="pickwrap" id="pickwrap" hidden>
+      <h3 class="pcalh">Our pick for you</h3>
+      <div class="picks" id="picks" role="group" aria-label="Best, fastest and cheapest"></div>
+      <p class="pcalnote" id="picknote"><span id="pickcount"></span> <span>Best pick weighs price against waiting: each extra day counts as about 10% of the price.</span></p>
+      <label class="primechk" id="primechk" hidden><input type="checkbox" id="primebox"> I have Amazon Prime <span>(free Prime delivery counts in the prices)</span></label>
+    </div>
     <div class="pcalwrap" id="pcalwrap" hidden>
       <h3 class="pcalh">Cheapest by delivery day</h3>
       <div class="pcal" id="pcal" role="group" aria-label="Cheapest price by delivery day"></div>
@@ -695,7 +718,7 @@
       <p class="pcalnote" id="pcalnote">Includes delivery (“+” means delivery is extra). Tap a day to see what arrives by then.</p>
     </div>
     <div id="pgroups"></div>
-    <p class="pnote">Photos, prices and stock come from each shop's own product list, updated every night. eBay listings are live, and their delivery dates are the seller's estimate. The shop's site shows the final price before you pay.</p>
+    <p class="pnote">Every search checks all the shops at once. Photos, prices and stock come from each shop: product lists are updated every night, Amazon and eBay are live. Delivery dates on eBay are the seller's estimate. The shop's site shows the final price before you pay. We may earn a commission when you buy, which never changes the price or our pick.</p>
   </section>
   <section class="local" id="local" aria-labelledby="localhead" hidden>
     <h3 class="shopshead" id="localhead">Local shops near <span class="notr" id="localpc"></span></h3>
@@ -1057,6 +1080,8 @@
     API_URL: 'https://nolag-api.justincypang2.workers.dev',
     // Before launch: show labelled sample products when the engine has no real ones yet. Set to false before posting publicly.
     SAMPLE_PRODUCTS: true,
+    // Your Amazon Associates tag (e.g. 'nolag-21'). Added to every Amazon link so sales earn commission. Leave '' until you have one.
+    AMAZON_TAG: '',
     FORM_ENDPOINT: 'https://formsubmit.co/ajax/enquiries@jpfsystems.co',
     CONTACT_LINE: 'enquiries@jpfsystems.co',
     BOROUGHS: 'Southwark and Lambeth'
@@ -1524,10 +1549,11 @@
   const REMOTE=/^(GY|JE|IM|HS|ZE)\d|^KW1[5-7]\b|^TR2[1-5]\b|^PH4\d\b|^IV(4[1-9]|5\d)\b|^PA(2\d|[3-7]\d)\b/i;
   const NI=/^BT\d/i;
   const reaches=(s,pc)=>{ if(!pc) return true; const p=pc.replace(/\s/g,''); if(s.national && REMOTE.test(p)) return false; if(s.noNI && NI.test(p)) return false; return true; };
+  const amzUrl=q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`+(CONFIG.AMAZON_TAG?`&tag=${encodeURIComponent(CONFIG.AMAZON_TAG)}`:'');
   const SOURCES=[
     {id:'amznow', how:"Amazon's 30-minute delivery, only in parts of Southwark so far", etaBig:'30 min',etaSmall:'after ordering',promise:'in about 30 minutes', opens:8, name:'Amazon Now', via:'Amazon, 30-minute delivery pilot', cats:['health','home','grocery'], cutoff:22, speed:30,
      eta:'about 30 minutes', fee:'Prime: £1.99, without Prime: £3.99, free over £20', area:/^SE(1|5|15|16|17|22)\b/i, areaNote:'Only in parts of Southwark so far',
-     url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
+     url:q=>amzUrl(q)},
     {id:'boots', how:'From nearby Boots shops through Deliveroo, Uber Eats or Just Eat. The app shows the delivery time', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', opens:8, name:'Boots', via:'on Deliveroo, Uber Eats or Just Eat', cats:['health','beauty','gift'], cutoff:21.5, speed:40,
      eta:'about 20 to 45 minutes', fee:'app delivery fee, shown at checkout', url:q=>`https://www.boots.com/sitesearch?searchTerm=${encodeURIComponent(q)}`},
     {id:'ubereats', how:'Local shops such as Tesco, GameStop and florists. The app shows the delivery time', etaBig:'20–45 min',etaSmall:'after ordering',promise:'in 20 to 45 minutes', opens:8, name:'Shops on Uber Eats', via:'Tesco, GameStop, JD Sports, florists and more', cats:['tech','gift','health','grocery','beauty'], cutoff:22, speed:40,
@@ -1539,7 +1565,7 @@
     {id:'argos', national:true, noNI:true, how:'Same-day delivery by 10pm tonight', etaBig:'By 10pm',etaSmall:'tonight',promise:'by 10pm tonight', name:'Argos', via:'Fast Track same-day delivery', cats:['tech','home','gift'], cutoff:17, speed:240,
      eta:'by 10pm tonight', fee:'from £5.95 to £7.95', note:'Some items must be ordered by 1pm', url:q=>`https://www.argos.co.uk/search/${encodeURIComponent(q.trim().toLowerCase().replace(/\s+/g,'-'))}/`},
     {id:'amazon', national:true, how:'Same-day delivery in eligible postcodes', etaBig:'Today',etaSmall:'same-day',promise:'today', name:'Amazon same-day', via:'Amazon same-day delivery, in eligible postcodes', cats:['tech','home','gift','health','beauty'], cutoff:12, speed:420,
-     eta:'later today', fee:'Prime: free over £20, £1.99 under. Without Prime: £5.99', note:'Cut-off varies by item', url:q=>`https://www.amazon.co.uk/s?k=${encodeURIComponent(q)}`},
+     eta:'later today', fee:'Prime: free over £20, £1.99 under. Without Prime: £5.99', note:'Cut-off varies by item', url:q=>amzUrl(q)},
     {id:'currys', national:true, how:'Next-day delivery, or collect from a store', today:false, etaBig:'Tomorrow',etaSmall:'next-day delivery',promise:'tomorrow', name:'Currys', via:'Next-day delivery, or collect from a store', cats:['tech','home'], cutoff:21, speed:1440,
      eta:'tomorrow', fee:'£5.99 next-day', url:q=>`https://www.currys.co.uk/search?q=${encodeURIComponent(q)}`}
   ];
@@ -1748,6 +1774,7 @@
       {shop:'Argos',name:label,price:r(b),was:r(b*1.15),stock:'in',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Argos',name:label+', bundle',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Currys',name:label,price:r(b*0.95),stock:'in',speed:'tomorrow',arrive:'next day',fee:'£5.99 next-day delivery'},
+      {shop:'Amazon',live:true,prime:true,name:label,price:r(b*0.92),stock:'in',speed:'tomorrow',arrive:'Prime delivery: Amazon shows your exact date before you pay',fee:'Free delivery with Prime'},
       {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.9),stock:'in',speed:'tomorrow',arrive:'seller’s estimate',fee:'Free delivery'},
       {shop:'eBay',seller:'another-seller',live:true,name:label+', new',price:r(b*0.7),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+2*864e5)),arrive:'seller’s estimate',fee:'£3.49 delivery'},
       {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.6),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+3*864e5)),arrive:'seller’s estimate',fee:'£2.99 delivery'},
@@ -1862,7 +1889,9 @@
     if(m){ const n=+(m[2]||m[1]); return m[3] ? Math.round(n*7/5) : n; }
     return null;
   }
+  let hasPrime=false; try{ hasPrime=localStorage.getItem('nolag-prime')==='1'; }catch(e){}
   function totalOf(p){ // item + delivery when the shop says what delivery costs
+    if(p.prime) return {v:p.price, known:hasPrime}; // free with Prime; without it Amazon shows its charge at checkout
     const f=String(p.fee||'');
     if(/free/i.test(f)) return {v:p.price, known:true};
     const m=f.match(/£\s*(\d+(?:\.\d+)?)/);
@@ -1886,6 +1915,52 @@
   }
   $('pcalall').addEventListener('click',()=>{ calSel=null; drawProducts(); $('pcal').querySelector('.pday:not(.none)')?.focus(); });
   $('pcal').addEventListener('click',e=>{ const b=e.target.closest('.pday'); if(!b||b.disabled) return; const d=+b.dataset.day; calSel = calSel===d ? null : d; drawProducts(); });
+  // ---------- our pick: every source is searched at once, then the best, fastest and cheapest are picked ----------
+  // Best weighs price against waiting: each extra day counts as about 10% of the fastest option's price (at least £3).
+  function choosePicks(all){
+    // Only things that arrive within 3 days: NoLag is for when you need it soon.
+    let c=all.filter(x=>x.day!=null && x.day<=3 && x.p.stock!=='out');
+    if(c.some(x=>!x.p.accessory)) c=c.filter(x=>!x.p.accessory);
+    if(!c.length) return null;
+    c=c.map(x=>({...x,t:totalOf(x.p)}));
+    // When a shop doesn't say what delivery costs, compare it as if it charged the typical delivery of the others (or £3.99),
+    // so a missing charge never makes a shop look cheaper than it is. The price shown still says "+ delivery".
+    const fees=c.filter(x=>x.t.known).map(x=>x.t.v-x.p.price).sort((a,b)=>a-b), typical=fees.length?fees[Math.floor(fees.length/2)]:3.99;
+    c.forEach(x=>{ x.r=x.t.known ? x.t.v : x.t.v+typical; });
+    const byT=(a,b)=>a.r-b.r;
+    const fastest=[...c].sort((a,b)=>a.day-b.day||byT(a,b))[0];
+    const cheapest=[...c].sort((a,b)=>byT(a,b)||a.day-b.day)[0];
+    const perDay=Math.max(3,fastest.r*0.1);
+    const best=[...c].sort((a,b)=>(a.r+a.day*perDay)-(b.r+b.day*perDay)||a.day-b.day)[0];
+    return {best,fastest,cheapest,n:c.length,shops:new Set(c.map(x=>x.p.shop)).size};
+  }
+  let PICK=new Map();
+  function drawPicks(all){
+    const wrap=$('pickwrap'); PICK=new Map();
+    const P=calSel==null ? choosePicks(all) : null;
+    if(!P || P.n<2){ wrap.hidden=true; return; }
+    const tiles=[['best','Best pick',P.best]];
+    if(P.fastest.p!==P.best.p) tiles.push(['fast','Fastest',P.fastest]);
+    if(P.cheapest.p!==P.best.p && P.cheapest.p!==P.fastest.p) tiles.push(['cheap','Cheapest',P.cheapest]);
+    const also=[]; if(P.fastest.p===P.best.p) also.push('fastest'); if(P.cheapest.p===P.best.p) also.push('cheapest');
+    tiles.forEach(([k,,x])=>PICK.set(x.p,k));
+    const when=x=>x.day===0?'Arrives today':x.day===1?'Arrives tomorrow':'Arrives by '+dayLong(x.day);
+    $('picks').innerHTML=tiles.map(([k,l,x],i)=>{
+      const price=GBP(Math.round(x.t.v*100)/100)+(x.t.known?'':'+');
+      const lab=k==='best'&&also.length ? l+', also '+also.join(' and ') : l;
+      return `<button type="button" class="pick ${k}${tiles.length===1?' one':''}" data-i="${i}"><span class="k">${esc(lab)}</span><span class="v">${price}</span><span class="w">${when(x)}</span><span class="s">${esc(x.p.shop)}${x.t.known?', with delivery':', plus delivery'}</span></button>`;
+    }).join('');
+    $('picks').querySelectorAll('.pick').forEach((b,i)=>b.addEventListener('click',()=>{
+      const el=document.querySelector(`.pcard[data-pick="${tiles[i][0]}"]`); if(!el) return;
+      const d=el.closest('details'); if(d) d.open=true;
+      el.scrollIntoView({block:'center',behavior:stillMode()?'auto':'smooth'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1600);
+      el.querySelector('.pbuy')?.focus({preventScroll:true});
+    }));
+    $('pickcount').textContent=`We checked ${P.n} options from ${P.shops>1?P.shops+' shops':'1 shop'} that arrive within 3 days.`;
+    $('primechk').hidden=!all.some(x=>x.p.prime); $('primebox').checked=hasPrime;
+    wrap.hidden=false;
+  }
+  $('primebox').addEventListener('change',e=>{ hasPrime=e.target.checked; try{ localStorage.setItem('nolag-prime',hasPrime?'1':'0'); }catch(_){} drawProducts(); });
   function drawProducts(){
     if(!prodList) return;
     const now=londonHours(), G={today:[],tomorrow:[],unknown:[],later:[]};
@@ -1893,7 +1968,7 @@
       if(g==='today' && p.cutoff!=null && now>=p.cutoff){ g='tomorrow'; p={...p,missed:true}; }
       G[g].push(p); });
     const all=Object.entries(G).flatMap(([g,ps])=>ps.map(p=>({p,g,day:dayOf(p,g)})));
-    drawCalendar(all);
+    drawCalendar(all); drawPicks(all);
     if(calSel!=null) Object.keys(G).forEach(g=>{ G[g]=all.filter(x=>x.g===g && x.day!=null && (calSel===7 || x.day<=calSel)).map(x=>x.p); });
     let pos=0;
     const arrival=(p,g)=>{
@@ -1906,17 +1981,19 @@
       if(g==='later') return `<b>${esc((p.arrive||'takes a few days').replace(/^./,c=>c.toUpperCase()))}</b>`;
       return `<b>Delivery time not listed</b><br>check on the shop's site`;
     };
-    const card=(p,g,flat)=>{ pos++; const first=pos===1 && (flat || g==='today'), shop=esc(p.shop);
+    const card=(p,g,flat)=>{ pos++; const pk=PICK.get(p), first=PICK.size ? pk==='best' : pos===1 && (flat || g==='today'), shop=esc(p.shop);
+      const badge=pk ? `<span class="pbadge ${pk}">${pk==='best'?'Best pick':pk==='fast'?'Fastest':'Cheapest'}</span>` : '';
       const stock = p.stock==='in' ? '<p class="pstock in">In stock</p>' : p.stock==='low' ? '<p class="pstock low">Only a few left</p>' : '<p class="pstock">Stock not listed</p>';
-      return `<li class="pcard ${g}${first?' first':''}">
-        <div class="pimg">${p.sample?'<span class="ptag">Sample</span>':''}<img src="${esc(p.img||phImg('No photo'))}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+      return `<li class="pcard ${g}${first?' first':''}"${pk?` data-pick="${pk}"`:''}>
+        <div class="pimg">${p.sample?'<span class="ptag">Sample</span>':''}${badge}<img src="${esc(p.img||phImg('No photo'))}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="pbody">
           <p class="pshop">${shop}${p.seller?`<span class="pseller">, sold by ${esc(p.seller)}</span>`:''}</p>
           <h4 class="pname">${esc(p.name)}</h4>
           <p class="pprice">${GBP(p.price)}${p.was?`<s><span class="sr">was </span>${GBP(p.was)}</s>`:''}</p>
+          ${p.deal?`<p class="pdeal">${esc(p.deal)}</p>`:''}
           ${stock}
           <p class="parr">${arrival(p,g)}</p>
-          ${p.fee?`<p class="pfee">${esc(p.fee)}</p>`:''}
+          ${p.fee?`<p class="pfee">${esc(p.fee)}${p.prime&&!hasPrime?' (without Prime, Amazon shows the charge)':''}</p>`:''}
           ${flat?(()=>{ const t=totalOf(p); return t.known?`<p class="ptotal">${GBP(Math.round(t.v*100)/100)} with delivery</p>`:'<p class="ptotal">plus delivery</p>'; })():''}
           <a class="pbuy${p.sample?' sample':''}" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-shop="${esc(p.shop.toLowerCase().slice(0,20))}" data-pos="${pos}">${p.live?'Buy on':'Buy at'} ${shop}<span class="sr">: ${esc(p.name)}, ${GBP(p.price)} (opens in a new tab)</span></a>
         </div></li>`; };
@@ -2302,7 +2379,7 @@
   // Dates and times are re-written the way each language writes them. Shop and product names stay in English.
   const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['yue','廣東話（繁體）','Cantonese'],['ja','日本語','Japanese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
   const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',yue:'zh-HK',ja:'ja-JP',ar:'ar-u-nu-latn',hi:'hi-IN'};
-  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='3';
+  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='4';
   const TXT=new WeakMap(), ATT=new WeakMap(), I18N_ATTRS=['placeholder','aria-label','title','alt'];
   const splitSent=s=>s.split(/(?<![A-Z]\.[A-Z]\.)(?<=[.!?])\s+(?=[A-Z“])/);
   const tplRe=en=>new RegExp('^'+en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\\\{#\d\\\}/g,'([\\d.,]+)').replace(/\\\{\d\\\}/g,'(.+?)')+'$');

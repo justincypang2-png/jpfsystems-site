@@ -529,3 +529,24 @@ t57|Prowadzisz sklep w pobliżu {0}?
 470|Nie znaleźliśmy brytyjskiego kodu pocztowego w pobliżu. Wpisz go.
 471|Nie udało się ustalić lokalizacji. Wpisz kod pocztowy.
 t58|Ustawiono kod pocztowy: {0}.
+472|Nasz wybór dla ciebie
+473|Najlepszy wybór
+474|Najlepszy wybór, też najszybszy
+475|Najlepszy wybór, też najtańszy
+476|Najlepszy wybór, najszybszy i najtańszy
+477|Najlepszy wybór waży cenę i czas czekania: każdy dodatkowy dzień liczy się jak około 10% ceny.
+478|Mam Amazon Prime
+479|(darmowa dostawa Prime jest wliczona w ceny)
+480|Darmowa dostawa z Prime
+481|Darmowa dostawa z Prime (bez Prime Amazon pokaże koszt)
+482|Dostawa Prime: Amazon pokaże dokładną datę przed zapłatą
+483|Każde wyszukiwanie sprawdza wszystkie sklepy naraz.
+484|Zdjęcia, ceny i stany magazynowe pochodzą z każdego sklepu: listy produktów są aktualizowane co noc, Amazon i eBay na bieżąco.
+485|Daty dostawy na eBay to szacunek sprzedawcy.
+486|Możemy dostać prowizję, gdy kupujesz, ale nigdy nie zmienia to ceny ani naszego wyboru.
+487|Najlepszy, najszybszy i najtańszy
+488|plus dostawa
+t59|{0}, z dostawą
+t60|{0}, plus dostawa
+t61|Porównaliśmy {#0} ofert z {#1} sklepów z dostawą w ciągu 3 dni.
+t62|Porównaliśmy {#0} ofert z 1 sklepu z dostawą w ciągu 3 dni.
