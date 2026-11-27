@@ -6,9 +6,19 @@
 <title>NoLag: search every same-day shop in the UK at once</title>
 <meta name="description" content="Type what you need and your postcode. See every shop that can deliver it to you today, anywhere in the UK. Or let us order it for you.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231556D6'/%3E%3Cpath d='M17.5 5 8 18h8l-1.5 9L24 14h-8z' fill='%23fff'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/ahn-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ahn-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Atkinson Hyperlegible Next (SIL Open Font License, fonts/OFL.txt), served from this site so no visitor data goes to Google */
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ahn-latin-ext-400.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/ahn-latin-400.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/ahn-latin-ext-600.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/ahn-latin-600.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/ahn-latin-ext-700.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/ahn-latin-700.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/ahn-latin-ext-800.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+  @font-face{font-family:'Atkinson Hyperlegible Next';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/ahn-latin-800.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+</style>
 <script>(function(){try{var R=document.documentElement,L=new URLSearchParams(location.search).get('lang')||localStorage.getItem('nolag-lang');if(L&&/^(fr|es|de|it|pt|pl|zh|yue|ja|ar|hi)$/.test(L)){R.lang={zh:'zh-Hans',yue:'zh-HK'}[L]||L;R.dir=L==='ar'?'rtl':'ltr';R.classList.add('i18n-wait');setTimeout(function(){R.classList.remove('i18n-wait')},2500);}}catch(e){}})();(function(){try{var A=JSON.parse(localStorage.getItem('nolag-a11y')||'{}'),R=document.documentElement;if(A.fs)R.dataset.fs=A.fs;['contrast','spacing','links','still','cursor'].forEach(function(k){if(A[k])R.classList.add('a11y-'+k)});if(A.theme==='dark'||(A.theme==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))R.classList.add('a11y-dark');}catch(e){}})();</script>
 <style>
   /* Design notes
@@ -213,7 +223,7 @@
   .pagebar{padding:18px 0 0}
   body[data-page=board] #board, body[data-page=doit] #doit, body[data-page=help] #how, body[data-page=about] #about{padding-top:20px}
   .aboutwrap p{max-width:64ch;margin:0 0 16px}
-  body[data-page=shops] .pg-shops,body[data-page=apply] .pg-apply{display:block} body[data-page=shops] #shops,body[data-page=apply] #apply{padding-top:20px}
+  body[data-page=shops] .pg-shops,body[data-page=apply] .pg-apply,body[data-page=privacy] .pg-privacy{display:block} body[data-page=shops] #shops,body[data-page=apply] #apply,body[data-page=privacy] #privacy{padding-top:20px}
   .applywrap{max-width:760px}
   .applycta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:26px 0 8px} .applycta span{color:var(--muted)}
   .applyback{margin:0 0 6px} .applyback a{font-weight:700}
@@ -486,7 +496,8 @@
   .pskel i.img{aspect-ratio:4/3;margin:0;border-radius:0}
   @media(prefers-reduced-motion:no-preference){ .pskel i{animation:shimmer 1.2s linear infinite} }
   @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
-  [hidden]{display:none !important} /* hidden always means hidden, even for rows with their own layout */
+  [hidden]{display:none !important}
+  .hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden} /* spam trap: people never see or fill it, bots do */ /* hidden always means hidden, even for rows with their own layout */
   section.assist{margin:0 0 24px;padding:0}
   .aform[hidden]{display:none}
   .alog{display:flex;flex-direction:column;gap:6px;margin:0 0 8px}
@@ -836,6 +847,7 @@
         <div>Your NoLag fee<small>paid only after it arrives</small></div>
         <b id="fee">–</b>
       </div>
+      <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
       <button class="go" type="submit">Send my request</button>
       <p class="fine">Nothing to pay now. We'll reply with a quote first.</p>
     </form>
@@ -951,6 +963,53 @@
   </div>
 </div></section>
 
+<section id="privacy" class="pg pg-privacy"><div class="wrap applywrap">
+  <p class="enonly-note">This page is only in English for now.</p>
+  <div translate="no" lang="en">
+  <h1 class="s" tabindex="-1">Privacy, and how NoLag makes money</h1>
+  <p class="lead" style="font-size:calc((19px) * var(--fs,1))">In short: no cookies, no tracking, no selling your details. We only keep what we need to run NoLag.</p>
+  <h2 class="lsub">Who we are</h2>
+  <p class="lterms">NoLag is run by <span class="opname"></span><span class="opdetail"></span>, trading as part of J.P. Freglien Systems. For anything about your details, email <span class="contactline"></span>.</p>
+  <h2 class="lsub">What we collect, and why</h2>
+  <ul class="lterms">
+    <li><b>Searches.</b> What you searched for, your postcode area (like SE15, never your full postcode), which shop you tapped and when. No names, no IP addresses, no cookies. We use this to make results better and to see which shops help people.</li>
+    <li><b>Do it for me requests.</b> The item, the delivery postcode, when you need it, your first name and your mobile or email. We use these to find and order the item for you and to keep you updated.</li>
+    <li><b>Shop listings.</b> The shop's details and a contact name, email and phone, to check and run the listing. If a shop shares its product list, we read it every two hours in the day to show its products.</li>
+    <li><b>Use my location.</b> Only when you tap the button. Your browser sends your location to postcodes.io, a free UK postcode service, to find the nearest postcode. NoLag never receives or keeps your location.</li>
+    <li><b>On your device only.</b> Your language, accessibility settings, last postcode, recent searches and whether you have Amazon Prime are saved in your browser and never sent to us. Clearing this site's data removes them.</li>
+  </ul>
+  <h2 class="lsub">Who helps us run NoLag</h2>
+  <ul class="lterms">
+    <li>GitHub Pages hosts this website. Cloudflare runs the search and stores the anonymous search records. FormSubmit forwards requests and shop listings to our inbox.</li>
+    <li>Product photos load straight from each shop's own servers (for example Amazon or eBay), which see your browser's address like any web page does.</li>
+    <li>When you tap through to a shop, you're on their website and their privacy policy applies.</li>
+  </ul>
+  <h2 class="lsub">How long we keep it</h2>
+  <ul class="lterms">
+    <li>Anonymous search records: up to 24 months.</li>
+    <li>Do it for me requests and shop listings: up to 2 years after we last hear from you. Payment records are kept for 6 years because the law requires it.</li>
+  </ul>
+  <h2 class="lsub">Your rights</h2>
+  <p class="lterms">You can ask for a copy of your details, ask us to correct or delete them, or object to how we use them. Email us and we'll reply within a month. If you're not happy with our answer, you can complain to the Information Commissioner's Office at ico.org.uk.</p>
+  <h2 class="lsub">Cookies</h2>
+  <p class="lterms">NoLag doesn't use cookies, adverts or tracking tools, so there's no cookie banner. Our font is served from this site, not from Google.</p>
+  <h2 class="lsub">How NoLag makes money</h2>
+  <ul class="lterms">
+    <li><b>Searching is free.</b> When you buy through some of our links, the shop may pay us a small commission. It never changes your price. We work with Amazon Associates, eBay Partner Network, Awin and CJ.</li>
+    <li class="amzline" hidden>As an Amazon Associate, NoLag earns from qualifying purchases.</li>
+    <li><b>Do it for me</b> costs £2, £5 or £10, depending on the item's price, and you only pay once it has arrived on time.</li>
+    <li><b>Local shops</b> list for free while we launch. We'll give them 30 days' notice before any fees start.</li>
+  </ul>
+  <h2 class="lsub">How we choose what to show first</h2>
+  <ul class="lterms">
+    <li><b>Best pick</b> weighs price, including delivery, against how long you'd wait. Each extra day counts as about 10% of the fastest option's price (at least £3). We only pick from things that arrive within 3 days.</li>
+    <li><b>Fastest</b> is what arrives soonest. <b>Cheapest</b> is the lowest total price. If a shop doesn't say what delivery costs, we compare it as if it charged a typical delivery fee, so it never looks cheaper than it is.</li>
+    <li>Commission never affects what we show or in what order, and no shop can pay to rank higher. If we ever show paid placements, they'll be clearly labelled "Sponsored".</li>
+  </ul>
+  <p class="lterms"><small>Last updated 27 November 2026.</small></p>
+  </div>
+</div></section>
+
 <section id="apply" class="pg pg-apply"><div class="wrap applywrap">
   <p class="enonly-note">This page is only in English for now.</p>
   <div translate="no" lang="en">
@@ -1022,6 +1081,7 @@
           <label><input type="checkbox" id="l-terms"> I agree to the <a href="#lterms">listing terms</a></label>
         </div>
         <p class="error-msg" id="l-agree-err">Tick both boxes to continue.</p></fieldset>
+      <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
       <button class="go" type="submit">Send my listing</button>
       <p class="error-msg" id="l-senderr" role="alert">Your listing didn't send. Check your connection and press Send my listing again, or email <span class="contactline"></span>.</p>
     </form>
@@ -1056,7 +1116,7 @@
 
 <footer><div class="wrap">
   <div><b style="color:var(--ink)">NoLag</b>. Your 25th hour. Part of <a href="/jpf/">J.P. Freglien Systems</a>, London. <span class="contactline"></span></div>
-  <ul class="flinks"><li><a href="#board">Open now</a></li><li><a href="#doit">Do it for me</a></li><li><a href="#help">How it works</a></li><li><a href="#faq">Questions</a></li><li><a href="#about">About</a></li><li><a href="#shops">List your shop</a></li><li><button type="button" id="a11yfoot" aria-haspopup="dialog" aria-controls="a11y">Accessibility</button></li><li><button type="button" id="langfoot" aria-haspopup="dialog" aria-controls="langdlg">Language</button></li></ul>
+  <ul class="flinks"><li><a href="#board">Open now</a></li><li><a href="#doit">Do it for me</a></li><li><a href="#help">How it works</a></li><li><a href="#faq">Questions</a></li><li><a href="#about">About</a></li><li><a href="#shops">List your shop</a></li><li id="privlink" hidden><a href="#privacy">Privacy</a></li><li><button type="button" id="a11yfoot" aria-haspopup="dialog" aria-controls="a11y">Accessibility</button></li><li><button type="button" id="langfoot" aria-haspopup="dialog" aria-controls="langdlg">Language</button></li></ul>
 </div></footer>
 
 <dialog class="a11y" id="langdlg" aria-labelledby="lang-t"><div class="a11yin">
@@ -1103,6 +1163,10 @@
     SAMPLE_PRODUCTS: true,
     // Your Amazon Associates tag (e.g. 'nolag-21'). Added to every Amazon link so sales earn commission. Leave '' until you have one.
     AMAZON_TAG: '',
+    // Who runs NoLag, for the privacy page (your full name, or the company name once registered). The Privacy link appears once this is set.
+    OPERATOR: '',
+    // Optional extra, e.g. ', a sole trader' or ', a company registered in England and Wales (number 12345678), registered office: ...'
+    OPERATOR_DETAIL: '',
     FORM_ENDPOINT: 'https://formsubmit.co/ajax/enquiries@jpfsystems.co',
     CONTACT_LINE: 'enquiries@jpfsystems.co',
     BOROUGHS: 'Southwark and Lambeth'
@@ -1110,8 +1174,15 @@
   const $ = id => document.getElementById(id);
   document.querySelectorAll('.contactline').forEach(e=>{const a=document.createElement('a');a.href='mailto:'+CONFIG.CONTACT_LINE;a.textContent=CONFIG.CONTACT_LINE;e.replaceChildren(a);});
   document.querySelectorAll('.borough').forEach(e=>e.textContent=CONFIG.BOROUGHS);
+  document.querySelectorAll('.opname').forEach(e=>e.textContent=CONFIG.OPERATOR||'its founder');
+  document.querySelectorAll('.opdetail').forEach(e=>e.textContent=CONFIG.OPERATOR?CONFIG.OPERATOR_DETAIL:'');
+  if(CONFIG.OPERATOR) $('privlink').hidden=false;
+  if(CONFIG.AMAZON_TAG) document.querySelectorAll('.amzline').forEach(e=>e.hidden=false);
 
   const form=$('f'), feeEl=$('fee');
+  // Spam trap: bots fill the hidden field or send the form within seconds of the page opening. Those are quietly dropped.
+  const PAGE_T0=Date.now();
+  const looksLikeBot=f=>{ const h=f.querySelector('[name=_honey]'); return !!(h && h.value) || Date.now()-PAGE_T0<4000; };
   const PREVIEW_FLAG = new URLSearchParams(location.search).has('preview'); // jpfsystems.co/?preview=1 shows sample products and sends nothing
   const DEMO = PREVIEW_FLAG || !/(^|\.)jpfsystems\.co$/.test(location.hostname);
   // Anonymous event recording: no names, emails or cookies; postcode trimmed to its area by the server.
@@ -1168,15 +1239,15 @@
                 name:$('name').value.trim(), contact:$('contact').value.trim(), language:(LANGS.find(l=>l[0]===I18N.lang)||LANGS[0])[2], submitted:new Date().toISOString()};
     const btn=form.querySelector('button.go'); btn.disabled=true; btn.textContent='Sending…';
     try{
-      if(!DEMO){
+      if(!DEMO && !looksLikeBot(form)){
         const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},
-          body:JSON.stringify({...data,_subject:`NoLag request: ${data.item.slice(0,60)} → ${data.postcode} (${data.by})`,_template:'table',_captcha:'false'})});
+          body:JSON.stringify({...data,_subject:`NoLag request: ${data.item.slice(0,60)} → ${data.postcode} (${data.by})`,_template:'table',_captcha:'false',_honey:form.querySelector('[name=_honey]').value})});
         const j=await r.json().catch(()=>({}));
         if(!r.ok || String(j.success)==='false') throw new Error('send failed');
       }
       $('done-pc').textContent=data.postcode; $('done-contact').textContent=data.contact;
       form.style.display='none'; const d=$('done'); d.style.display='block'; d.focus();
-      track('doit',{understood:data.item, area:data.postcode});
+      if(!looksLikeBot(form)) track('doit',{understood:data.item, area:data.postcode});
       if(DEMO) setTimeout(()=>openDemo(data),900);
     }catch(e){
       $('sendErr').style.display='block'; btn.disabled=false; btn.textContent='Send my request';
@@ -2068,7 +2139,7 @@
   // Shareable searches: jpfsystems.co/?q=ps5 opens the results; Back returns to the previous search.
   let fromHistory=false;
   // Separate pages (#board, #doit, #help) so the home page stays short. Old links like #how, #faq and #ask still work.
-  const PAGES={board:'Open now',doit:'Do it for me',help:'How it works',about:'About',shops:'List your shop',apply:'Apply to list your shop'}, ALIAS={how:'help',faq:'help',fees:'doit',cover:'doit',ask:'doit',lterms:'shops',listcard:'apply'};
+  const PAGES={board:'Open now',doit:'Do it for me',help:'How it works',about:'About',shops:'List your shop',apply:'Apply to list your shop',privacy:'Privacy and how we make money'}, ALIAS={how:'help',faq:'help',fees:'doit',cover:'doit',ask:'doit',lterms:'shops',listcard:'apply'};
   function showPage(p,anchor){
     const was=document.body.dataset.page;
     if(p) document.body.dataset.page=p; else delete document.body.dataset.page;
@@ -2393,13 +2464,13 @@
       delivery_charge:$('l-fee').value.trim(), product_list:(lf.querySelector('[name=llist]:checked')||{}).value||'none', product_list_link:$('l-listurl').value.trim(), agreed_terms:'yes', language:(LANGS.find(l=>l[0]===I18N.lang)||LANGS[0])[2], submitted:new Date().toISOString()};
     const btn=lf.querySelector('button.go'); btn.disabled=true; btn.textContent='Sending…';
     try{
-      if(!DEMO){
+      if(!DEMO && !looksLikeBot(lf)){
         const r=await fetch(CONFIG.FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},
-          body:JSON.stringify({...data,_subject:`NoLag shop listing: ${data.shop.slice(0,60)} (${data.postcode})`,_replyto:data.email,_template:'table',_captcha:'false'})});
+          body:JSON.stringify({...data,_subject:`NoLag shop listing: ${data.shop.slice(0,60)} (${data.postcode})`,_replyto:data.email,_template:'table',_captcha:'false',_honey:lf.querySelector('[name=_honey]').value})});
         const j=await r.json().catch(()=>({})); if(!r.ok || String(j.success)==='false') throw new Error('send failed');
       }
       lf.hidden=true; const d=$('ldone'); d.hidden=false; d.focus();
-      track('listing',{area:data.postcode});
+      if(!looksLikeBot(lf)) track('listing',{area:data.postcode});
     }catch(e){ $('l-senderr').classList.add('show'); btn.disabled=false; btn.textContent='Send my listing'; }
   });
 
@@ -2409,7 +2480,7 @@
   // Dates and times are re-written the way each language writes them. Shop and product names stay in English.
   const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['yue','廣東話（繁體）','Cantonese'],['ja','日本語','Japanese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
   const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',yue:'zh-HK',ja:'ja-JP',ar:'ar-u-nu-latn',hi:'hi-IN'};
-  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='5';
+  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='6';
   const TXT=new WeakMap(), ATT=new WeakMap(), I18N_ATTRS=['placeholder','aria-label','title','alt'];
   const splitSent=s=>s.split(/(?<![A-Z]\.[A-Z]\.)(?<=[.!?])\s+(?=[A-Z“])/);
   const tplRe=en=>new RegExp('^'+en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\\\{#\d\\\}/g,'([\\d.,]+)').replace(/\\\{\d\\\}/g,'(.+?)')+'$');

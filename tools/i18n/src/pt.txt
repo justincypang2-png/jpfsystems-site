@@ -558,3 +558,5 @@ t62|Comparámos {#0} opções de 1 loja que entregam em até 3 dias.
 494|Próximo dia em que a loja abre
 t63|Ligar para {0}
 t64|: {0}, {#1} £
+495|Privacidade
+496|Privacidade e como ganhamos dinheiro | NoLag

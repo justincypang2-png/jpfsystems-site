@@ -558,3 +558,5 @@ t62|Wir haben {#0} Angebote von 1 Shop verglichen, die innerhalb von 3 Tagen lie
 494|Nächster Öffnungstag des Ladens
 t63|{0} anrufen
 t64|: {0}, {#1} £
+495|Datenschutz
+496|Datenschutz und wie wir Geld verdienen | NoLag

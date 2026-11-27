@@ -558,3 +558,5 @@ t62|Porównaliśmy {#0} ofert z 1 sklepu z dostawą w ciągu 3 dni.
 494|Najbliższy dzień otwarcia sklepu
 t63|Zadzwoń: {0}
 t64|: {0}, {#1} £
+495|Prywatność
+496|Prywatność i jak zarabiamy | NoLag

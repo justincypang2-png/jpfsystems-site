@@ -558,3 +558,5 @@ t62|Nous avons comparé {#0} options d'une boutique livrant sous 3 jours.
 494|Prochain jour d'ouverture de la boutique
 t63|Appeler {0}
 t64|: {0}, {#1} £
+495|Confidentialité
+496|Confidentialité et comment nous gagnons de l’argent | NoLag

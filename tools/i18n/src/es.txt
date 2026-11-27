@@ -558,3 +558,5 @@ t62|Hemos comparado {#0} opciones de 1 tienda que llegan en 3 días o menos.
 494|Próximo día que abre la tienda
 t63|Llamar a {0}
 t64|: {0}, {#1} £
+495|Privacidad
+496|Privacidad y cómo ganamos dinero | NoLag
