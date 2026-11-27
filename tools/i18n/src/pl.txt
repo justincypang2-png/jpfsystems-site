@@ -550,3 +550,11 @@ t59|{0}, z dostawą
 t60|{0}, plus dostawa
 t61|Porównaliśmy {#0} ofert z {#1} sklepów z dostawą w ciągu 3 dni.
 t62|Porównaliśmy {#0} ofert z 1 sklepu z dostawą w ciągu 3 dni.
+489|Dostawa przez sklep
+490|Kurierem
+491|Przez aplikację z dostawą
+492|Odbiór za darmo
+493|Koszt dostawy ustala sklep
+494|Najbliższy dzień otwarcia sklepu
+t63|Zadzwoń: {0}
+t64|: {0}, {#1} £

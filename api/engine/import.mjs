@@ -1,8 +1,10 @@
-// NoLag product engine: nightly importer.
+// NoLag product engine: importer (nightly for Awin shops, every 2 hours in the day for local shops).
 // 1. Reads your Awin feed list, which names every shop that has approved you. Nothing is typed in by hand.
 // 2. Downloads each shop's product feed: names, photos, prices, stock and delivery text.
 // 3. Works out how fast each product can arrive (today / tomorrow / later).
-// 4. Writes only what changed into your Cloudflare D1 database, where the website's /search reads it.
+// 4. Reads the product list of every approved local shop in local-shops.json that gave us one
+//    (a Google Sheet, their Shopify or WooCommerce shop, or their Google Shopping file). Only with the shop's permission.
+// 5. Writes only what changed into your Cloudflare D1 database, where the website's /search reads it.
 //
 // Settings come from environment variables (GitHub secrets):
 //   FEED_LIST_URL          your Awin feed-list link (Awin: Toolbox > Create-a-Feed > feed list download)
@@ -10,6 +12,7 @@
 //   CLOUDFLARE_ACCOUNT_ID  your Cloudflare account ID
 //   D1_DATABASE_ID         the nolag database ID
 // Optional: MAX_CHANGES (default 25000 a night, keeps inside D1's free daily write allowance)
+//           LOCAL_ONLY=1 reads only the local shops (the daytime runs)
 // For local testing: LOCAL_DB=/path/file.sqlite writes to a local SQLite file instead of Cloudflare.
 
 import { gunzipSync } from 'node:zlib';
@@ -165,8 +168,15 @@ const SCHEMA = readFileSync(join(HERE, '..', 'schema.sql'), 'utf8');
 const COLS = ['shop', 'name', 'brand', 'cat', 'price', 'was', 'img', 'url', 'stock', 'speed', 'cutoff', 'arrive', 'dfee', 'h'];
 
 export async function main() {
-  if (!env.FEED_LIST_URL) { log('No Awin feed list link saved yet (secret AWIN_FEED_LIST_URL). Nothing to import.'); return { changes: 0, removed: 0 }; }
+  if (!env.LOCAL_DB && !(env.CLOUDFLARE_API_TOKEN && env.CLOUDFLARE_ACCOUNT_ID && env.D1_DATABASE_ID)) { log('No Cloudflare keys saved yet, so there is nowhere to save products. Nothing to do.'); return { changes: 0, removed: 0 }; }
   await run(SCHEMA.split(';').map(s => s.trim()).filter(Boolean));
+  const a = env.LOCAL_ONLY ? { changes: 0, removed: 0 } : await importAwin();
+  const l = await importLocal();
+  return { changes: a.changes + l.changes, removed: a.removed + l.removed, stoppedEarly: a.stoppedEarly, local: l };
+}
+
+async function importAwin() {
+  if (!env.FEED_LIST_URL) { log('No Awin feed list link saved yet (secret AWIN_FEED_LIST_URL). Skipping Awin shops.'); return { changes: 0, removed: 0 }; }
 
   log('Reading your Awin feed list');
   const list = parseCSV(await download(env.FEED_LIST_URL));
@@ -180,7 +190,7 @@ export async function main() {
   const order = { today: 0, tomorrow: 1, unknown: 2, later: 3 };
   feeds.sort((a, b) => (order[ruleFor(a['advertiser name'] || '')?.speed || 'unknown'] - order[ruleFor(b['advertiser name'] || '')?.speed || 'unknown']));
 
-  const existing = new Map((await d1('SELECT rid, id, h, shop FROM products')).map(r => [r.id, r]));
+  const existing = new Map((await d1("SELECT rid, id, h, shop FROM products WHERE id NOT LIKE 'local:%'")).map(r => [r.id, r]));
   let nextRid = (await d1('SELECT COALESCE(MAX(rid), 0) AS m FROM products'))[0].m + 1;
   let changes = 0, stoppedEarly = false;
   const seen = new Set(), finishedShops = new Set(), shopRows = [];
@@ -218,6 +228,142 @@ export async function main() {
   await run(shopRows);
   log(`Done: ${changes} products added or updated, ${gone.length} removed${stoppedEarly ? ', more to load tomorrow' : ''}`);
   return { changes, removed: gone.length, stoppedEarly };
+}
+
+// ---------- local shops: their own product lists ----------
+// Each approved shop in local-shops.json can have  "list": { "url": "...", "type": "auto" }.
+// type: auto (default, worked out from the link), sheet (Google Sheet or CSV), shopify, woocommerce, google (Google Shopping file).
+const LOCAL_FILE = env.LOCAL_SHOPS_FILE || join(HERE, '..', '..', 'local-shops.json');
+async function getText(url, ms = 20000) { // one quick try: a shop's list that fails is kept from last time and tried again in 2 hours
+  const res = await fetch(url, { headers: { 'User-Agent': 'NoLag product list reader (with the shop\'s permission)', Accept: '*/*' }, signal: AbortSignal.timeout(ms) });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  let buf = Buffer.from(await res.arrayBuffer());
+  if (buf[0] === 0x1f && buf[1] === 0x8b) buf = gunzipSync(buf);
+  return buf.toString('utf8');
+}
+const getJSON = async url => JSON.parse(await getText(url));
+export function sheetLink(url) { // a normal Google Sheets link becomes its CSV download link
+  const u = String(url).trim();
+  if (/docs\.google\.com\/spreadsheets\/d\/e\//.test(u)) return u.replace(/\/pubhtml.*$/, '/pub?output=csv').replace(/\/pub(\?(?!.*output=csv).*)?$/, '/pub?output=csv');
+  const m = u.match(/docs\.google\.com\/spreadsheets\/d\/([\w-]+)/);
+  if (m) { const gid = (u.match(/[#&?]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv${gid ? '&gid=' + gid : ''}`; }
+  return u;
+}
+const yesNo = v => { const t = String(v || '').trim().toLowerCase(); if (!t) return null; const n = Number(t);
+  if (Number.isFinite(n)) return n <= 0 ? 'out' : n < 5 ? 'low' : 'in';
+  if (/^(n|no|false|out|out of stock|sold out|out_of_stock|none|unavailable)$/.test(t)) return 'out';
+  if (/low|limited|few/.test(t)) return 'low';
+  return /^(y|yes|true|in|in stock|in_stock|available|instock)$/.test(t) ? 'in' : null; };
+const decode = s => String(s || '').replace(/^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/, '$1').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&amp;/g, '&').trim();
+export function googleRows(text) { // Google Shopping file: XML (RSS or Atom) or a CSV/TSV with the same column names
+  if (!/^\s*</.test(text)) return parseCSV(text).map(r => Object.fromEntries(Object.entries(r).map(([k, v]) => [k.replace(/^g:/, ''), v])));
+  const items = text.match(/<(item|entry)\b[\s\S]*?<\/\1>/g) || [];
+  return items.map(item => { const r = {}, it = item.replace(/^<(item|entry)\b[^>]*>/, '').replace(/<\/(item|entry)>$/, ''); for (const m of it.matchAll(/<(g:)?([\w]+)(?:\s[^>]*)?>([\s\S]*?)<\/\1?\2>/g)) { const k = m[2].toLowerCase(); if (!(k in r) || m[1]) r[k] = decode(m[3]); }
+    const href = it.match(/<link[^>]*href="([^"]+)"/); if (!r.link && href) r.link = decode(href[1]); return r; });
+}
+const fromRow = r => ({ // a sheet row or a Google Shopping row, in whatever column names the shop used
+  id: pick(r, 'id', 'sku', 'product id', 'item id', 'code'), name: pick(r, 'name', 'product', 'product name', 'item', 'title', 'description'),
+  price: money(pick(r, 'sale_price', 'sale price', 'price', 'price (£)', '£', 'cost')), was: money(pick(r, 'was', 'was price', 'rrp')) || (pick(r, 'sale_price', 'sale price') ? money(pick(r, 'price')) : null),
+  url: pick(r, 'link', 'url', 'product link', 'web link', 'website'), img: pick(r, 'image', 'image_link', 'image link', 'image url', 'photo', 'picture'),
+  stock: yesNo(pick(r, 'in stock', 'in_stock', 'stock', 'availability', 'available', 'quantity', 'qty')), brand: pick(r, 'brand', 'make'),
+  cat: pick(r, 'category', 'product_type', 'product type', 'google_product_category', 'type'), barcode: pick(r, 'barcode', 'gtin', 'ean', 'upc'),
+});
+async function shopifyItems(base) {
+  const out = [];
+  for (let page = 1; page <= 40; page++) {
+    const j = await getJSON(`${base}/products.json?limit=250&page=${page}`);
+    const ps = j.products || []; if (!ps.length) break;
+    for (const p of ps) {
+      const vs = p.variants || [], avail = vs.filter(v => v.available !== false), use = avail.length ? avail : vs;
+      const v = [...use].sort((a, b) => Number(a.price) - Number(b.price))[0] || {};
+      const cmp = Number(v.compare_at_price);
+      out.push({ id: String(p.id), name: p.title, price: money(v.price), was: cmp > Number(v.price) ? cmp : null, url: `${base}/products/${p.handle}`,
+        img: p.images?.[0]?.src || '', stock: vs.some(x => 'available' in x) ? (avail.length ? 'in' : 'out') : null, brand: p.vendor || '', cat: p.product_type || '', barcode: v.barcode || '' });
+    }
+    if (ps.length < 250) break;
+  }
+  return out;
+}
+async function wooItems(base) {
+  const out = [];
+  for (let page = 1; page <= 50; page++) {
+    let ps; try { ps = await getJSON(`${base}/wp-json/wc/store/v1/products?per_page=100&page=${page}`); } catch (e) { if (page > 1) break; throw e; }
+    if (!Array.isArray(ps) || !ps.length) break;
+    for (const p of ps) {
+      const d = 10 ** (p.prices?.currency_minor_unit ?? 2), price = Number(p.prices?.price) / d, reg = Number(p.prices?.regular_price) / d;
+      out.push({ id: String(p.id), name: decode(p.name), price: Math.round(price * 100) / 100, was: reg > price ? reg : null, url: p.permalink, img: p.images?.[0]?.src || '',
+        stock: p.is_in_stock === false ? 'out' : p.is_in_stock ? (p.low_stock_remaining ? 'low' : 'in') : null, brand: '', cat: p.categories?.[0]?.name || '', barcode: '' });
+    }
+    if (ps.length < 100) break;
+  }
+  return out;
+}
+export async function readList(list) {
+  const url = String(list.url || '').trim(); let type = list.type || 'auto';
+  if (!/^https?:\/\//.test(url)) throw new Error('not a web link');
+  const base = new URL(url).origin;
+  if (type === 'auto') type = /docs\.google\.com\/spreadsheets/.test(url) || /\.csv(\?|$)/i.test(url) ? 'sheet' : /\.(xml|txt|tsv)(\?|$)/i.test(url) ? 'google' : 'shop';
+  if (type === 'sheet') return parseCSV(await getText(sheetLink(url))).map(fromRow);
+  if (type === 'google') return googleRows(await getText(url)).map(fromRow);
+  if (type === 'shopify') return shopifyItems(base);
+  if (type === 'woocommerce') return wooItems(base);
+  try { return await shopifyItems(base); } catch { return wooItems(base); } // an online shop: Shopify first, then WooCommerce
+}
+const DELIVERS = { own: 'Delivered by the shop', courier: 'By courier', apps: 'Through a delivery app' };
+export function localProduct(it, s) {
+  const name = String(it.name || '').replace(/\s+/g, ' ').trim().slice(0, 200);
+  if (!name || !(it.price > 0) || it.stock === 'out' || SKIP.test(name) || SKIP.test(it.cat || '')) return null;
+  const how = s.how || [], d = how.find(h => DELIVERS[h]);
+  const url = /^https?:\/\//.test(it.url || '') ? it.url : s.url || (s.phone ? 'tel:' + String(s.phone).replace(/[^\d+]/g, '') : '');
+  if (!url) return null;
+  const p = {
+    id: `local:${s.id}:${it.id || createHash('sha1').update(name + url).digest('hex').slice(0, 12)}`.slice(0, 120), shop: String(s.name).slice(0, 60), name,
+    brand: String(it.brand || '').slice(0, 60), cat: String(it.cat || '').slice(0, 120), price: it.price, was: it.was > it.price ? it.was : null,
+    img: /^https?:\/\//.test(it.img || '') ? it.img : '', url, stock: it.stock || null, speed: 'today', cutoff: s.cutoff ?? null,
+    arrive: d ? DELIVERS[d] : 'Collect today', dfee: d ? (s.fee || 'Delivery charge set by the shop') : 'Free to collect',
+  };
+  p.h = createHash('sha1').update(JSON.stringify(p)).digest('hex').slice(0, 12);
+  return p;
+}
+export async function importLocal() {
+  let shops = [];
+  try { shops = JSON.parse(readFileSync(LOCAL_FILE, 'utf8')).shops || []; } catch (e) { log('Could not read local-shops.json: ' + e.message); return { changes: 0, removed: 0 }; }
+  const prev = new Map((await d1('SELECT id, list_ok FROM local_shops').catch(() => [])).map(r => [r.id, r.list_ok]));
+  const existing = new Map((await d1("SELECT rid, id, h FROM products WHERE id LIKE 'local:%'")).map(r => [r.id, r]));
+  let nextRid = (await d1('SELECT COALESCE(MAX(rid), 0) AS m FROM products'))[0].m + 1;
+  const seen = new Set(), readOk = new Set(), stmts = [], info = []; let changes = 0;
+  for (const s of shops) {
+    if (!s.id || !s.name) continue;
+    let count = null, ok = prev.get(s.id) || null;
+    if (s.list?.url) {
+      try {
+        const items = (await readList(s.list)).slice(0, 5000); readOk.add(s.id); ok = new Date().toISOString(); count = 0;
+        for (const it of items) {
+          const p = localProduct(it, s);
+          if (!p || seen.has(p.id)) continue;
+          seen.add(p.id); count++;
+          const old = existing.get(p.id);
+          if (old && old.h === p.h) continue;
+          const rid = old ? old.rid : nextRid++;
+          if (old) stmts.push(`UPDATE products SET ${COLS.map(c => `${c}=${lit(p[c])}`).join(',')}, updated=${lit(ok)} WHERE rid=${rid}`, `DELETE FROM pfts WHERE rowid=${rid}`);
+          else stmts.push(`INSERT INTO products (rid,id,${COLS.join(',')},updated) VALUES (${rid},${lit(p.id)},${COLS.map(c => lit(p[c])).join(',')},${lit(ok)})`);
+          stmts.push(`INSERT INTO pfts (rowid,name,brand,cat) VALUES (${rid},${lit(p.name)},${lit(p.brand)},${lit(p.cat)})`);
+          changes++;
+        }
+        log(`${s.name}: ${count} products from its product list`);
+      } catch (e) { log(`${s.name}: couldn't read its product list (${e.message}); keeping what we had`); }
+    }
+    info.push(`INSERT INTO local_shops (id,name,areas,how,opens,cutoff,days,fee,phone,url,products,list_ok,updated) VALUES (${[s.id, s.name, (s.areas || []).join(' ').toUpperCase(), (s.how || []).join(' '),
+      s.opens ?? null, s.cutoff ?? null, Array.isArray(s.days) ? s.days.join(',') : null, s.fee || null, s.phone || null, s.url || null, count, ok, new Date().toISOString()].map(lit).join(',')})`);
+  }
+  // Remove products a shop no longer lists; everything from shops that left or stopped sharing a list. A list that failed to load is kept.
+  const byId = new Map(shops.map(x => [x.id, x]));
+  const gone = [...existing.values()].filter(r => { const sid = r.id.split(':')[1], sh = byId.get(sid); return !seen.has(r.id) && (readOk.has(sid) || !sh || !sh.list?.url); });
+  gone.forEach(r => stmts.push(`DELETE FROM products WHERE rid=${r.rid}`, `DELETE FROM pfts WHERE rowid=${r.rid}`));
+  await run(stmts);
+  await run(['DELETE FROM local_shops', ...info]);
+  if (shops.length) log(`Local shops: ${changes} products added or updated, ${gone.length} removed`);
+  return { changes, removed: gone.length };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) main().catch(e => { console.error(e); process.exit(1); });

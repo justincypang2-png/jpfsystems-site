@@ -488,7 +488,13 @@
 "Delivery dates on eBay are the seller's estimate.",
 "We may earn a commission when you buy, which never changes the price or our pick.",
 "Best, fastest and cheapest",
-"plus delivery"
+"plus delivery",
+"Delivered by the shop",
+"By courier",
+"Through a delivery app",
+"Free to collect",
+"Delivery charge set by the shop",
+"Next day the shop is open"
 ],
 "t": [
 "1 way to get “{0}” today",
@@ -553,6 +559,8 @@
 "{0}, with delivery",
 "{0}, plus delivery",
 "We checked {#0} options from {#1} shops that arrive within 3 days.",
-"We checked {#0} options from 1 shop that arrive within 3 days."
+"We checked {#0} options from 1 shop that arrive within 3 days.",
+"Call {0}",
+": {0}, £{#1}"
 ]
 }

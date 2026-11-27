@@ -550,3 +550,11 @@ t59|{0}, livraison comprise
 t60|{0}, plus la livraison
 t61|Nous avons comparé {#0} options de {#1} boutiques livrant sous 3 jours.
 t62|Nous avons comparé {#0} options d'une boutique livrant sous 3 jours.
+489|Livré par la boutique
+490|Par coursier
+491|Via une appli de livraison
+492|Retrait gratuit
+493|Frais de livraison fixés par la boutique
+494|Prochain jour d'ouverture de la boutique
+t63|Appeler {0}
+t64|: {0}, {#1} £

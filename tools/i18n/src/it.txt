@@ -550,3 +550,11 @@ t59|{0}, spedizione inclusa
 t60|{0}, più spedizione
 t61|Abbiamo confrontato {#0} opzioni di {#1} negozi che consegnano entro 3 giorni.
 t62|Abbiamo confrontato {#0} opzioni di 1 negozio che consegnano entro 3 giorni.
+489|Consegna del negozio
+490|Con corriere
+491|Tramite un'app di consegna
+492|Ritiro gratuito
+493|Costo di consegna stabilito dal negozio
+494|Prossimo giorno di apertura del negozio
+t63|Chiama {0}
+t64|: {0}, {#1} £

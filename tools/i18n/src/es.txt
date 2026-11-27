@@ -550,3 +550,11 @@ t59|{0}, con envío
 t60|{0}, más envío
 t61|Hemos comparado {#0} opciones de {#1} tiendas que llegan en 3 días o menos.
 t62|Hemos comparado {#0} opciones de 1 tienda que llegan en 3 días o menos.
+489|Lo entrega la tienda
+490|Por mensajero
+491|A través de una app de reparto
+492|Recogida gratis
+493|Gastos de envío según la tienda
+494|Próximo día que abre la tienda
+t63|Llamar a {0}
+t64|: {0}, {#1} £

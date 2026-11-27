@@ -550,3 +550,11 @@ t59|{0}, inkl. Versand
 t60|{0}, zzgl. Versand
 t61|Wir haben {#0} Angebote von {#1} Shops verglichen, die innerhalb von 3 Tagen liefern.
 t62|Wir haben {#0} Angebote von 1 Shop verglichen, die innerhalb von 3 Tagen liefern.
+489|Lieferung durch den Laden
+490|Per Kurier
+491|Über eine Liefer-App
+492|Kostenlose Abholung
+493|Lieferkosten legt der Laden fest
+494|Nächster Öffnungstag des Ladens
+t63|{0} anrufen
+t64|: {0}, {#1} £

@@ -82,6 +82,21 @@ export default {
           rows = (await find(words.map(term).join(' OR '))).filter(r => words.filter(w => has(r.name.toLowerCase(), w)).length >= need);
         }
       } catch { rows = []; } // tables not filled yet
+      // Local shops' products: only where the shop delivers (postcode district or whole area), and only while its list is fresh.
+      if (rows.some(r => String(r.id).startsWith('local:'))) {
+        const shops = await localShops(env), now = Date.now();
+        rows = rows.flatMap(r => {
+          if (!String(r.id).startsWith('local:')) return [r];
+          const s = shops.get(String(r.id).split(':')[1]);
+          if (!s || !area || !coversArea(s.areas, area) || (s.list_ok && now - Date.parse(s.list_ok) > 3 * 864e5)) return [];
+          const how = String(s.how || '').split(' '), collect = !how.some(h => ['own', 'courier', 'apps'].includes(h));
+          const wait = daysUntilOpen(s.days); // 0 = open today
+          const extra = { local: true, collect, shopId: s.id, phone: s.phone || '' };
+          if (wait === 0) return [{ ...r, ...extra }];
+          const day = new Date(Date.now() + wait * 864e5);
+          return [{ ...r, ...extra, speed: wait === 1 ? 'tomorrow' : 'later', cutoff: null, arriveDate: wait > 1 ? londonDate(day) : null, arrive: 'Next day the shop is open' }];
+        });
+      }
       // Someone searching "ps5" wants the console, not a controller or a case: accessories go below the real thing.
       const ACC = /\b(case|cases|cover|covers|cable|lead|charger|charging|controller|strap|protector|skin|stand|mount|adapter|replacement|refill|sleeve|holder|bag|grip|dock|tips|decal|sticker|compatible)\b/;
       const wantsAcc = ACC.test(q);
@@ -98,9 +113,10 @@ export default {
         .forEach(r => {
           const key = r.shop + '|' + r.name.toLowerCase();
           const g = groups[r.speed] || groups.unknown;
-          if (seen.has(key) || g.length >= 8) return;
+          if (seen.has(key) || g.length >= (r.local ? 12 : 8)) return; // local shops keep a place even when big shops fill the group
           seen.add(key);
-          g.push({ shop: r.shop, name: r.name, brand: r.brand, price: r.price, was: r.was, img: r.img, url: r.url, stock: r.stock, speed: r.speed in groups ? r.speed : 'unknown', cutoff: r.cutoff, arrive: r.arrive, fee: r.dfee, accessory: !!r.acc, updated: r.updated });
+          g.push({ shop: r.shop, name: r.name, brand: r.brand, price: r.price, was: r.was, img: r.img, url: r.url, stock: r.stock, speed: r.speed in groups ? r.speed : 'unknown', cutoff: r.cutoff, arrive: r.arrive, fee: r.dfee, accessory: !!r.acc, updated: r.updated,
+            ...(r.local ? { local: true, collect: r.collect, shopId: r.shopId, phone: r.phone, arriveDate: r.arriveDate || undefined } : {}) });
         });
       live.map((p, i) => ({ ...p, acc: !wantsAcc && ACC.test(p.name.toLowerCase()) ? 1 : 0, i }))
         .sort((a, b) => a.acc - b.acc || a.i - b.i)
@@ -248,6 +264,23 @@ async function ebayLive(env, q, area) {
   if (LIVE_CACHE.size > 500) LIVE_CACHE.clear();
   LIVE_CACHE.set(key, { t: Date.now(), v });
   return v;
+}
+
+// ---------- local shops (copied from local-shops.json into D1 by the importer) ----------
+let LOCAL_SHOPS = null, LOCAL_T = 0;
+async function localShops(env) {
+  if (LOCAL_SHOPS && Date.now() - LOCAL_T < 10 * 60 * 1000) return LOCAL_SHOPS;
+  try { LOCAL_SHOPS = new Map((await env.DB.prepare('SELECT * FROM local_shops').all()).results.map(s => [s.id, s])); } catch { LOCAL_SHOPS = new Map(); }
+  LOCAL_T = Date.now(); return LOCAL_SHOPS;
+}
+// "SE15" covers SE15; "SE" covers every SE district. area is the searcher's district, e.g. "SE15".
+const coversArea = (areas, area) => String(areas || '').split(/[\s,]+/).filter(Boolean).some(a => a === area || (/^[A-Z]{1,2}$/.test(a) && area.replace(/\d.*$/, '') === a));
+function daysUntilOpen(days) { // days: "1,2,3,4,5,6" (0 = Sunday). Empty means open every day.
+  if (!days) return 0;
+  const open = String(days).split(',').map(Number), wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const today = wd.indexOf(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short' }).format(new Date()));
+  for (let k = 0; k < 7; k++) if (open.includes((today + k) % 7)) return k;
+  return 0;
 }
 
 // ---------- live products from Amazon (Creators API) ----------

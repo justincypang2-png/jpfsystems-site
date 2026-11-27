@@ -550,3 +550,11 @@ t59|{0}, com entrega
 t60|{0}, mais entrega
 t61|Comparámos {#0} opções de {#1} lojas que entregam em até 3 dias.
 t62|Comparámos {#0} opções de 1 loja que entregam em até 3 dias.
+489|Entregue pela loja
+490|Por estafeta
+491|Através de uma app de entregas
+492|Levantamento grátis
+493|Custo de entrega definido pela loja
+494|Próximo dia em que a loja abre
+t63|Ligar para {0}
+t64|: {0}, {#1} £

@@ -232,6 +232,7 @@
   .lsum{margin-top:10px}
   .lsum.show,#l-senderr.show{display:block}
   .local{margin:0 0 8px}
+  .pshop .lbadge{display:inline-block;font-size:calc((13px) * var(--fs,1));font-weight:700;color:var(--ok);background:var(--ok-tint);border-radius:6px;padding:1px 8px;margin-left:8px;vertical-align:middle}
   .srow.lshop .lbadge{display:inline-block;font-size:calc((13px) * var(--fs,1));font-weight:700;color:var(--ok);background:var(--ok-tint);border-radius:6px;padding:1px 8px;margin-left:8px;vertical-align:middle}
   .srow.lshop .sample-tag{background:var(--ink);color:var(--on-fill)}
   .srow .sacts{display:flex;flex-direction:column;gap:8px}
@@ -926,6 +927,14 @@
       <li><svg viewBox="0 0 24 24" fill="none" stroke="#0E7A47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Checked before it goes live</b> We review every listing and only show it to postcodes you deliver to.</span></li>
     </ul>
     <p class="applycta"><a class="btn" href="#apply">Apply here</a> <span>Free, and takes about two minutes.</span></p>
+    <h2 class="lsub">Show your products, not just your shop</h2>
+    <p class="lterms">Once you're listed, you can also share your product list, so people searching for something you sell see your item and price right next to the big shops. It only shows in the postcodes you deliver to, and updates every two hours from 7am to 9pm. Choose whichever is easiest:</p>
+    <ul class="lterms">
+      <li><b>Your online shop.</b> If you sell on Shopify or WooCommerce, just send us your web address.</li>
+      <li><b>Your Google Shopping file.</b> If you already list products on Google, send us the file link from Google Merchant Center.</li>
+      <li><b>A simple sheet.</b> A Google Sheet with name, price and in stock. <a href="local-shop-template.csv" download>Download the template</a>, fill it in, and share the link.</li>
+    </ul>
+    <p class="lterms">You can stop at any time. Sold-out items drop off at the next update, and nothing changes the price you set.</p>
     <h2 class="lsub">How listings are shown</h2>
     <p class="lterms">Your shop appears when someone searches for something in your categories from a postcode you cover. Shops that can still deliver today come first, then the ones with the latest order time. No shop can pay to rank higher. If we ever offer paid placement, it will be clearly marked as Sponsored, and we'll update these terms first.</p>
     <h2 class="lsub" id="lterms">Listing terms</h2>
@@ -995,6 +1004,18 @@
         <input type="text" id="l-hours" placeholder="For example: Mon to Sat, 9am to 6pm" aria-describedby="l-hours-err"><p class="error-msg" id="l-hours-err">Enter your opening days and hours.</p></div>
       <div class="field" id="lf-fee"><label for="l-fee">Delivery charge <span class="opt-tag">(optional)</span></label>
         <input type="text" id="l-fee" placeholder="For example: £4.95, free over £40"></div>
+      <fieldset id="lf-list" aria-describedby="l-list-help"><legend>Show your products on NoLag <span class="opt-tag">(optional)</span></legend>
+        <span class="help" id="l-list-help">People can then find your products by name, with your price, next to the big shops. Only in the areas you deliver to, and you can stop at any time.</span>
+        <div class="ticks">
+          <label><input type="radio" name="llist" value="none" checked> Not now, just list my shop</label>
+          <label><input type="radio" name="llist" value="online"> From our online shop (Shopify, WooCommerce or similar)</label>
+          <label><input type="radio" name="llist" value="google"> From the product file we use for Google Shopping</label>
+          <label><input type="radio" name="llist" value="sheet"> From a simple Google Sheet</label>
+        </div>
+        <div class="field" id="lf-listurl" hidden><label for="l-listurl" id="l-listurl-label">Link to your online shop</label>
+          <span class="help" id="l-listurl-help"></span>
+          <input type="url" id="l-listurl" inputmode="url" placeholder="https://" aria-describedby="l-listurl-help l-listurl-err"><p class="error-msg" id="l-listurl-err">Add the link (starting https://), or choose "Not now".</p></div>
+      </fieldset>
       <fieldset id="lf-agree" aria-describedby="l-agree-err"><legend class="sr">Confirm</legend>
         <div class="ticks">
           <label><input type="checkbox" id="l-owner"> I own this shop or I'm allowed to list it</label>
@@ -1774,6 +1795,7 @@
       {shop:'Argos',name:label,price:r(b),was:r(b*1.15),stock:'in',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Argos',name:label+', bundle',price:r(b*1.4),stock:'low',speed:'today',cutoff:17,arrive:'by 10pm',fee:'£5.95 to £7.95 delivery'},
       {shop:'Currys',name:label,price:r(b*0.95),stock:'in',speed:'tomorrow',arrive:'next day',fee:'£5.99 next-day delivery'},
+      {shop:'Your shop here',local:true,shopId:'example',name:label,price:r(b*1.05),stock:'in',speed:'today',cutoff:18,arrive:'Delivered by the shop',fee:'Delivery charge set by the shop'},
       {shop:'Amazon',live:true,prime:true,name:label,price:r(b*0.92),stock:'in',speed:'tomorrow',arrive:'Prime delivery: Amazon shows your exact date before you pay',fee:'Free delivery with Prime'},
       {shop:'eBay',seller:'example-seller',live:true,name:label+', new',price:r(b*0.9),stock:'in',speed:'tomorrow',arrive:'seller’s estimate',fee:'Free delivery'},
       {shop:'eBay',seller:'another-seller',live:true,name:label+', new',price:r(b*0.7),stock:'in',speed:'later',arriveDate:new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date(Date.now()+2*864e5)),arrive:'seller’s estimate',fee:'£3.49 delivery'},
@@ -1944,11 +1966,11 @@
     if(P.cheapest.p!==P.best.p && P.cheapest.p!==P.fastest.p) tiles.push(['cheap','Cheapest',P.cheapest]);
     const also=[]; if(P.fastest.p===P.best.p) also.push('fastest'); if(P.cheapest.p===P.best.p) also.push('cheapest');
     tiles.forEach(([k,,x])=>PICK.set(x.p,k));
-    const when=x=>x.day===0?'Arrives today':x.day===1?'Arrives tomorrow':'Arrives by '+dayLong(x.day);
+    const when=x=>x.day===0?(x.p.collect?'Collect today':'Arrives today'):x.day===1?'Arrives tomorrow':'Arrives by '+dayLong(x.day);
     $('picks').innerHTML=tiles.map(([k,l,x],i)=>{
       const price=GBP(Math.round(x.t.v*100)/100)+(x.t.known?'':'+');
       const lab=k==='best'&&also.length ? l+', also '+also.join(' and ') : l;
-      return `<button type="button" class="pick ${k}${tiles.length===1?' one':''}" data-i="${i}"><span class="k">${esc(lab)}</span><span class="v">${price}</span><span class="w">${when(x)}</span><span class="s">${esc(x.p.shop)}${x.t.known?', with delivery':', plus delivery'}</span></button>`;
+      return `<button type="button" class="pick ${k}${tiles.length===1?' one':''}" data-i="${i}"><span class="k">${esc(lab)}</span><span class="v">${price}</span><span class="w">${when(x)}</span><span class="s">${x.p.collect?`<span class="notr">${esc(x.p.shop)}</span>`:x.p.local?`<span class="notr">${esc(x.p.shop)}</span>${x.t.known?', with delivery':', plus delivery'}`:esc(x.p.shop)+(x.t.known?', with delivery':', plus delivery')}</span></button>`;
     }).join('');
     $('picks').querySelectorAll('.pick').forEach((b,i)=>b.addEventListener('click',()=>{
       const el=document.querySelector(`.pcard[data-pick="${tiles[i][0]}"]`); if(!el) return;
@@ -1972,6 +1994,7 @@
     if(calSel!=null) Object.keys(G).forEach(g=>{ G[g]=all.filter(x=>x.g===g && x.day!=null && (calSel===7 || x.day<=calSel)).map(x=>x.p); });
     let pos=0;
     const arrival=(p,g)=>{
+      if(g==='today' && p.local) return `<b>${p.collect?'Collect today':'Today'}</b>${p.collect?'':'<br>'+esc(p.arrive||'')}${p.cutoff!=null?`<br>if you order within <span class="pcd" data-cut="${p.cutoff}">${left(p.cutoff-now)}</span>`:''}`;
       if(g==='today' && p.live) return `<b>Today</b><br>seller’s estimate`;
       if(g==='today') return p.cutoff!=null
         ? `<b>Today ${esc(p.arrive||'')}</b><br>if you order within <span class="pcd" data-cut="${p.cutoff}">${left(p.cutoff-now)}</span>`
@@ -1987,7 +2010,7 @@
       return `<li class="pcard ${g}${first?' first':''}"${pk?` data-pick="${pk}"`:''}>
         <div class="pimg">${p.sample?'<span class="ptag">Sample</span>':''}${badge}<img src="${esc(p.img||phImg('No photo'))}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="pbody">
-          <p class="pshop">${shop}${p.seller?`<span class="pseller">, sold by ${esc(p.seller)}</span>`:''}</p>
+          <p class="pshop">${p.local?`<span class="notr">${shop}</span><span class="lbadge">Local shop</span>`:shop}${p.seller?`<span class="pseller">, sold by ${esc(p.seller)}</span>`:''}</p>
           <h4 class="pname">${esc(p.name)}</h4>
           <p class="pprice">${GBP(p.price)}${p.was?`<s><span class="sr">was </span>${GBP(p.was)}</s>`:''}</p>
           ${p.deal?`<p class="pdeal">${esc(p.deal)}</p>`:''}
@@ -1995,7 +2018,8 @@
           <p class="parr">${arrival(p,g)}</p>
           ${p.fee?`<p class="pfee">${esc(p.fee)}${p.prime&&!hasPrime?' (without Prime, Amazon shows the charge)':''}</p>`:''}
           ${flat?(()=>{ const t=totalOf(p); return t.known?`<p class="ptotal">${GBP(Math.round(t.v*100)/100)} with delivery</p>`:'<p class="ptotal">plus delivery</p>'; })():''}
-          <a class="pbuy${p.sample?' sample':''}" href="${esc(p.url)}" target="_blank" rel="noopener sponsored" data-shop="${esc(p.shop.toLowerCase().slice(0,20))}" data-pos="${pos}">${p.live?'Buy on':'Buy at'} ${shop}<span class="sr">: ${esc(p.name)}, ${GBP(p.price)} (opens in a new tab)</span></a>
+          ${(()=>{ const tel=/^tel:/.test(p.url||''), loc=p.local?` data-local="${esc(p.shopId||'')}" data-act="${tel?'call':'web'}"`:'';
+            return `<a class="pbuy${p.sample?' sample':''}" href="${esc(p.url)}"${tel?'':` target="_blank" rel="noopener${p.local?'':' sponsored'}"`} data-shop="${esc(p.shop.toLowerCase().slice(0,20))}" data-pos="${pos}"${loc}>${tel?'Call':p.live?'Buy on':'Buy at'} ${shop}<span class="sr">: ${esc(p.name)}, ${GBP(p.price)}${tel?'':' (opens in a new tab)'}</span></a>`; })()}
         </div></li>`; };
     const count=n=>`<small>${n} product${n>1?'s':''}</small>`;
     const block=(g,title)=>G[g].length ? `<div class="pgroup"><h3>${title} ${count(G[g].length)}</h3><ul class="pgrid">${G[g].map(p=>card(p,g)).join('')}</ul></div>` : '';
@@ -2347,7 +2371,13 @@
     'lf-email':()=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('l-email').value.trim()), 'lf-phone':()=>$('l-phone').value.replace(/\D/g,'').length>=10,
     'lf-pc':()=>LPC.test($('l-pc').value.trim()), 'lf-cats':()=>!!lf.querySelector('[name=lcat]:checked'), 'lf-how':()=>!!lf.querySelector('[name=lhow]:checked'),
     'lf-areas':()=>$('l-areas').value.trim().length>1, 'lf-cutoff':()=>$('l-cutoff').value.trim().length>0, 'lf-hours':()=>$('l-hours').value.trim().length>2,
+    'lf-listurl':()=>{ const v=(lf.querySelector('[name=llist]:checked')||{}).value; return v==='none' || v==='sheet' && !$('l-listurl').value.trim() || /^https?:\/\/[^\s.]+\.\S+/.test($('l-listurl').value.trim()); },
     'lf-agree':()=>$('l-owner').checked && $('l-terms').checked };
+  const LIST_HELP={online:['Link to your online shop','Your shop’s web address. We read your product list from it, with your permission.'],
+    google:['Link to your product file','The file link from your Google Merchant Center feed settings (it often ends in .xml or .txt).'],
+    sheet:['Link to your Google Sheet (optional)','Copy our template, fill in name, price and in stock, then choose Share, “Anyone with the link”. No sheet yet? Leave this blank and we’ll email you the template.']};
+  lf.querySelectorAll('[name=llist]').forEach(r=>r.addEventListener('change',()=>{ const v=lf.querySelector('[name=llist]:checked').value, box=$('lf-listurl');
+    box.hidden=v==='none'; box.classList.remove('invalid'); if(LIST_HELP[v]){ $('l-listurl-label').textContent=LIST_HELP[v][0]; $('l-listurl-help').textContent=LIST_HELP[v][1]; } }));
   const lcheck=id=>{ const ok=lrules[id](); $(id).classList.toggle('invalid',!ok); return ok; };
   lf.addEventListener('input',e=>{ const f=e.target.closest('.field,fieldset'); if(f && f.classList.contains('invalid')) lcheck(f.id); });
   lf.addEventListener('change',e=>{ const f=e.target.closest('fieldset'); if(f && f.classList.contains('invalid')) lcheck(f.id); });
@@ -2360,7 +2390,7 @@
     const data={shop:$('l-name').value.trim(), contact_name:$('l-person').value.trim(), email:$('l-email').value.trim(), phone:$('l-phone').value.trim(),
       postcode:$('l-pc').value.trim().toUpperCase(), website:$('l-url').value.trim(), sells:vals('lcat'), main_products:$('l-sells').value.trim(),
       how:vals('lhow'), delivers_to:$('l-areas').value.trim(), latest_order:$('l-cutoff').value.trim(), hours:$('l-hours').value.trim(),
-      delivery_charge:$('l-fee').value.trim(), agreed_terms:'yes', language:(LANGS.find(l=>l[0]===I18N.lang)||LANGS[0])[2], submitted:new Date().toISOString()};
+      delivery_charge:$('l-fee').value.trim(), product_list:(lf.querySelector('[name=llist]:checked')||{}).value||'none', product_list_link:$('l-listurl').value.trim(), agreed_terms:'yes', language:(LANGS.find(l=>l[0]===I18N.lang)||LANGS[0])[2], submitted:new Date().toISOString()};
     const btn=lf.querySelector('button.go'); btn.disabled=true; btn.textContent='Sending…';
     try{
       if(!DEMO){
@@ -2379,7 +2409,7 @@
   // Dates and times are re-written the way each language writes them. Shop and product names stay in English.
   const LANGS=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['de','Deutsch','German'],['it','Italiano','Italian'],['pt','Português','Portuguese'],['pl','Polski','Polish'],['zh','中文（简体）','Chinese'],['yue','廣東話（繁體）','Cantonese'],['ja','日本語','Japanese'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi']];
   const LOCALE={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',pt:'pt-PT',pl:'pl-PL',zh:'zh-CN',yue:'zh-HK',ja:'ja-JP',ar:'ar-u-nu-latn',hi:'hi-IN'};
-  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='4';
+  const I18N={lang:'en',x:null,t:[]}, I18N_CACHE={}, I18N_VER='5';
   const TXT=new WeakMap(), ATT=new WeakMap(), I18N_ATTRS=['placeholder','aria-label','title','alt'];
   const splitSent=s=>s.split(/(?<![A-Z]\.[A-Z]\.)(?<=[.!?])\s+(?=[A-Z“])/);
   const tplRe=en=>new RegExp('^'+en.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\\\{#\d\\\}/g,'([\\d.,]+)').replace(/\\\{\d\\\}/g,'(.+?)')+'$');

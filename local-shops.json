@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26",
-  "note": "Shops are added here by hand after their listing is checked. Fields: id, name, areas (postcode districts like SE15, or a whole area like SE), cats (tech, home, gift, health, beauty, grocery), sells, how (own, courier, apps, collect), opens and cutoff (hours, 17.5 = 5:30pm), days (0 Sun to 6 Sat), fee, phone, url.",
+  "updated": "2026-11-27",
+  "note": "Shops are added here by hand after their listing is checked. Fields: id (short, no spaces), name, areas (postcode districts like SE15, or a whole area like SE), cats (tech, home, gift, health, beauty, grocery), sells, how (own, courier, apps, collect), opens and cutoff (hours, 17.5 = 5:30pm), days (0 Sun to 6 Sat), fee, phone, url. Optional list: {\"url\": \"their Google Sheet, Shopify or WooCommerce shop, or Google Shopping file\"} to show their products in search; read every 2 hours in the day, only with the shop's permission.",
   "shops": []
 }
