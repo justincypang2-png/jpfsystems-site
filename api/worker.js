@@ -3,7 +3,7 @@
 // 2) GET  /report?key=… : a summary for you (top searches, searches we didn't understand, clicks by shop…)
 // 3) GET  /export.csv?key=… : every event as a spreadsheet file
 // 4) GET  /search?q=…&area=SE15 : real products (photo, price, stock, delivery) from the shops' own feeds (loaded nightly by
-//    engine/import.mjs) plus live Amazon Prime items and eBay listings you can pay for now, grouped by when they arrive
+//    engine/import.mjs) plus live Amazon Prime items, CJ shops such as Argos, and eBay listings, grouped by when they arrive
 // 5) POST /ask          : the search assistant. Reads a vague search ("tv", "present for dad") and asks one short
 //    question with tap-able answers, or returns precise search words. Uses Cloudflare Workers AI (free daily allowance).
 // Stores no names, emails, IP addresses or cookies. Postcodes are cut to the area (e.g. "SE15").
@@ -72,6 +72,7 @@ export default {
       const area = (url.searchParams.get('area') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').match(/^[A-Z]{1,2}\d[A-Z\d]?/)?.[0] || '';
       const livePromise = ebayLive(env, q, area).catch(() => []); // runs while the database is searched
       const amazonPromise = amazonLive(env, q).catch(() => []);
+      const cjPromise = cjLive(env, q).catch(() => []);
       let rows = [];
       try {
         rows = await find(words.map(term).join(' AND '));
@@ -105,7 +106,7 @@ export default {
       const has = (name, w) => [w, ...(SYN[w] || [])].some(s => name.includes(s));
       // eBay titles must have every word; Amazon's own search is sharper, so its titles need only half of them ("phone charger usb" → "Anker USB C Charger").
       const half = Math.ceil(words.length / 2);
-      const live = [...(await amazonPromise).filter(p => words.filter(w => has(p.name.toLowerCase(), w)).length >= half),
+      const live = [...[...await amazonPromise, ...await cjPromise].filter(p => words.filter(w => has(p.name.toLowerCase(), w)).length >= half),
         ...(await livePromise).filter(p => words.every(w => has(p.name.toLowerCase(), w)))];
       const liveCount = {};
       rows.map(r => ({ ...r, acc: !wantsAcc && ACC.test(r.name.toLowerCase()) ? 1 : 0 }))
@@ -281,6 +282,45 @@ function daysUntilOpen(days) { // days: "1,2,3,4,5,6" (0 = Sunday). Empty means 
   const today = wd.indexOf(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', weekday: 'short' }).format(new Date()));
   for (let k = 0; k < 7; k++) if (open.includes((today + k) % 7)) return k;
   return 0;
+}
+
+// ---------- live products from CJ shops, e.g. Argos (CJ Product Search API) ----------
+// Products from every CJ shop that has accepted NoLag, with CJ's tracked link (for commission).
+// Switched on by three Worker secrets: CJ_TOKEN (a CJ personal access token), CJ_COMPANY_ID (your CJ account ID)
+// and CJ_WEBSITE_ID (your website's ID in CJ, for the tracked links). Optional: CJ_ADVERTISER_IDS, comma-separated, to limit to some shops.
+// CJ product files don't say how fast a shop delivers, so we add the delivery facts we have checked for each shop.
+const SHOP_FACTS = [
+  { match: 'argos', name: 'Argos', speed: 'today', cutoff: 17, arrive: 'by 10pm', fee: '£5.95 to £7.95 delivery' },
+  { match: 'currys', name: 'Currys', speed: 'tomorrow', cutoff: null, arrive: 'next day', fee: '£5.99 next-day delivery' },
+  { match: 'john lewis', name: 'John Lewis', speed: 'tomorrow', cutoff: null, arrive: 'next day', fee: '' },
+];
+const CJ_CACHE = new Map();
+const gql = s => JSON.stringify(String(s));
+async function cjLive(env, q) {
+  if (!env.CJ_TOKEN || !env.CJ_COMPANY_ID || !env.CJ_WEBSITE_ID || !q) return [];
+  const hit = CJ_CACHE.get(q);
+  if (hit && Date.now() - hit.t < 15 * 60 * 1000) return hit.v;
+  const ids = String(env.CJ_ADVERTISER_IDS || '').split(',').map(x => x.trim()).filter(Boolean);
+  const query = `{ products(companyId: ${gql(env.CJ_COMPANY_ID)}, keywords: [${q.split(/\s+/).slice(0, 8).map(gql).join(', ')}]${ids.length ? `, partnerIds: [${ids.map(gql).join(', ')}]` : ''}, limit: 40) {
+    resultList { advertiserId advertiserName title price { amount currency } salePrice { amount currency } imageLink link availability linkCode(pid: ${gql(env.CJ_WEBSITE_ID)}) { clickUrl } } } }`;
+  const r = await fetch(env.CJ_API_URL || 'https://ads.api.cj.com/query', { method: 'POST', headers: { Authorization: 'Bearer ' + env.CJ_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ query }) });
+  if (!r.ok) return [];
+  const j = await r.json();
+  const v = (j.data?.products?.resultList || []).map(it => {
+    const facts = SHOP_FACTS.find(f => String(it.advertiserName || '').toLowerCase().includes(f.match));
+    const full = Number(it.price?.amount), sale = Number(it.salePrice?.amount), price = sale > 0 && sale < full ? sale : full;
+    const cur = it.salePrice?.currency || it.price?.currency;
+    if (cur && cur !== 'GBP') return null;
+    if (/out[ _]of[ _]stock|discontinued|preorder|backorder/i.test(it.availability || '')) return null;
+    const url = it.linkCode?.clickUrl; // tracked links only, so every sale can earn commission
+    if (!url || !(price > 0) || !it.title) return null;
+    return { shop: facts?.name || String(it.advertiserName || 'Shop').replace(/\s+(UK|GB)$/i, '').slice(0, 60), name: String(it.title).slice(0, 200), price,
+      was: sale > 0 && sale < full ? full : null, img: it.imageLink || '', url, stock: /in[ _]stock/i.test(it.availability || '') ? 'in' : null,
+      speed: facts?.speed || 'unknown', cutoff: facts?.cutoff ?? null, arrive: facts?.arrive || '', fee: facts?.fee || '', live: false };
+  }).filter(Boolean);
+  if (CJ_CACHE.size > 500) CJ_CACHE.clear();
+  CJ_CACHE.set(q, { t: Date.now(), v });
+  return v;
 }
 
 // ---------- live products from Amazon (Creators API) ----------
